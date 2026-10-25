@@ -1,0 +1,23 @@
+# Secrets - never commit a key
+.env
+*.key
+*_api_key.txt
+openrouter_api_key.txt
+secrets.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Notebooks
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# NOTE: run_log.jsonl is NOT ignored.
+# It is the testing evidence for W8 and the final report - commit it.
