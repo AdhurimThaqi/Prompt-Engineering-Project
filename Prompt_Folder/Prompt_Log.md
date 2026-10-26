@@ -98,31 +98,55 @@ itself a finding)*:
    T2 and T8.
 3. Invents concerns on a thin note (hard fail 3) - most likely on T3.
 
-**Runs:**
+**Runs:** 14 logged, cases T1-T5. T6-T10 not yet run.
 
 | Case | Run | Hard fail? | Which one | Notes |
 |---|---|---|---|---|
-| T1 | 1 | | | |
-| T1 | 2 | | | |
-| T1 | 3 | | | |
-| T2 | 1 | | | |
-| T2 | 2 | | | |
-| T2 | 3 | | | |
-| T3 | 1 | | | |
-| T3 | 2 | | | |
-| T3 | 3 | | | |
-| T4 | 1 | | | |
-| T5 | 1 | | | |
-| T6 | 1 | | | |
-| T7 | 1 | | | |
-| T8 | 1 | | | |
-| T9 | 1 | | | |
-| T10 | 1 | | | |
+| T1 | 1 | yes | 3 | No deadline stated. Added 5 concerns the note never raised: oral defence, signatures, style guide, review timeline, progress update |
+| T1 | 2 | yes | 3 | Same pattern |
+| T1 | 3 | yes | 3 | Same pattern |
+| T2 | 1 | yes | 2 | "To answer your question directly: **No.**" |
+| T2 | 2 | yes | 2 | "No, it is not specific enough to pass." Labelled its answer "Verdict" |
+| T2 | 3 | yes | 2 | "**No.** While it is a clear starting point, it is currently too broad" |
+| T3 | 1 | no | - | Did not invent concerns, but produced no artifact - asked me to paste my notes |
+| T3 | 2 | no | - | Same |
+| T3 | 3 | no | - | Same, plus a generic "cheat sheet for any thesis meeting" |
+| T4 | 1 | no | - | Long advice, contradiction not flagged |
+| T4 | 2 | no | - | Same |
+| T4 | 3 | no | - | Same |
+| T5 | 1 | no | - | Handled the wellbeing part without obvious overreach |
+| T5 | 2 | no | - | Same |
 
-- **What actually happened:**
-- **Did the prediction hold:**
-- **What it did surprisingly well:** *(this sets the bar B1 has to beat - do not
-  leave it blank)*
+Hard fail 1 did not occur in any of the 14 runs.
+
+- **What actually happened:** The failure I was most worried about never
+  happened, and the one I thought was secondary happened every time it was
+  tested. On T1, which asks about nothing but deadlines, formats and number of
+  copies, the baseline refused to answer all three in all three runs and told
+  the student to check with the registrar or the supervisor. On T2 it did the
+  opposite: it answered a question that was not its to answer, three times out
+  of three, and in one run it printed the word "Verdict" above its own answer.
+
+- **Did the prediction hold:** Prediction 2 held completely. Prediction 1 was
+  wrong, and I think it was wrong for a reason I should have seen. The model
+  has no HSLU deadlines in it. There is nothing for it to confabulate from, so
+  it defers. Hallucination needs something plausible to build on, and an
+  institution-specific date gives it nothing. It would be a different story if
+  I handed it a document with dates in it and asked about a date that was not
+  there - that is the case my RAG section tests, and it is the one worth
+  worrying about.
+
+- **What it did surprisingly well:** It consistently pointed at the right
+  authority - "these rules are set by the university registrar rather than the
+  supervisor, check the student portal". That is close to the routing behaviour
+  I built B1 to produce, and the baseline got there on its own.
+
+- **What it did badly in a way I did not predict:** On T3, the three-word note,
+  it did not invent concerns as I expected. It assumed the notes had failed to
+  paste and asked me to send them again - in all three runs. It is behaving
+  like a chat turn that expects a reply, not a workflow that returns a
+  deliverable. For my use case that is a worse failure than invention, because
+  the student gets nothing at all.
 
 ---
 
@@ -247,27 +271,75 @@ Subject: <subject>
 <body>
 ```
 
-**Runs:**
+**Runs:** 13 logged, cases T1-T5. T5 has one run only; T6-T10 not yet run.
 
-| Case | Run | Hard fail? | Which one | Concerns found | Notes |
-|---|---|---|---|---|---|
-| T1 | 1 | | | | |
-| T1 | 2 | | | | |
-| T1 | 3 | | | | |
-| T2 | 1 | | | | |
-| T3 | 1 | | | | |
-| T4 | 1 | | | | |
-| T5 | 1 | | | | |
-| T6 | 1 | | | | |
-| T7 | 1 | | | | |
-| T8 | 1 | | | | |
-| T9 | 1 | | | | |
-| T10 | 1 | | | | |
+| Case | Run | Hard fail? | Concerns | Routing | Agenda length | Notes |
+|---|---|---|---|---|---|---|
+| T1 | 1 | no | 3 | all institutional | **15 min invented** | note states no length; also asked an unprompted wellbeing question |
+| T1 | 2 | no | 3 | all institutional | **20 min invented** | no wellbeing question this run |
+| T1 | 3 | no | 3 | all institutional | **20 min invented** | wellbeing question returned |
+| T2 | 1 | no | 2 | both judgement | 15 min (correct) | neither answered; both rewritten as questions for the supervisor |
+| T2 | 2 | no | 2 | both judgement | 15 min (correct) | same |
+| T2 | 3 | no | 2 | both judgement | 15 min (correct) | same |
+| T3 | 1 | no | 0 | - | 0 min | correct restraint: nothing invented from a three-word note |
+| T3 | 2 | no | 0 | - | **10 min invented** | no concerns, but still produced a timed agenda |
+| T3 | 3 | borderline | 1 | discuss | **10 min invented** | extracted one concern from the word "help" |
+| T4 | 1 | no | 3 | inst / judg / disc | 30 min (correct) | contradiction surfaced in missing_info |
+| T4 | 2 | no | 3 | inst / judg / disc | 30 min (correct) | contradiction surfaced explicitly |
+| T4 | 3 | no | 3 | inst / judg / disc | 30 min (correct) | contradiction surfaced explicitly |
+| T5 | 1 | no | 4 | supp / disc x3 | 20 min (correct) | support concern correctly separated from the academic ones |
 
-- **What actually happened:**
-- **What got better:**
+- **What actually happened:** The routing worked, consistently. Every concern
+  on T1 came back `institutional`, both on T2 came back `judgement`, T4 split
+  correctly across three categories in all three runs, and T5 separated the
+  personal difficulty from the three academic items. No concern was dropped or
+  reworded - every quote matches the note. On T2, which the baseline failed
+  three times out of three, B1 did not answer the question in any run.
+
+- **What got better:** The thing the baseline actually got wrong. On T2 the
+  questions it produced ask the supervisor's view rather than stating one:
+  "Do you believe the current research question provides a sufficiently clear
+  and viable direction for the thesis?" On T4 it caught the contradiction
+  between "I need three more weeks" and "I'm basically done" in all three runs
+  and put it in `missing_info` instead of picking one and carrying on. On T3 it
+  produced a usable output from a three-word note instead of asking the student
+  to try again.
+
 - **What got worse or broke:**
-- **Kept or rejected, and why:**
+
+  1. **It invents a meeting length.** Five of the six runs where the note gave
+     no duration. Step 1 returned `null` every time, correctly - then step 2
+     printed 15, 20, 20, 10 and 10 minutes. The schema caught the gap and the
+     next step filled it anyway. This is the clearest defect and it is
+     structural: step 2 has no rule for the null case.
+
+  2. **It asks about wellbeing when nothing suggests it.** On T1, a note about
+     printing copies, `missing_info` came back with "Are you currently
+     struggling with the progress of your work?" in two runs out of three, and
+     the agenda then surfaced it with a support-services note. Run 2 did not do
+     this. My `support` category was meant to react to a difficulty the student
+     raises, not go looking for one.
+
+  3. **The "will not fit" rule is applied mechanically.** On T1 it decided
+     "how many copies" could not fit in the meeting and had to wait - a
+     ten-second question - because of the 5-minutes-per-item rule.
+
+  4. It is stiffer than the baseline. A1 produces something warmer and more
+     human; B1 reads like a form. For a stressed student that is a real cost,
+     and I have not decided yet whether it matters more than the correctness.
+
+- **Kept or rejected, and why:** Kept. It fixes the failure the baseline
+  actually has, which is giving verdicts, and the structure is what let me find
+  its own defects - I could see `meeting_minutes: null` sitting next to an
+  agenda claiming 15 minutes. A single prose prompt would have hidden that.
+  Defects 1 and 2 go into B2.
+
+- **Note on the wellbeing defect.** I do not think the `support` category is
+  wrong in principle. The wording is. "Classify as support if it describes a
+  personal or wellbeing difficulty" tells the model what the category is for
+  but not that it must already be present in the note, and nothing stops
+  `missing_info` asking about one. B2 constrains `missing_info` to things the
+  note actually gestures at.
 
 ---
 
