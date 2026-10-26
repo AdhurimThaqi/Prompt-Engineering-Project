@@ -360,7 +360,15 @@ function render(data){
     f.appendChild(d);
   });
 
-  data.cases.forEach(function(sc, i){
+  var cases = data.cases || data.scenarios || [];
+  if(!cases.length){
+    panels.innerHTML = '<div class="pending"><b>No results in outputs.json</b>'+
+      'The file loaded but contains no cases. Re-run <code>build_outputs</code> against '+
+      '<code>run_log.jsonl</code>, or check you are serving the current copy.</div>';
+    return;
+  }
+
+  cases.forEach(function(sc, i){
     var btn = document.createElement('button');
     btn.className = 'tab'; btn.type = 'button';
     btn.setAttribute('role','tab');
@@ -409,7 +417,7 @@ function render(data){
   });
 
   function select(id){
-    data.cases.forEach(function(sc){
+    cases.forEach(function(sc){
       var on = sc.id === id;
       document.getElementById('tab-'+sc.id).setAttribute('aria-selected', on ? 'true':'false');
       document.getElementById('panel-'+sc.id).hidden = !on;
@@ -417,15 +425,38 @@ function render(data){
   }
 }
 
+function fail(title, body, err){
+  document.getElementById('panels').innerHTML =
+    '<div class="pending"><b>'+esc(title)+'</b>'+body+
+    (err ? ' <br><br><code>'+esc(err.message || String(err))+'</code>' : '')+'</div>';
+}
+
 fetch('outputs.json')
-  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
-  .then(render)
+  .then(function(r){
+    if(!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
   .catch(function(e){
-    document.getElementById('panels').innerHTML =
-      '<div class="pending"><b>Could not load outputs.json</b>'+
-      'Open this page over http (GitHub Pages, or <code>python -m http.server</code>) rather than as a local file — '+
-      'browsers block fetch from file:// URLs. ('+esc(e.message)+')</div>';
-  });
+    // Distinguish "the file never arrived" from "it arrived but broke the page".
+    fail('Could not load outputs.json',
+      location.protocol === 'file:'
+        ? 'This page is open as a local file. Browsers block <code>fetch</code> from <code>file://</code>, '+
+          'so serve it over http instead — GitHub Pages, or <code>python -m http.server</code> in the '+
+          '<code>docs</code> folder.'
+        : '<code>outputs.json</code> must sit in the same folder as this page. If you opened '+
+          '<code>index.html</code> on its own, the data file is not next to it.',
+      e);
+    throw e;   // stop the chain; do not call render with nothing
+  })
+  .then(function(data){
+    try { render(data); }
+    catch(e){
+      fail('outputs.json loaded, but the page could not render it',
+        'The file is present but not in the shape this page expects. It should have a '+
+        '<code>cases</code> array — regenerate it from <code>run_log.jsonl</code>.', e);
+    }
+  })
+  .catch(function(){ /* already reported above */ });
 </script>
 </body>
 </html>
