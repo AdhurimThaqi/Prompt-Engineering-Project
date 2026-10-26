@@ -313,6 +313,7 @@ function card(label, text){
 }
 
 function concernList(parsed){
+  parsed = parsed || {};
   var h = '<ul class="concerns">';
   (parsed.concerns||[]).forEach(function(c){
     h += '<li><span class="kind '+esc(c.kind)+'">'+esc(c.kind)+'</span>'+
@@ -360,11 +361,22 @@ function render(data){
     f.appendChild(d);
   });
 
-  var cases = data.cases || data.scenarios || [];
+  // The old placeholder file used `scenarios` and carried no run data. Name it rather
+  // than half-rendering it.
+  if(!data.cases && data.scenarios){
+    panels.innerHTML = '<div class="pending"><b>This is the old placeholder outputs.json</b>'+
+      'It has a <code>scenarios</code> list with no run data, from before the prototype was run. '+
+      'The current file has a <code>cases</code> array built from <code>run_log.jsonl</code>. '+
+      'Push the current <code>docs/</code> folder, then hard-refresh (Ctrl+Shift+R) — '+
+      'GitHub Pages can serve a previous build for a few minutes.</div>';
+    return;
+  }
+
+  var cases = (data.cases || []).filter(function(c){ return c && c.parsed; });
   if(!cases.length){
-    panels.innerHTML = '<div class="pending"><b>No results in outputs.json</b>'+
-      'The file loaded but contains no cases. Re-run <code>build_outputs</code> against '+
-      '<code>run_log.jsonl</code>, or check you are serving the current copy.</div>';
+    panels.innerHTML = '<div class="pending"><b>No usable results in outputs.json</b>'+
+      'The file loaded but no case carries a <code>parsed</code> block. '+
+      'Regenerate it from <code>run_log.jsonl</code>.</div>';
     return;
   }
 
