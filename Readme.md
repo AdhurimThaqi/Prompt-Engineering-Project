@@ -5,7 +5,9 @@ notes into a focused plan for a thesis supervisor meeting: an agenda, prioritize
 questions, and a follow-up email.
 
 Semester project for **PROMPT - Prompt Engineering for Beginners**, HSLU HS26.
-Modality 1 (Text), individual project. Adhurim Thaqi.
+Modality 1 (Text), individual project. Adhurim Thaqi.\
+
+- Open the web-based prototype via this link https://adhurimthaqi.github.io/Prompt-Engineering-Project/
 
 ---
 
