@@ -105,6 +105,49 @@ pre{margin:0; font-family:var(--mono); font-size:.82rem; line-height:1.55; white
 .pending{background:var(--warn-bg); border:1px dashed var(--warn-border); border-radius:8px; padding:14px 16px; color:var(--warn-ink); font-size:.88rem}
 .pending b{display:block; font-weight:600; margin-bottom:4px}
 
+/* findings */
+.findings{display:grid; grid-template-columns:1fr; gap:12px; margin:20px 0 30px}
+@media(min-width:720px){.findings{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.finding{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:15px 17px}
+.finding .v{font-family:Syne,sans-serif; font-weight:800; font-size:1.18rem; color:var(--accent); line-height:1.2; margin-bottom:5px}
+.finding .l{font-weight:600; font-size:.93rem; margin-bottom:5px}
+.finding .n{font-size:.84rem; color:var(--ink-3); line-height:1.45}
+
+/* verdicts */
+.verdict{border-radius:8px; padding:12px 14px; font-size:.88rem; line-height:1.5; margin-bottom:14px}
+.verdict.bad{background:color-mix(in srgb,#d9534f 9%,transparent); border:1px solid color-mix(in srgb,#d9534f 32%,transparent)}
+.verdict.good{background:color-mix(in srgb,#2aa36b 10%,transparent); border:1px solid color-mix(in srgb,#2aa36b 34%,transparent)}
+.verdict b{display:block; font-weight:600; margin-bottom:4px; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase}
+.verdict.bad b{color:#c0392b}
+.verdict.good b{color:#1e8f5c}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .verdict.bad b{color:#ff8a80} :root:not([data-theme="light"]) .verdict.good b{color:#6ee7a8}}
+:root[data-theme="dark"] .verdict.bad b{color:#ff8a80}
+:root[data-theme="dark"] .verdict.good b{color:#6ee7a8}
+.verdict code{font-family:var(--mono); font-size:.82em}
+
+/* concern list */
+.concerns{list-style:none; margin:0; padding:0}
+.concerns li{border-bottom:1px solid var(--border); padding:9px 0; font-size:.87rem}
+.concerns li:last-child{border-bottom:none}
+.kind{display:inline-block; font-family:var(--mono); font-size:.72rem; padding:2px 7px; border-radius:4px; margin-right:7px;
+  background:var(--surface-2); border:1px solid var(--border); color:var(--ink-2)}
+.kind.institutional{color:var(--accent); border-color:var(--accent)}
+.kind.judgement{color:var(--secondary); border-color:var(--secondary)}
+.kind.support{color:#c87f0a; border-color:#c87f0a}
+.q{color:var(--ink); font-style:italic}
+
+details.card>summary{padding:11px 16px; cursor:pointer; font-size:.76rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); background:var(--surface-2);
+  border-bottom:1px solid transparent; list-style:none}
+details.card>summary::-webkit-details-marker{display:none}
+details.card>summary::before{content:"▸ "; color:var(--accent)}
+details.card[open]>summary::before{content:"▾ "}
+details.card[open]>summary{border-bottom-color:var(--border)}
+details.card>summary:focus-visible{outline:2px solid var(--accent-bright); outline-offset:-2px}
+.flag{font-size:.84rem; color:#c0392b; margin-top:8px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .flag{color:#ff8a80}}
+:root[data-theme="dark"] .flag{color:#ff8a80}
+
 footer{padding:36px 0 56px; color:var(--ink-3); font-size:.86rem}
 footer p{max-width:72ch}
 .disclaim{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:22px}
@@ -195,11 +238,15 @@ footer p{max-width:72ch}
 
 <section>
   <div class="wrap">
-    <h2>Three scenarios</h2>
-    <p class="lead">The same workflow across three points in a thesis. Each shows the student's raw note and what the toolkit produced from it.</p>
+    <h2>Results</h2>
+    <p class="lead" id="runsummary">Baseline and refined workflow, run against the same notes. Everything below is verbatim from the run log — nothing on this page is written by hand.</p>
 
-    <div class="tabs" role="tablist" aria-label="Scenarios" id="tabs"></div>
+    <div class="findings" id="findings"></div>
+
+    <div class="tabs" role="tablist" aria-label="Test cases" id="tabs"></div>
     <div id="panels"></div>
+
+    <p class="tests" style="margin-top:26px">The three shipped scenarios (early / mid / late thesis) have not been run yet. They will appear here once they have.</p>
   </div>
 </section>
 
@@ -261,34 +308,66 @@ footer p{max-width:72ch}
 
 function esc(s){ return String(s).replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
 
-function outBlock(label, text, scenarioId){
-  if(text && String(text).trim()){
-    return '<div class="card out"><div class="ttl">'+esc(label)+'</div><div class="body"><pre>'+esc(text)+'</pre></div></div>';
+function card(label, text){
+  return '<div class="card out"><div class="ttl">'+esc(label)+'</div><div class="body"><pre>'+esc(text||'')+'</pre></div></div>';
+}
+
+function concernList(parsed){
+  var h = '<ul class="concerns">';
+  (parsed.concerns||[]).forEach(function(c){
+    h += '<li><span class="kind '+esc(c.kind)+'">'+esc(c.kind)+'</span>'+
+         '<span class="q">“'+esc(c.quote)+'”</span></li>';
+  });
+  if(!(parsed.concerns||[]).length){
+    h += '<li><em>No concerns extracted — the note gave too little to work with.</em></li>';
   }
-  return '<div class="card out"><div class="ttl">'+esc(label)+'</div><div class="body">'+
-    '<div class="pending"><b>Not generated yet</b>'+
-    'Run <code>thesis_meeting_prep_prototype.ipynb</code> on scenario '+esc(scenarioId)+
-    ', then paste the verbatim output into <code>outputs.json</code>. Nothing here is written by hand.</div>'+
-    '</div></div>';
+  h += '</ul>';
+
+  if(parsed.missing_info && parsed.missing_info.length){
+    h += '<div class="ttl" style="padding:12px 0 6px;border:none;background:none">Open questions it raised</div><ul class="concerns">';
+    parsed.missing_info.forEach(function(q){ h += '<li>'+esc(q)+'</li>'; });
+    h += '</ul>';
+  }
+
+  var stated = parsed.agenda_states;
+  if(parsed.meeting_minutes === null && stated && stated.trim() !== '0 min'){
+    h += '<div class="flag">⚠ The note states no meeting length. Step 1 correctly recorded <code>null</code> — '+
+         'the agenda then claimed <strong>'+esc(stated)+'</strong>. A defect, not a feature.</div>';
+  }
+  return h;
 }
 
 function render(data){
   var tabs = document.getElementById('tabs');
   var panels = document.getElementById('panels');
   var m = data.meta || {};
-  if(m.promptVersion){
-    document.getElementById('verchip').textContent =
-      'Prompt version ' + m.promptVersion + (m.generatedOn ? ' · ' + m.generatedOn : '');
+
+  document.getElementById('verchip').textContent =
+    (m.totalRuns ? m.totalRuns + ' logged runs' : 'results') + (m.generatedOn ? ' · ' + m.generatedOn : '');
+
+  if(m.model){
+    document.getElementById('runsummary').innerHTML =
+      'Baseline (<code>A1</code>) and refined workflow (<code>B1</code>) run against the same notes on '+
+      esc(m.model.split('/').slice(-1)[0])+', three times per case. '+
+      '<strong>'+esc(m.totalRuns)+' runs logged.</strong> Everything below is verbatim from the run log — nothing on this page is written by hand.';
   }
 
-  data.scenarios.forEach(function(sc, i){
+  var f = document.getElementById('findings');
+  (data.findings||[]).forEach(function(x){
+    var d = document.createElement('div');
+    d.className = 'finding';
+    d.innerHTML = '<div class="v">'+esc(x.value)+'</div><div class="l">'+esc(x.label)+'</div><div class="n">'+esc(x.note)+'</div>';
+    f.appendChild(d);
+  });
+
+  data.cases.forEach(function(sc, i){
     var btn = document.createElement('button');
     btn.className = 'tab'; btn.type = 'button';
     btn.setAttribute('role','tab');
     btn.setAttribute('aria-selected', i===0 ? 'true' : 'false');
     btn.setAttribute('aria-controls','panel-'+sc.id);
     btn.id = 'tab-'+sc.id;
-    btn.innerHTML = '<b>'+esc(sc.title)+'</b><small>'+esc(sc.subtitle)+' · '+esc(sc.meeting)+'</small>';
+    btn.innerHTML = '<b>'+esc(sc.id)+' · '+esc(sc.title)+'</b><small>'+esc(sc.subtitle)+'</small>';
     btn.addEventListener('click', function(){ select(sc.id); });
     tabs.appendChild(btn);
 
@@ -297,22 +376,40 @@ function render(data){
     p.setAttribute('role','tabpanel');
     p.setAttribute('aria-labelledby','tab-'+sc.id);
     if(i!==0) p.hidden = true;
+
     p.innerHTML =
-      '<p class="situation">'+esc(sc.situation)+'</p>'+
-      '<p class="tests"><strong>What this case tests.</strong> '+esc(sc.tests)+'</p>'+
+      '<p class="tests"><strong>What this case tests.</strong> '+esc(sc.tests)+
+        ' <em>'+esc(sc.runs)+' run'+(sc.runs===1?'':'s')+' logged.</em></p>'+
+
       '<div class="cols">'+
         '<div class="card"><div class="ttl">The student\'s note</div><div class="body"><pre>'+esc(sc.note)+'</pre></div></div>'+
         '<div class="stack">'+
-          outBlock('Agenda', sc.agenda, sc.id)+
-          outBlock('Questions, in priority order', sc.questions, sc.id)+
-          outBlock('Follow-up email', sc.email, sc.id)+
+
+          '<div>'+
+            '<h3 style="margin-bottom:10px">Baseline — one plain prompt</h3>'+
+            (sc.verdictA1 ? '<div class="verdict bad"><b>What went wrong</b>'+sc.verdictA1+'</div>' : '')+
+            '<details class="card out"><summary>A1 output — full text, '+
+              esc(String(sc.baseline||'').length)+' characters</summary>'+
+              '<div class="body"><pre>'+esc(sc.baseline)+'</pre></div></details>'+
+          '</div>'+
+
+          '<div>'+
+            '<h3 style="margin:18px 0 10px">Refined — four-step workflow</h3>'+
+            (sc.verdictB1 ? '<div class="verdict good"><b>What it did</b>'+sc.verdictB1+'</div>' : '')+
+            '<div class="card"><div class="ttl">Step 1 · what it extracted and how it routed it</div>'+
+              '<div class="body">'+concernList(sc.parsed)+'</div></div>'+
+          '</div>'+
+
+          card('Agenda', sc.agenda)+
+          card('Questions, in priority order', sc.questions)+
+          card('Follow-up email', sc.email)+
         '</div>'+
       '</div>';
     panels.appendChild(p);
   });
 
   function select(id){
-    data.scenarios.forEach(function(sc){
+    data.cases.forEach(function(sc){
       var on = sc.id === id;
       document.getElementById('tab-'+sc.id).setAttribute('aria-selected', on ? 'true':'false');
       document.getElementById('panel-'+sc.id).hidden = !on;
