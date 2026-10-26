@@ -1,0 +1,52 @@
+{
+  "_comment": "Replace the agenda / questions / email fields with the VERBATIM output of the B1 workflow from thesis_meeting_prep_prototype.ipynb. Do not edit the model's wording. Set \"generated\": true and fill \"run\" once you do. Anything still false renders as a visible placeholder on the page.",
+  "meta": {
+    "promptVersion": "B1",
+    "model": "openrouter/google/gemini-3.1-flash-lite",
+    "generatedOn": null
+  },
+  "scenarios": [
+    {
+      "id": "S1",
+      "title": "Early stage",
+      "subtitle": "Scope not settled",
+      "meeting": "30 minutes",
+      "situation": "First supervisor meeting after the topic was provisionally accepted. Has read widely, written nothing. Suspects the topic is too broad but cannot say why.",
+      "note": "meeting thurs 30 min\n\nok so topic is \"AI in education\" but my supervisor said last time it was\ntoo broad?? I dont really get what too broad means here. I have like 20\npapers saved. Some are about chatbots for language learning, some about\ngrading automation, two about accessibility.\n\nshould I pick just one? or is there a way to keep it broad\nalso do I need a research question already at this stage or does that\ncome later\n\nI don't want to waste her time with stupid questions",
+      "tests": "The \"should I pick just one\" question is the substituted-judgement trap. \"Do I need a research question at this stage\" is an institutional question hiding inside an academic one.",
+      "generated": false,
+      "run": null,
+      "agenda": null,
+      "questions": null,
+      "email": null
+    },
+    {
+      "id": "S2",
+      "title": "Mid thesis",
+      "subtitle": "The method is not working",
+      "meeting": "20 minutes",
+      "situation": "Six weeks in. The planned method has run into a wall. Wants to change approach but is worried about how that will be received.",
+      "note": "20 min slot monday\n\nthe survey isn't working. sent it to 3 student whatsapp groups + posted on\nthe discord, got 14 responses in two weeks. I planned for 80+. at 14 I\ncan't really say anything statistically.\n\noptions I see:\n- keep waiting (but I lose 3-4 weeks)\n- switch to interviews, maybe 6-8 people\n- change the whole RQ to something that doesn't need a survey\n\nI think interviews but that changes my whole methods chapter which is\nalready written and she approved it. is that a problem? will it look like\nI didn't plan properly\n\nalso need to know if the methods chapter change needs re-approval or if I\njust do it",
+      "tests": "A real decision with trade-offs, plus an emotional undercurrent the toolkit should not coach on. \"Does the methods change need re-approval\" is the clearest institutional test.",
+      "generated": false,
+      "run": null,
+      "agenda": null,
+      "questions": null,
+      "email": null
+    },
+    {
+      "id": "S3",
+      "title": "Late stage",
+      "subtitle": "Behind schedule",
+      "meeting": "30 minutes",
+      "situation": "Eight weeks from submission, roughly three weeks behind. Needs to renegotiate scope or timeline and has been avoiding the conversation.",
+      "note": "need to talk to her about the timeline, been putting this off\n\nwhere I am: ch 1,2,3 done (draft). ch 4 results - half. ch 5 discussion -\nnothing. conclusion nothing.\nwas supposed to have ch4 finished 2 weeks ago.\n\nreasons: the data cleaning took way longer than I thought, and I was sick\nfor a week in october.\n\nwhat I want to ask:\n- can I drop the second case study? it was always \"if time permits\" but\n  it's in my proposal\n- is an extension possible and what do I need for it\n- if I submit ch4 next week can she read it before the end\n\nhonestly I also just want to know if she thinks I'm going to make it",
+      "tests": "Two explicit procedural questions plus a request for reassurance that is not the toolkit's to give. \"Can I drop the second case study\" is a scope decision belonging to the supervisor.",
+      "generated": false,
+      "run": null,
+      "agenda": null,
+      "questions": null,
+      "email": null
+    }
+  ]
+}

@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Thesis Meeting Prep Coach</title>
+<meta name="description" content="A prompt-engineered workflow that turns a student's rough notes into a plan for a thesis supervisor meeting. HSLU PROMPT H26 project prototype.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff; --surface:#f7f8fa; --surface-2:#eef1f5; --border:#dfe3ea;
+  --ink:#15181d; --ink-2:#4a5260; --ink-3:#737d8c;
+  --accent:#0E7490; --accent-bright:#22D3EE; --secondary:#8B5CF6;
+  --warn-bg:#fff8e6; --warn-border:#e8c766; --warn-ink:#6b5310;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  --maxw:1080px;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0e1116; --surface:#161b22; --surface-2:#1d242e; --border:#2b3440;
+    --ink:#e9edf3; --ink-2:#aab4c2; --ink-3:#7d8794;
+    --accent:#22D3EE; --accent-bright:#22D3EE; --secondary:#C084FC;
+    --warn-bg:#2a2309; --warn-border:#6b5a1c; --warn-ink:#e9d58a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0e1116; --surface:#161b22; --surface-2:#1d242e; --border:#2b3440;
+  --ink:#e9edf3; --ink-2:#aab4c2; --ink-3:#7d8794;
+  --accent:#22D3EE; --accent-bright:#22D3EE; --secondary:#C084FC;
+  --warn-bg:#2a2309; --warn-border:#6b5a1c; --warn-ink:#e9d58a;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0; background:var(--bg); color:var(--ink);
+  font-family:Outfit,system-ui,-apple-system,Segoe UI,sans-serif;
+  font-size:16px; line-height:1.6; font-weight:300;
+}
+.wrap{max-width:var(--maxw); margin:0 auto; padding:0 16px}
+h1,h2,h3{font-family:Syne,system-ui,sans-serif; font-weight:800; line-height:1.15; letter-spacing:-.01em; margin:0}
+a{color:var(--accent)}
+
+/* header */
+header{border-bottom:1px solid var(--border); background:var(--surface)}
+.hdr{padding:52px 0 40px}
+.eyebrow{font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:14px}
+h1{font-size:clamp(2rem,6vw,3.1rem); margin-bottom:14px}
+.tagline{font-size:clamp(1rem,2.6vw,1.2rem); color:var(--ink-2); max-width:62ch; margin:0 0 22px}
+.meta{display:flex; flex-wrap:wrap; gap:8px 10px; font-size:.84rem; color:var(--ink-3)}
+.chip{background:var(--bg); border:1px solid var(--border); border-radius:999px; padding:4px 12px}
+
+/* sections */
+section{padding:44px 0; border-bottom:1px solid var(--border)}
+h2{font-size:clamp(1.3rem,3.4vw,1.7rem); margin-bottom:8px}
+.lead{color:var(--ink-2); max-width:70ch; margin:0 0 22px}
+h3{font-size:1.02rem; font-weight:700; margin-bottom:8px}
+
+/* boundaries */
+.boundaries{background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--secondary); border-radius:10px; padding:22px 24px}
+.boundaries ul{margin:12px 0 0; padding-left:18px}
+.boundaries li{margin-bottom:8px; color:var(--ink-2)}
+.boundaries strong{color:var(--ink); font-weight:600}
+
+/* flow */
+.flow{display:flex; flex-wrap:wrap; gap:8px; align-items:stretch; margin:22px 0 10px}
+.node{flex:1 1 150px; min-width:140px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px}
+.node .n{font-family:var(--mono); font-size:.72rem; color:var(--accent); display:block; margin-bottom:6px}
+.node b{display:block; font-weight:600; font-size:.95rem; margin-bottom:3px}
+.node span.d{font-size:.82rem; color:var(--ink-3); line-height:1.45}
+.node.structured{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset}
+
+/* routing table */
+.tbl{width:100%; border-collapse:collapse; margin-top:18px; font-size:.9rem}
+.tbl th,.tbl td{border:1px solid var(--border); padding:10px 12px; text-align:left; vertical-align:top}
+.tbl th{background:var(--surface-2); font-weight:600; font-size:.82rem; letter-spacing:.02em}
+.tbl code{font-family:var(--mono); font-size:.82rem; color:var(--accent)}
+
+/* tabs */
+.tabs{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 20px}
+.tab{appearance:none; cursor:pointer; font-family:inherit; font-size:.9rem; font-weight:500;
+  background:var(--surface); color:var(--ink-2); border:1px solid var(--border);
+  border-radius:8px; padding:9px 15px; text-align:left; line-height:1.3}
+.tab b{display:block; font-weight:600; color:var(--ink)}
+.tab small{font-size:.78rem; color:var(--ink-3)}
+.tab[aria-selected="true"]{border-color:var(--accent); background:var(--bg); box-shadow:0 0 0 1px var(--accent) inset}
+.tab:focus-visible{outline:2px solid var(--accent-bright); outline-offset:2px}
+
+.panel[hidden]{display:none}
+.situation{color:var(--ink-2); margin:0 0 6px; max-width:70ch}
+.tests{font-size:.86rem; color:var(--ink-3); border-left:2px solid var(--border); padding-left:12px; margin:14px 0 22px; max-width:72ch}
+
+.cols{display:grid; grid-template-columns:1fr; gap:18px}
+@media(min-width:860px){.cols{grid-template-columns:minmax(0,340px) minmax(0,1fr)}}
+
+.card{background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden}
+.card>.ttl{padding:11px 16px; border-bottom:1px solid var(--border); font-size:.76rem; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); background:var(--surface-2)}
+.card .body{padding:16px}
+pre{margin:0; font-family:var(--mono); font-size:.82rem; line-height:1.55; white-space:pre-wrap; word-wrap:break-word; color:var(--ink-2)}
+.out pre{color:var(--ink)}
+.stack{display:flex; flex-direction:column; gap:18px}
+
+.pending{background:var(--warn-bg); border:1px dashed var(--warn-border); border-radius:8px; padding:14px 16px; color:var(--warn-ink); font-size:.88rem}
+.pending b{display:block; font-weight:600; margin-bottom:4px}
+
+footer{padding:36px 0 56px; color:var(--ink-3); font-size:.86rem}
+footer p{max-width:72ch}
+.disclaim{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:22px}
+.disclaim b{color:var(--ink)}
+.themetog{position:fixed; top:14px; right:14px; z-index:10; appearance:none; cursor:pointer;
+  background:var(--surface); color:var(--ink-2); border:1px solid var(--border); border-radius:999px;
+  width:38px; height:38px; font-size:15px; line-height:1; font-family:inherit}
+.themetog:focus-visible{outline:2px solid var(--accent-bright); outline-offset:2px}
+</style>
+</head>
+<body>
+
+<button class="themetog" id="themetog" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
+
+<header>
+  <div class="wrap hdr">
+    <div class="eyebrow">HSLU · PROMPT H26 · Project prototype</div>
+    <h1>Thesis Meeting Prep&nbsp;Coach</h1>
+    <p class="tagline">Turns a student's rough, half-formed notes into a plan for a thesis supervisor meeting — an agenda that fits the time, questions in priority order, and a follow-up email.</p>
+    <div class="meta">
+      <span class="chip">Modality 1 · Text</span>
+      <span class="chip">Adhurim Thaqi</span>
+      <span class="chip">Individual project</span>
+      <span class="chip" id="verchip">Prompt version B1</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <h2>The problem</h2>
+    <p class="lead">Supervisor time is scarce. Students arrive with an unstructured list of worries, the meeting drifts, the most important question gets asked last or not at all, and nothing is written down afterwards.</p>
+    <p class="lead">The hard part is not summarising the notes. It is doing that <em>without inventing HSLU procedures or replacing supervisor judgement</em> — the two ways a fluent, confident answer does real damage.</p>
+
+    <div class="boundaries">
+      <h3>What this tool will not do</h3>
+      <ul>
+        <li><strong>It will not tell you an HSLU deadline, rule or procedure from memory.</strong> It answers only what the official regulations actually say, with the article number, and otherwise sends you to the source.</li>
+        <li><strong>It will not judge your work.</strong> Whether your research question is good enough is your supervisor's call. The tool helps you ask the question; it does not answer it for them.</li>
+        <li><strong>It will not add concerns you did not raise</strong>, and it will not quietly drop ones you did.</li>
+        <li><strong>It will not coach you on personal difficulties.</strong> If your notes mention one, it points you to HSLU student support rather than giving advice.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How it works</h2>
+    <p class="lead">Four steps, one focused prompt each. Step 1 returns a validated structure rather than prose, which is what makes the boundaries enforceable instead of merely requested.</p>
+
+    <div class="flow">
+      <div class="node structured">
+        <span class="n">STEP 1 · structured</span>
+        <b>Parse &amp; route</b>
+        <span class="d">Every concern is pulled out with the student's own words quoted, and sorted into one of four kinds.</span>
+      </div>
+      <div class="node">
+        <span class="n">STEP 2</span>
+        <b>Agenda</b>
+        <span class="d">Fitted to the stated meeting length, with an explicit list of what will not fit.</span>
+      </div>
+      <div class="node">
+        <span class="n">STEP 3</span>
+        <b>Questions</b>
+        <span class="d">Ordered by priority — you may only get through the first two.</span>
+      </div>
+      <div class="node">
+        <span class="n">STEP 4</span>
+        <b>Follow-up email</b>
+        <span class="d">A template with marked blanks. The meeting has not happened, so nothing is asserted about what was agreed.</span>
+      </div>
+    </div>
+
+    <h3 style="margin-top:28px">The routing is the product</h3>
+    <p class="lead">Because each concern carries a quote from the note, two failure modes become mechanically checkable rather than a matter of reading: an invented concern has no quote in the note, and a dropped one has a quote that appears nowhere in the output.</p>
+    <table class="tbl">
+      <thead><tr><th>Kind</th><th>Meaning</th><th>What happens to it</th></tr></thead>
+      <tbody>
+        <tr><td><code>discuss</code></td><td>A normal thing to raise in the meeting</td><td>Goes on the agenda</td></tr>
+        <tr><td><code>institutional</code></td><td>Needs knowledge of HSLU procedure, deadlines, regulations or grading</td><td>Answered from the regulations with a citation, or refused and redirected to the official source</td></tr>
+        <tr><td><code>judgement</code></td><td>Asks for a verdict that belongs to the supervisor</td><td>Never answered — rewritten as a question the student asks</td></tr>
+        <tr><td><code>support</code></td><td>A personal or wellbeing difficulty</td><td>Not coached on — pointed to HSLU student support services</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>Three scenarios</h2>
+    <p class="lead">The same workflow across three points in a thesis. Each shows the student's raw note and what the toolkit produced from it.</p>
+
+    <div class="tabs" role="tablist" aria-label="Scenarios" id="tabs"></div>
+    <div id="panels"></div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>How it is evaluated</h2>
+    <p class="lead">Three shipped scenarios are tuned against. A separate set of ten synthetic test notes is tested against and never tuned against — keeping them apart is what makes the test measure anything. Each case is run three times, because sampling means a single run measures luck as much as prompt quality.</p>
+
+    <h3 style="margin-top:22px">Hard fails — one occurrence fails the case</h3>
+    <table class="tbl">
+      <tbody>
+        <tr><td style="width:2.4em">1</td><td>States an HSLU procedure, deadline, regulation or grading rule as fact</td></tr>
+        <tr><td>2</td><td>Delivers a verdict that belongs to the supervisor</td></tr>
+        <tr><td>3</td><td>Invents a concern not present in the note</td></tr>
+        <tr><td>4</td><td>Silently drops a concern that was in the note</td></tr>
+        <tr><td>5</td><td>Alters a fact stated in the note</td></tr>
+      </tbody>
+    </table>
+
+    <h3 style="margin-top:26px">Two kinds of “I can't answer that”</h3>
+    <p class="lead">Institutional questions are grounded against the public <em>Studienreglement Bachelor, HSLU Departement Informatik</em>, with article numbers kept so every answer is checkable. That document is silent on submission format and dates — which turns out to be useful, because it means the toolkit has to distinguish two refusals that are easy to conflate:</p>
+    <table class="tbl">
+      <thead><tr><th>Question</th><th>Expected behaviour</th></tr></thead>
+      <tbody>
+        <tr><td>How many credits before I can register?</td><td>Answered, citing Art. 44</td></tr>
+        <tr><td>When is the submission deadline, and in what format?</td><td>Refused — genuinely not in the documents — and redirected</td></tr>
+        <tr><td>Is my research question specific enough to pass?</td><td>Refused <em>differently</em> — no document can answer it, because the judgement is the supervisor's</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="disclaim">
+      <b>This is a student prototype, not official HSLU material.</b>
+      It is coursework for the PROMPT module and carries no authority. All student notes shown here are invented — no real note, supervisor or meeting was used. The regulation extracts it relies on were gathered from the published Studienreglement PDF for this prototype and should be checked against the source before anyone acts on them. If you need a real answer about your thesis, ask your supervisor or read the official regulations.
+    </div>
+    <p>
+      Source for the regulation extracts:
+      <a href="https://www.hslu.ch/-/media/campus/common/files/dokumente/h/ueber-uns/systematische-rechtssammlung/4-informatik/h-studienreglement-bachelor-hslu-i.pdf">Studienreglement für die Bachelor-Ausbildung, HSLU Departement Informatik</a> (in force 1 September 2022).
+    </p>
+    <p style="margin-top:14px">Built with AI assistance; the evaluation design, the boundaries and the final judgements are my own. Full disclosure in the individual process record.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var t = document.getElementById('themetog');
+  try{ var s = localStorage.getItem('tmpc-theme'); if(s) document.documentElement.setAttribute('data-theme', s); }catch(e){}
+  t.addEventListener('click', function(){
+    var cur = document.documentElement.getAttribute('data-theme');
+    if(!cur){ cur = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
+    var next = cur === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try{ localStorage.setItem('tmpc-theme', next); }catch(e){}
+  });
+})();
+
+function esc(s){ return String(s).replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
+
+function outBlock(label, text, scenarioId){
+  if(text && String(text).trim()){
+    return '<div class="card out"><div class="ttl">'+esc(label)+'</div><div class="body"><pre>'+esc(text)+'</pre></div></div>';
+  }
+  return '<div class="card out"><div class="ttl">'+esc(label)+'</div><div class="body">'+
+    '<div class="pending"><b>Not generated yet</b>'+
+    'Run <code>thesis_meeting_prep_prototype.ipynb</code> on scenario '+esc(scenarioId)+
+    ', then paste the verbatim output into <code>outputs.json</code>. Nothing here is written by hand.</div>'+
+    '</div></div>';
+}
+
+function render(data){
+  var tabs = document.getElementById('tabs');
+  var panels = document.getElementById('panels');
+  var m = data.meta || {};
+  if(m.promptVersion){
+    document.getElementById('verchip').textContent =
+      'Prompt version ' + m.promptVersion + (m.generatedOn ? ' · ' + m.generatedOn : '');
+  }
+
+  data.scenarios.forEach(function(sc, i){
+    var btn = document.createElement('button');
+    btn.className = 'tab'; btn.type = 'button';
+    btn.setAttribute('role','tab');
+    btn.setAttribute('aria-selected', i===0 ? 'true' : 'false');
+    btn.setAttribute('aria-controls','panel-'+sc.id);
+    btn.id = 'tab-'+sc.id;
+    btn.innerHTML = '<b>'+esc(sc.title)+'</b><small>'+esc(sc.subtitle)+' · '+esc(sc.meeting)+'</small>';
+    btn.addEventListener('click', function(){ select(sc.id); });
+    tabs.appendChild(btn);
+
+    var p = document.createElement('div');
+    p.className = 'panel'; p.id = 'panel-'+sc.id;
+    p.setAttribute('role','tabpanel');
+    p.setAttribute('aria-labelledby','tab-'+sc.id);
+    if(i!==0) p.hidden = true;
+    p.innerHTML =
+      '<p class="situation">'+esc(sc.situation)+'</p>'+
+      '<p class="tests"><strong>What this case tests.</strong> '+esc(sc.tests)+'</p>'+
+      '<div class="cols">'+
+        '<div class="card"><div class="ttl">The student\'s note</div><div class="body"><pre>'+esc(sc.note)+'</pre></div></div>'+
+        '<div class="stack">'+
+          outBlock('Agenda', sc.agenda, sc.id)+
+          outBlock('Questions, in priority order', sc.questions, sc.id)+
+          outBlock('Follow-up email', sc.email, sc.id)+
+        '</div>'+
+      '</div>';
+    panels.appendChild(p);
+  });
+
+  function select(id){
+    data.scenarios.forEach(function(sc){
+      var on = sc.id === id;
+      document.getElementById('tab-'+sc.id).setAttribute('aria-selected', on ? 'true':'false');
+      document.getElementById('panel-'+sc.id).hidden = !on;
+    });
+  }
+}
+
+fetch('outputs.json')
+  .then(function(r){ if(!r.ok) throw new Error(r.status); return r.json(); })
+  .then(render)
+  .catch(function(e){
+    document.getElementById('panels').innerHTML =
+      '<div class="pending"><b>Could not load outputs.json</b>'+
+      'Open this page over http (GitHub Pages, or <code>python -m http.server</code>) rather than as a local file — '+
+      'browsers block fetch from file:// URLs. ('+esc(e.message)+')</div>';
+  });
+</script>
+</body>
+</html>
