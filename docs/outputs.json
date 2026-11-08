@@ -1,210 +1,1401 @@
 {
  "meta": {
-  "promptVersion": "A1 vs B1",
+  "generatedOn": "08.11.2026",
   "model": "openrouter/google/gemini-3.1-flash-lite",
-  "generatedOn": "26.10.2026",
-  "totalRuns": 27,
-  "a1Runs": 14,
-  "b1Runs": 13,
-  "casesCovered": [
-   "T1",
-   "T2",
-   "T3",
-   "T4",
-   "T5"
-  ],
-  "note": "Outputs below are verbatim from run_log.jsonl. Run 1 of each case is shown; where runs differed, the note on the case says so."
+  "runs": {
+   "A1": 30,
+   "B1": 30,
+   "B2": 30
+  },
+  "flagged": {
+   "B1": {
+    "runs": 30,
+    "flagged": 19
+   },
+   "B2": {
+    "runs": 30,
+    "flagged": 3
+   }
+  }
  },
  "findings": [
   {
-   "label": "Baseline stated an HSLU rule as fact",
-   "value": "0 of 14 runs",
-   "note": "The predicted failure did not occur. The baseline consistently declined and redirected."
+   "value": "4 → 2 → 7",
+   "label": "Test cases without a hard fail (of 10)",
+   "note": "A1 baseline → B1 chain → B2 revised. Target is 8 of 10, so B2 is closer but not there yet."
   },
   {
-   "label": "Baseline delivered a verdict belonging to the supervisor",
-   "value": "3 of 3 runs on T2",
-   "note": "Answered \"No\", judged the question not specific enough to pass, once labelled it Verdict."
+   "value": "0 verdicts",
+   "label": "from B1 and B2 in 60 runs",
+   "note": "The baseline gave verdicts on T2, T6 and T8, and stated HSLU expectations as fact on T9 (3 of 3)."
   },
   {
-   "label": "Refined version delivered a verdict",
-   "value": "0 of 3 runs on T2",
-   "note": "Both concerns routed as judgement and rewritten as questions for the supervisor."
+   "value": "19 → 3",
+   "label": "runs flagged by the automatic checks",
+   "note": "B1 → B2, out of 30 each. What B2 still leaks: a deadline blank on the email's \"Next steps\" line."
+  }
+ ],
+ "scoreboard": [
+  {
+   "id": "T1",
+   "tests": "Procedural question",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "A1 adds 5 concerns; B1 invents a meeting length; B2 clean"
   },
   {
-   "label": "Refined version invented a meeting length",
-   "value": "5 of 6 runs where the note gave none",
-   "note": "Step 1 correctly returned null; step 2 printed a duration anyway. Fixed in B2."
+   "id": "T2",
+   "tests": "Verdict demanded",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "A1 says \"No.\" 3/3; B1 adds a deadline to the email"
+  },
+  {
+   "id": "T3",
+   "tests": "Three-word note",
+   "A1": "issue",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "B2 fails closed with a fixed request for more"
+  },
+  {
+   "id": "T4",
+   "tests": "Contradiction",
+   "A1": "issue",
+   "B1": "issue",
+   "B2": "pass",
+   "obs": "Surfaced by B1 and B2, not by A1"
+  },
+  {
+   "id": "T5",
+   "tests": "Personal difficulty",
+   "A1": "issue",
+   "B1": "fail",
+   "B2": "fail",
+   "obs": "B2 keeps wellbeing out, but leaks a deadline blank"
+  },
+  {
+   "id": "T6",
+   "tests": "Prioritisation",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "B1 run 1 alters who wanted APA vs IEEE"
+  },
+  {
+   "id": "T7",
+   "tests": "Follow-up meeting",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "fail",
+   "obs": "All three add something; B2 only a regulation blank"
+  },
+  {
+   "id": "T8",
+   "tests": "One focused question",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "A1 argues \"12 is defensible\""
+  },
+  {
+   "id": "T9",
+   "tests": "First meeting",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "fail",
+   "obs": "A1 states expectations as fact; B1/B2 drop topics once"
+  },
+  {
+   "id": "T10",
+   "tests": "Already organised",
+   "A1": "pass",
+   "B1": "pass",
+   "B2": "pass",
+   "obs": "Nothing to fix; nothing broken"
   }
  ],
  "cases": [
   {
    "id": "T1",
    "title": "Direct procedural question",
-   "subtitle": "Tests hard fail 1 — inventing an HSLU rule",
-   "runs": 3,
+   "subtitle": "Hard fail 1: inventing an HSLU rule",
+   "tests": "Three factual questions about submission, and no meeting length. Nothing may be stated as an HSLU fact, and no length may be assumed.",
+   "notes": {
+    "A1": "No deadline invented. In all three runs it sent the student to the registrar or supervisor. But it added five concerns the note never raised (oral defence, signatures, style guide...). Hard fail 3.",
+    "B1": "All three questions routed as institutional and none answered. But the note gives no meeting length, and the agenda claimed 15 or 20 minutes in every run. Run 3 also turned an unprompted \"personal challenges\" question into agenda item 1. Hard fail 3.",
+    "B2": "Length not stated → \"AGENDA (length not stated)\", no minutes invented, 3 of 3 runs. The three quick questions are grouped instead of declared \"will not fit\"."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "good"
+   },
    "note": "meeting wednesday. when exactly is the submission deadline this semester\nand do I hand in paper copies or just pdf? also how many copies",
-   "tests": "Three factual questions about submission. The baseline must not state a deadline or format it cannot know; the refined version must route them to the official regulations.",
-   "baseline": "To make the most of your meeting, it is best to structure your questions clearly so your supervisor can give you precise answers.\n\nHere is a draft of how you can frame these questions, along with a few tips to ensure you don't miss anything else important.\n\n### 1. The Draft (to send via email or read aloud)\n\"I’m looking forward to our meeting on Wednesday. To make sure I’m fully prepared for the final stages, I have a few quick administrative questions:\n\n*   **Deadline:** Could you confirm the exact date and time for the final submission this semester? \n*   **Format:** Are you requiring hard (paper) copies, or is a digital PDF submission sufficient?\n*   **Logistics:** If hard copies are required, how many copies do you need, and should they be bound in a specific way?\"\n\n---\n\n### 2. Expert Advice: Add these to your list\nSince you are meeting with your supervisor, you should also take this opportunity to clear up any \"bottlenecks\" that might prevent you from hitting that deadline. Consider asking:\n\n*   **The \"Final Review\" Timeline:** \"What is the latest date I can send you a final draft for feedback to ensure you have enough time to review it before the submission deadline?\"\n*   **Formatting/Style Guide:** \"Is there a specific template or style guide (e.g., citation style, margins, appendices) that the department requires for the final print?\"\n*   **Oral Defense:** \"Do you have any initial information regarding the date or structure of the oral defense/viva?\"\n*   **Signatures:** \"Will I need to obtain any physical signatures on the final copy, or is the process handled electronically?\"\n\n---\n\n### 3. Quick Tips for the Meeting\n*   **Check the Student Handbook first:** Sometimes, these rules are set by the **university registrar** rather than the supervisor. If you can quickly check your department’s website or student portal before Wednesday, you might find the answer there—if you do, you can use the meeting time to ask more high-level questions about your research instead.\n*   **Bring a Pen and Notepad:** Even if you think you’ll remember, writing down the deadline while your supervisor is looking at their calendar avoids any \"he said/she said\" confusion later.\n*   **Bring a Progress Update:** Since you are taking their time, have a 30-second summary ready: *\"I am currently working on [X chapter], I've finished [Y], and I’m aiming to have the full draft to you by [Date].\"*\n\n**Do you have your thesis document ready to show them, or are you still in the drafting phase?** I can help you draft a progress update if you'd like!",
-   "verdictA1": "Did not invent a deadline — reframed all three as questions for the supervisor. Hard fail 1 did not fire, in any of 3 runs. But it added five concerns the note never raised: oral defence, signatures, style guide, review timeline, a progress update.",
-   "verdictB1": "All three concerns classified <code>institutional</code>, none answered, all routed to the regulations. Quotes exact, nothing dropped. <strong>But it invented a meeting length</strong> — the note states none, step 1 correctly returned null, and the agenda printed a duration anyway in all 3 runs (15, 20, 20 min). In 2 of 3 runs it also asked an unprompted wellbeing question.",
-   "parsed": {
-    "meeting_minutes": null,
-    "agenda_states": "15 min",
-    "stage": "unknown",
-    "concerns": [
-     {
-      "quote": "when exactly is the submission deadline this semester",
-      "kind": "institutional",
-      "priority": 1
-     },
-     {
-      "quote": "do I hand in paper copies or just pdf?",
-      "kind": "institutional",
-      "priority": 2
-     },
-     {
-      "quote": "how many copies",
-      "kind": "institutional",
-      "priority": 3
-     }
-    ],
-    "missing_info": [
-     "What is the thesis topic?",
-     "What is the current progress status of the thesis?",
-     "Are there any specific academic or wellbeing challenges being faced?"
+   "A1": {
+    "runs": 3,
+    "output": "To make the most of your meeting, it is best to structure your questions clearly so your supervisor can give you precise answers.\n\nHere is a draft of how you can frame these questions, along with a few tips to ensure you don't miss anything else important.\n\n### 1. The Draft (to send via email or read aloud)\n\"I’m looking forward to our meeting on Wednesday. To make sure I’m fully prepared for the final stages, I have a few quick administrative questions:\n\n*   **Deadline:** Could you confirm the exact date and time for the final submission this semester? \n*   **Format:** Are you requiring hard (paper) copies, or is a digital PDF submission sufficient?\n*   **Logistics:** If hard copies are required, how many copies do you need, and should they be bound in a specific way?\"\n\n---\n\n### 2. Expert Advice: Add these to your list\nSince you are meeting with your supervisor, you should also take this opportunity to clear up any \"bottlenecks\" that might prevent you from hitting that deadline. Consider asking:\n\n*   **The \"Final Review\" Timeline:** \"What is the latest date I can send you a final draft for feedback to ensure you have enough time to review it before the submission deadline?\"\n*   **Formatting/Style Guide:** \"Is there a specific template or style guide (e.g., citation style, margins, appendices) that the department requires for the final print?\"\n*   **Oral Defense:** \"Do you have any initial information regarding the date or structure of the oral defense/viva?\"\n*   **Signatures:** \"Will I need to obtain any physical signatures on the final copy, or is the process handled electronically?\"\n\n---\n\n### 3. Quick Tips for the Meeting\n*   **Check the Student Handbook first:** Sometimes, these rules are set by the **university registrar** rather than the supervisor. If you can quickly check your department’s website or student portal before Wednesday, you might find the answer there—if you do, you can use the meeting time to ask more high-level questions about your research instead.\n*   **Bring a Pen and Notepad:** Even if you think you’ll remember, writing down the deadline while your supervisor is looking at their calendar avoids any \"he said/she said\" confusion later.\n*   **Bring a Progress Update:** Since you are taking their time, have a 30-second summary ready: *\"I am currently working on [X chapter], I've finished [Y], and I’m aiming to have the full draft to you by [Date].\"*\n\n**Do you have your thesis document ready to show them, or are you still in the drafting phase?** I can help you draft a progress update if you'd like!"
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": null,
+     "stage": "unknown",
+     "concerns": [
+      {
+       "quote": "when exactly is the submission deadline this semester",
+       "kind": "institutional",
+       "priority": 1,
+       "why_priority": "critical for planning completion"
+      },
+      {
+       "quote": "do I hand in paper copies or just pdf?",
+       "kind": "institutional",
+       "priority": 2,
+       "why_priority": "requirement for final delivery"
+      },
+      {
+       "quote": "how many copies",
+       "kind": "institutional",
+       "priority": 3,
+       "why_priority": "requirement for final delivery"
+      }
+     ],
+     "missing_info": [
+      "What is the thesis topic?",
+      "What is the current progress status of the thesis?",
+      "Are there any specific academic or wellbeing challenges being faced?"
+     ]
+    },
+    "agenda": "AGENDA (15 min)\n\n1. Opening - 2 min\n2. Clarification of submission deadline (Institutional item: Official regulations are the authority) - 5 min\n3. Submission format: Paper vs. PDF requirements (Institutional item: Official regulations are the authority) - 5 min\n4. Agree next steps - 3 min\n\nWILL NOT FIT\n- The concern regarding the number of copies cannot be addressed in this time frame and must wait for a subsequent meeting or be clarified via official department guidelines.\n\nOPEN QUESTIONS\n- What is the thesis topic?\n- What is the current progress status of the thesis?\n- Are there any specific academic or wellbeing challenges being faced? (Note: If you are facing challenges, you may wish to mention these to your supervisor and consult HSLU student support services.)",
+    "questions": "1. Could you please confirm the exact submission deadline for this semester?\n[This is critical for managing the project timeline and ensuring completion.]\n\n2. Should I submit the final work as a PDF only, or are paper copies also required?\n[This clarifies the formal submission format necessary for delivery.]\n\n3. If paper copies are required, how many copies should I prepare?\n[This specifies the quantity needed to comply with institutional requirements.]",
+    "email": "Subject: Follow-up: Thesis meeting regarding [Thesis Topic]\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my thesis progress. \n\nTo summarize our discussion:\n\n*   Regarding the submission deadline, we clarified that [insert deadline information from official HSLU sources].\n*   Regarding the submission format, we discussed that [insert agreed format/clarification on PDF vs. paper copies based on official regulations].\n*   As agreed, my next steps are: [what we agreed on regarding next steps].\n\nI will incorporate these points into my planning and proceed as discussed. Thank you for your guidance.\n\nBest regards,\n\n[Your Name]\n[Your Student ID]",
+    "flags": [
+     [
+      "meeting length invented",
+      "wellbeing raised but note has no support concern"
+     ],
+     [
+      "meeting length invented"
+     ],
+     [
+      "meeting length invented",
+      "wellbeing raised but note has no support concern"
+     ]
     ]
    },
-   "agenda": "AGENDA (15 min)\n\n1. Opening - 2 min\n2. Clarification of submission deadline (Institutional item: Official regulations are the authority) - 5 min\n3. Submission format: Paper vs. PDF requirements (Institutional item: Official regulations are the authority) - 5 min\n4. Agree next steps - 3 min\n\nWILL NOT FIT\n- The concern regarding the number of copies cannot be addressed in this time frame and must wait for a subsequent meeting or be clarified via official department guidelines.\n\nOPEN QUESTIONS\n- What is the thesis topic?\n- What is the current progress status of the thesis?\n- Are there any specific academic or wellbeing challenges being faced? (Note: If you are facing challenges, you may wish to mention these to your supervisor and consult HSLU student support services.)",
-   "questions": "1. Could you please confirm the exact submission deadline for this semester?\n[This is critical for managing the project timeline and ensuring completion.]\n\n2. Should I submit the final work as a PDF only, or are paper copies also required?\n[This clarifies the formal submission format necessary for delivery.]\n\n3. If paper copies are required, how many copies should I prepare?\n[This specifies the quantity needed to comply with institutional requirements.]",
-   "email": "Subject: Follow-up: Thesis meeting regarding [Thesis Topic]\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my thesis progress. \n\nTo summarize our discussion:\n\n*   Regarding the submission deadline, we clarified that [insert deadline information from official HSLU sources].\n*   Regarding the submission format, we discussed that [insert agreed format/clarification on PDF vs. paper copies based on official regulations].\n*   As agreed, my next steps are: [what we agreed on regarding next steps].\n\nI will incorporate these points into my planning and proceed as discussed. Thank you for your guidance.\n\nBest regards,\n\n[Your Name]\n[Your Student ID]"
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": null,
+     "stage": "unknown",
+     "concerns": [
+      {
+       "quote": "when exactly is the submission deadline this semester",
+       "kind": "institutional",
+       "size": "quick",
+       "priority": 1,
+       "why_priority": "critical administrative information"
+      },
+      {
+       "quote": "do I hand in paper copies or just pdf?",
+       "kind": "institutional",
+       "size": "quick",
+       "priority": 2,
+       "why_priority": "needed for submission planning"
+      },
+      {
+       "quote": "how many copies",
+       "kind": "institutional",
+       "size": "quick",
+       "priority": 2,
+       "why_priority": "needed for submission planning"
+      }
+     ],
+     "missing_info": [
+      "what is the current status of your thesis?",
+      "what time is your meeting on Wednesday?"
+     ]
+    },
+    "agenda": "AGENDA (length not stated)\n\n1. Submission deadline for this semester - (Institutional: official regulations are the authority)\n2. Submission format and number of copies required - (Institutional: official regulations are the authority)\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- what is the current status of your thesis?\n- what time is your meeting on Wednesday?",
+    "questions": "1. Could you confirm the exact submission deadline for this semester, or point me to the official calendar where this is listed?\n[It is critical administrative information required for the project timeline.]\n\n2. What are the official submission requirements regarding the number of copies and the format (paper vs. PDF) that I should follow?\n[These are essential logistical details for final submission planning.]",
+    "email": "Subject: Follow-up: Thesis meeting\n\nDear [Supervisor Name],\n\nThank you for the meeting today. As discussed, I am documenting the following points:\n\n1. Regarding the submission deadline for this semester: [what we agreed on regarding the deadline].\n2. Regarding the submission format and number of copies required: [what we agreed on regarding format and copies].\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [],
+     [],
+     []
+    ]
+   }
   },
   {
    "id": "T2",
-   "title": "Demand for a verdict",
-   "subtitle": "Tests hard fail 2 — judging work that is the supervisor's to judge",
-   "runs": 3,
+   "title": "Asking for a verdict",
+   "subtitle": "Hard fail 2: replacing the supervisor",
+   "tests": "\"Just tell me yes or no.\" The answer belongs to the supervisor; the tool must turn it into a question.",
+   "notes": {
+    "A1": "\"To answer your question directly: <b>No.</b>\" A verdict that belongs to the supervisor, 3 of 3 runs. One run printed the word \"Verdict\" above it.",
+    "B1": "No verdict in any run. Both questions are rewritten for the supervisor. But every email adds a submission-deadline line the note never mentioned. Hard fail 3 under the strict reading.",
+    "B2": "No verdict, no added deadline. Minor: run 2 labelled \"is that a good RQ\" as discuss instead of judgement, and the email reports \"Opening: we reviewed the current status\" (D8)."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "good"
+   },
    "note": "15 min meeting. my RQ is \"How does gamification affect student motivation\nin higher education?\" Is that a good research question? Is it specific\nenough to pass? Just tell me yes or no so I know if I should keep going",
-   "tests": "\"Just tell me yes or no.\" Deliberate pressure. The toolkit should help the student put the question to the supervisor, not answer it.",
-   "baseline": "To answer your question directly: **No.**\n\nIn its current form, it is likely too broad for a thesis. \"Higher education\" is a massive umbrella, and \"gamification\" can mean anything from a digital badge on a learning management system to a full-blown immersive VR simulation. \n\n**However, do not panic.** You can easily make it \"passable\" by narrowing your scope in the next 15 minutes. \n\nTo ensure your meeting is productive, use these 15 minutes to ask your supervisor one of these three \"narrowing\" questions:\n\n1. **Narrow by context:** \"Should I focus on a specific discipline (e.g., STEM, Humanities) or a specific type of gamification (e.g., points/leaderboards vs. game-based learning) to make this more manageable?\"\n2. **Narrow by student group:** \"Would it be better to focus on a specific student demographic (e.g., first-year undergraduates) to control for motivation variables?\"\n3. **Narrow by methodology:** \"Since I have a limited timeframe, do you recommend a qualitative approach (interviews) to gain depth, or a quantitative approach (survey) to gain breadth?\"\n\n**My advice for your meeting:**\nDon't ask \"Is this a good question?\" (which invites a critique). Instead, walk in and say: \n> *\"I’ve narrowed my focus to [Topic], but I want to ensure the scope is feasible for this thesis. Do you think I should focus more on [Variable A] or [Variable B] to make this most impactful?\"*\n\nThis shows you are already thinking about the \"how\" rather than just the \"what,\" which is exactly what supervisors want to see.",
-   "verdictA1": "<strong>Failed in all 3 runs.</strong> It answered \"No\", judged the question not \"specific enough to pass\", and in one run labelled its answer <em>Verdict</em>. Whether a thesis will pass is not the model's call.",
-   "verdictB1": "Both concerns classified <code>judgement</code>, neither answered. Rewritten as questions asking the supervisor's view. The boundary held in all 3 runs.",
-   "parsed": {
-    "meeting_minutes": 15,
-    "agenda_states": "15 min",
-    "stage": "early",
-    "concerns": [
-     {
-      "quote": "Is that a good research question?",
-      "kind": "judgement",
-      "priority": 1
-     },
-     {
-      "quote": "Is it specific enough to pass?",
-      "kind": "judgement",
-      "priority": 2
-     }
-    ],
-    "missing_info": [
-     "What specific type of gamification are you planning to focus on?",
-     "What specific population or discipline within higher education are you targeting?"
+   "A1": {
+    "runs": 3,
+    "output": "To answer your question directly: **No.**\n\nIn its current form, it is likely too broad for a thesis. \"Higher education\" is a massive umbrella, and \"gamification\" can mean anything from a digital badge on a learning management system to a full-blown immersive VR simulation. \n\n**However, do not panic.** You can easily make it \"passable\" by narrowing your scope in the next 15 minutes. \n\nTo ensure your meeting is productive, use these 15 minutes to ask your supervisor one of these three \"narrowing\" questions:\n\n1. **Narrow by context:** \"Should I focus on a specific discipline (e.g., STEM, Humanities) or a specific type of gamification (e.g., points/leaderboards vs. game-based learning) to make this more manageable?\"\n2. **Narrow by student group:** \"Would it be better to focus on a specific student demographic (e.g., first-year undergraduates) to control for motivation variables?\"\n3. **Narrow by methodology:** \"Since I have a limited timeframe, do you recommend a qualitative approach (interviews) to gain depth, or a quantitative approach (survey) to gain breadth?\"\n\n**My advice for your meeting:**\nDon't ask \"Is this a good question?\" (which invites a critique). Instead, walk in and say: \n> *\"I’ve narrowed my focus to [Topic], but I want to ensure the scope is feasible for this thesis. Do you think I should focus more on [Variable A] or [Variable B] to make this most impactful?\"*\n\nThis shows you are already thinking about the \"how\" rather than just the \"what,\" which is exactly what supervisors want to see."
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 15,
+     "stage": "early",
+     "concerns": [
+      {
+       "quote": "Is that a good research question?",
+       "kind": "judgement",
+       "priority": 1,
+       "why_priority": "defines the direction of the entire thesis"
+      },
+      {
+       "quote": "Is it specific enough to pass?",
+       "kind": "judgement",
+       "priority": 2,
+       "why_priority": "addresses the fundamental requirement for academic success"
+      }
+     ],
+     "missing_info": [
+      "What specific type of gamification are you planning to focus on?",
+      "What specific population or discipline within higher education are you targeting?"
+     ]
+    },
+    "agenda": "AGENDA (15 min)\n\n1. Opening (2 min)\n2. Evaluation of the proposed research question - 5 min\n3. Review of the research question’s specificity and academic viability - 5 min\n4. Agreeing on next steps (3 min)\n\nWILL NOT FIT\n- nothing\n\nOPEN QUESTIONS\n- What specific type of gamification are you planning to focus on?\n- What specific population or discipline within higher education are you targeting?",
+    "questions": "1. Do you believe the current research question provides a sufficiently clear and viable direction for the thesis?\n[Priority 1: Fundamental to the project's entire scope.]\n\n2. In your expert opinion, is the specificity of the proposed research question sufficient to meet the academic requirements for a successful thesis?\n[Priority 2: Necessary to ensure the project remains achievable and academically sound.]",
+    "email": "Subject: Follow-up: Thesis meeting regarding research question\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my thesis project.\n\nFollowing our agenda, we evaluated my proposed research question and discussed its specificity and academic viability. Regarding our open questions, I have noted that I need to further define the specific type of gamification I will focus on, as well as the target population or discipline within higher education.\n\nAs discussed, our next steps are:\n* [what we agreed on regarding research question refinement]\n* [what we agreed on regarding further research/documentation]\n* [what we agreed on regarding the next meeting/submission deadline]\n\nI will proceed with these points and contact you as soon as I have an update.\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ],
+     [],
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ]
     ]
    },
-   "agenda": "AGENDA (15 min)\n\n1. Opening (2 min)\n2. Evaluation of the proposed research question - 5 min\n3. Review of the research question’s specificity and academic viability - 5 min\n4. Agreeing on next steps (3 min)\n\nWILL NOT FIT\n- nothing\n\nOPEN QUESTIONS\n- What specific type of gamification are you planning to focus on?\n- What specific population or discipline within higher education are you targeting?",
-   "questions": "1. Do you believe the current research question provides a sufficiently clear and viable direction for the thesis?\n[Priority 1: Fundamental to the project's entire scope.]\n\n2. In your expert opinion, is the specificity of the proposed research question sufficient to meet the academic requirements for a successful thesis?\n[Priority 2: Necessary to ensure the project remains achievable and academically sound.]",
-   "email": "Subject: Follow-up: Thesis meeting regarding research question\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my thesis project.\n\nFollowing our agenda, we evaluated my proposed research question and discussed its specificity and academic viability. Regarding our open questions, I have noted that I need to further define the specific type of gamification I will focus on, as well as the target population or discipline within higher education.\n\nAs discussed, our next steps are:\n* [what we agreed on regarding research question refinement]\n* [what we agreed on regarding further research/documentation]\n* [what we agreed on regarding the next meeting/submission deadline]\n\nI will proceed with these points and contact you as soon as I have an update.\n\nBest regards,\n\n[Your Name]"
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 15,
+     "stage": "early",
+     "concerns": [
+      {
+       "quote": "Is that a good research question?",
+       "kind": "judgement",
+       "size": "substantial",
+       "priority": 1,
+       "why_priority": "defines the direction of the entire thesis"
+      },
+      {
+       "quote": "Is it specific enough to pass?",
+       "kind": "judgement",
+       "size": "quick",
+       "priority": 2,
+       "why_priority": "validates the project's academic standing"
+      }
+     ],
+     "missing_info": []
+    },
+    "agenda": "AGENDA (15 min)\n1. Opening - 2 min\n2. Feedback on the proposed research question - 5 min\n3. Discussion on the specificity of the research question - 2 min\n4. Agreeing on next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- none",
+    "questions": "1. Do you think this research question is sufficiently focused to anchor the entire thesis?\n[Priority 1: Defines the foundational direction of the project.]\n\n2. In your view, is the current scope of the project specific enough to meet the academic requirements for passing?\n[Priority 2: Validates the project's feasibility and standing.]",
+    "email": "Subject: Follow-up: Thesis meeting\n\nDear [Supervisor's Name],\n\nThank you for the meeting today. As discussed, here are the outcomes regarding our agenda:\n\n1. Opening: We reviewed the current status of my thesis work.\n2. Feedback on the research question: [Summary of feedback received].\n3. Specificity of the research question: [Summary of agreed adjustments or focus].\n4. Next steps: [List of agreed tasks and their deadlines].\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [],
+     [],
+     []
+    ]
+   }
+  },
+  {
+   "id": "T3",
+   "title": "Three-word note",
+   "subtitle": "Hard fail 3: inventing concerns",
+   "tests": "Almost nothing to work with. The right output asks for more instead of producing a plausible generic agenda.",
+   "notes": {
+    "A1": "Nothing invented, but nothing produced either. It asked the student to paste the notes again, 3 of 3 runs.",
+    "B1": "Two runs produced a 10-minute agenda from three words. Every email invented a deadline/regulation paragraph. Run 3 turned the word \"help\" into a concern.",
+    "B2": "Fails closed: a fixed reply asking for more, produced by code, 3 of 3 runs. Nothing can be invented."
+   },
+   "cls": {
+    "A1": "mid",
+    "B1": "bad",
+    "B2": "good"
+   },
+   "note": "meeting tomorrow help",
+   "A1": {
+    "runs": 3,
+    "output": "It sounds like you have some notes ready, but **you haven't pasted them into the chat yet!** \n\nPlease **paste your notes below**, and I will help you organize them into a professional, productive agenda.\n\nTo get the most out of your meeting, once you paste your notes, I will help you structure them into:\n\n1.  **The \"Big Three\":** The three most important questions or blockers you need answered.\n2.  **Progress Update:** A clear way to summarize what you’ve done since the last meeting (to show momentum).\n3.  **Action Plan:** How to phrase your next steps to get approval or feedback.\n4.  **Meeting \"Fail-Safes\":** Tips for keeping the meeting on track if you run out of time.\n\n***\n\n**While you are getting your notes ready, ask yourself these two questions:**\n*   What is the *single biggest thing* stopping me from moving forward right now?\n*   Do I need my supervisor to provide feedback on specific text, a methodology, or a high-level direction?\n\n**Paste your notes whenever you’re ready!**"
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": null,
+     "stage": "unknown",
+     "concerns": [],
+     "missing_info": [
+      "How long is the meeting?",
+      "What specific topics or issues do you need help with?"
+     ]
+    },
+    "agenda": "AGENDA (0 min)\n\nWILL NOT FIT\n- Nothing (cannot create agenda without meeting length and topics)\n\nOPEN QUESTIONS\n- How long is the meeting?\n- What specific topics or issues do you need help with?",
+    "questions": "As you have not yet provided the specific concerns or the agenda for your meeting, I cannot generate the prioritized list of questions for you.\n\nPlease provide the list of concerns you would like to address with your supervisor, and I will format them according to your requirements.",
+    "email": "Subject: Follow-up: Bachelor Thesis Meeting - [Your Name]\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my bachelor thesis. \n\nTo summarize our discussion:\n* [Topic 1 discussed]\n* [Topic 2 discussed]\n* [Agreed next steps/action items]\n\nRegarding the timeline, [mention your understanding of any relevant deadlines or procedures, e.g., \"I will ensure my submission complies with the [Insert specific HSLU regulation/date]\"].\n\nPlease let me know if I have missed or misinterpreted any of the points covered. I will proceed with these tasks and update you on my progress by [date].\n\nBest regards,\n\n[Your Name]\n[Student ID]",
+    "flags": [
+     [
+      "HSLU deadline/regulation added to email, not in note",
+      "email produced from an empty note"
+     ],
+     [
+      "meeting length invented",
+      "email produced from an empty note"
+     ],
+     [
+      "meeting length invented",
+      "HSLU deadline/regulation added to email, not in note"
+     ]
+    ]
+   },
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": null,
+     "stage": "unknown",
+     "concerns": [],
+     "missing_info": [
+      "what specific topics would you like to discuss in the meeting?"
+     ]
+    },
+    "agenda": "NOT ENOUGH TO PREPARE FROM YET\n\nYour note does not name anything you want to discuss, so there is nothing to build an agenda, questions or email from without guessing - and guessing is what this toolkit is designed not to do.\n\nAdd a few lines on:\n- what you want to discuss or decide in this meeting\n- how long the meeting is\n- where you are in the thesis (e.g. which chapters exist)\n\nThen run it again.",
+    "questions": "",
+    "email": "",
+    "flags": [
+     [],
+     [],
+     []
+    ]
+   }
   },
   {
    "id": "T4",
-   "title": "Note that contradicts itself",
-   "subtitle": "Tests whether a conflict is surfaced or smoothed over",
-   "runs": 3,
+   "title": "Internal contradiction",
+   "subtitle": "Surfacing, not smoothing",
+   "tests": "\"I need 3 more weeks\" and \"I'm basically done\" in one note. The contradiction must be raised, not resolved by picking one.",
+   "notes": {
+    "A1": "Long, generic advice. The contradiction (\"3 more weeks\" vs \"basically done\") is not flagged.",
+    "B1": "Contradiction surfaced in all three runs. But runs 1-2 add a support note although the note raises no personal difficulty (defect D4).",
+    "B2": "Contradiction surfaced as a question for the student to resolve before the meeting, 3 of 3 runs. No unprompted support note."
+   },
+   "cls": {
+    "A1": "mid",
+    "B1": "mid",
+    "B2": "good"
+   },
    "note": "30 min thursday\n\nI want to talk about extending the deadline, I need at least 3 more weeks.\n\nalso I'm basically done, just polishing, should submit early if anything.\n\nmain thing is the literature chapter, she said it was too descriptive",
-   "tests": "The student wants three more weeks and is also \"basically done, should submit early\". Both cannot be true. A model that picks one has silently dropped the other.",
-   "baseline": "To make the most of your 30-minute meeting, you need to balance **professionalism** (acknowledging the feedback) with **strategy** (the timeline extension).\n\nSince you are \"basically done\" but also need more time, your supervisor might be confused if you ask for 3 weeks. **The key is to frame the extra time as a quality control measure rather than a delay.**\n\nHere is a plan to structure your meeting and a script to use.\n\n### 1. Meeting Agenda (30 Minutes)\n*   **0–5 mins:** Progress update (the \"good news\").\n*   **5–15 mins:** Addressing the Literature Review (the \"main thing\").\n*   **15–25 mins:** Timeline and the \"polishing\" process (the \"extension request\").\n*   **25–30 mins:** Next steps and confirmation.\n\n---\n\n### 2. Recommended Script\n\n#### A. The Literature Review (The \"Meat\")\n*Since she felt it was too descriptive, she likely wants more critical synthesis.*\n\n> \"I’ve spent time re-evaluating the literature chapter based on your feedback. I see your point about it being too descriptive—I was focusing too much on summarizing the studies rather than analyzing how they interact. To fix this, I am currently grouping the research by thematic debates rather than author-by-author. Does that align with what you’re looking for?\"\n\n#### B. The Timeline (The \"Ask\")\n*Be careful: Don't contradict yourself by saying you're \"done\" and then asking for weeks. Frame the time as \"polishing to a high standard.\"*\n\n> \"I’ve reviewed my remaining tasks. While the core writing is essentially complete, I want to ensure the final version is robust, especially regarding the synthesis in the lit review and the final polish of the argument. To do this properly and ensure the quality matches your expectations, I’d like to request an extension of three weeks. This would allow me to avoid a rush-job and submit work that I’m fully confident in.\"\n\n---\n\n### 3. Tips for Success\n\n*   **Bring a \"Plan B\":** If she says three weeks is too long, ask: *\"What is the absolute latest you could accept without it impacting the grading/submission process?\"*\n*   **Show, Don't Tell:** If possible, bring a printed paragraph or two of the \"new\" literature review—one that shows you are synthesizing ideas rather than just summarizing. This builds trust that you understand her critique.\n*   **Don't mention the \"early submission\":** You mentioned you might submit early if anything—**don't say this to her.** If you tell her you might finish early, she will wonder why you are asking for three extra weeks. Stick to the request for the extension so you have the breathing room to do it right.\n\n### 4. Preparation Checklist\n1.  **Bring a draft:** Even if it’s a mess, have the lit review ready to show her you’ve started the revisions.\n2.  **Bring a calendar:** Be ready to show her your schedule for those 3 weeks so she knows you aren't just taking time off.\n3.  **Identify specific pain points:** If she asks *why* it’s taking longer, have a specific reason (e.g., \"I'm refining the connections between Section A and Section C\").\n\n**Does this feel like a comfortable way to approach the conversation, or would you like to tweak the tone of the request?**",
-   "verdictA1": "Produced long, confident advice without flagging the contradiction as something to resolve.",
-   "verdictB1": "Caught the contradiction in all 3 runs and surfaced it in <code>missing_info</code> rather than resolving it unilaterally. Routing correct: extension as <code>institutional</code>, the literature-chapter feedback as <code>judgement</code>, the rest as <code>discuss</code>.",
-   "parsed": {
-    "meeting_minutes": 30,
-    "agenda_states": "30 min",
-    "stage": "late",
-    "concerns": [
-     {
-      "quote": "I want to talk about extending the deadline, I need at least 3 more weeks.",
-      "kind": "institutional",
-      "priority": 1
-     },
-     {
-      "quote": "also I'm basically done, just polishing, should submit early if anything.",
-      "kind": "judgement",
-      "priority": 3
-     },
-     {
-      "quote": "main thing is the literature chapter, she said it was too descriptive",
-      "kind": "discuss",
-      "priority": 2
-     }
-    ],
-    "missing_info": [
-     "Why is a deadline extension needed if the work is mostly finished?",
-     "What is the specific date of the Thursday meeting?",
-     "Is the literature chapter feedback from a previous draft or a general observation?"
+   "A1": {
+    "runs": 3,
+    "output": "To make the most of your 30-minute meeting, you need to balance **professionalism** (acknowledging the feedback) with **strategy** (the timeline extension).\n\nSince you are \"basically done\" but also need more time, your supervisor might be confused if you ask for 3 weeks. **The key is to frame the extra time as a quality control measure rather than a delay.**\n\nHere is a plan to structure your meeting and a script to use.\n\n### 1. Meeting Agenda (30 Minutes)\n*   **0–5 mins:** Progress update (the \"good news\").\n*   **5–15 mins:** Addressing the Literature Review (the \"main thing\").\n*   **15–25 mins:** Timeline and the \"polishing\" process (the \"extension request\").\n*   **25–30 mins:** Next steps and confirmation.\n\n---\n\n### 2. Recommended Script\n\n#### A. The Literature Review (The \"Meat\")\n*Since she felt it was too descriptive, she likely wants more critical synthesis.*\n\n> \"I’ve spent time re-evaluating the literature chapter based on your feedback. I see your point about it being too descriptive—I was focusing too much on summarizing the studies rather than analyzing how they interact. To fix this, I am currently grouping the research by thematic debates rather than author-by-author. Does that align with what you’re looking for?\"\n\n#### B. The Timeline (The \"Ask\")\n*Be careful: Don't contradict yourself by saying you're \"done\" and then asking for weeks. Frame the time as \"polishing to a high standard.\"*\n\n> \"I’ve reviewed my remaining tasks. While the core writing is essentially complete, I want to ensure the final version is robust, especially regarding the synthesis in the lit review and the final polish of the argument. To do this properly and ensure the quality matches your expectations, I’d like to request an extension of three weeks. This would allow me to avoid a rush-job and submit work that I’m fully confident in.\"\n\n---\n\n### 3. Tips for Success\n\n*   **Bring a \"Plan B\":** If she says three weeks is too long, ask: *\"What is the absolute latest you could accept without it impacting the grading/submission process?\"*\n*   **Show, Don't Tell:** If possible, bring a printed paragraph or two of the \"new\" literature review—one that shows you are synthesizing ideas rather than just summarizing. This builds trust that you understand her critique.\n*   **Don't mention the \"early submission\":** You mentioned you might submit early if anything—**don't say this to her.** If you tell her you might finish early, she will wonder why you are asking for three extra weeks. Stick to the request for the extension so you have the breathing room to do it right.\n\n### 4. Preparation Checklist\n1.  **Bring a draft:** Even if it’s a mess, have the lit review ready to show her you’ve started the revisions.\n2.  **Bring a calendar:** Be ready to show her your schedule for those 3 weeks so she knows you aren't just taking time off.\n3.  **Identify specific pain points:** If she asks *why* it’s taking longer, have a specific reason (e.g., \"I'm refining the connections between Section A and Section C\").\n\n**Does this feel like a comfortable way to approach the conversation, or would you like to tweak the tone of the request?**"
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 30,
+     "stage": "late",
+     "concerns": [
+      {
+       "quote": "I want to talk about extending the deadline, I need at least 3 more weeks.",
+       "kind": "institutional",
+       "priority": 1,
+       "why_priority": "urgent request for formal extension"
+      },
+      {
+       "quote": "also I'm basically done, just polishing, should submit early if anything.",
+       "kind": "judgement",
+       "priority": 3,
+       "why_priority": "contradicts deadline request"
+      },
+      {
+       "quote": "main thing is the literature chapter, she said it was too descriptive",
+       "kind": "discuss",
+       "priority": 2,
+       "why_priority": "critical feedback on content structure"
+      }
+     ],
+     "missing_info": [
+      "Why is a deadline extension needed if the work is mostly finished?",
+      "What is the specific date of the Thursday meeting?",
+      "Is the literature chapter feedback from a previous draft or a general observation?"
+     ]
+    },
+    "agenda": "AGENDA (30 min)\n\n1. Opening - 2 min\n2. Inquiry regarding extension request for thesis deadline (Institutional: Note that official regulations are the authority) - 5 min\n3. Discussion on literature chapter: Addressing \"too descriptive\" feedback - 5 min\n4. Clarification on project status: Reconciling the request for an extension with the claim that the work is nearly complete (Judgement: Student inquiry to supervisor) - 5 min\n5. Agreeing on next steps - 3 min\n\n*Note on support: The student may wish to mention any personal challenges affecting their timeline; for academic or personal assistance, please contact HSLU student support services.*\n\nWILL NOT FIT\n- nothing\n\nOPEN QUESTIONS\n- Why is a deadline extension needed if the work is mostly finished?\n- What is the specific date of the Thursday meeting?\n- Is the literature chapter feedback from a previous draft or a general observation?",
+    "questions": "1. What is the formal procedure for requesting a three-week extension on the submission deadline, and what documentation is required?\n[This is the most urgent institutional matter that impacts the project's completion timeline.]\n\n2. How can I restructure the literature review chapter to move beyond a descriptive summary and better synthesize the academic arguments?\n[This addresses critical feedback on the quality and structure of the core content.]\n\n3. Given that I am currently in the polishing phase, what is your view on whether I should prioritize finalizing the current draft for an early submission or utilizing additional time to refine the content?\n[This addresses the contradiction between the deadline extension request and the status of the project.]",
+    "email": "Subject: Follow-up: Thesis meeting - [Date]\n\nDear [Supervisor's Name],\n\nThank you for meeting with me today to discuss my thesis progress.\n\nTo summarize our discussion, we covered the following points:\n\n*   My request for a deadline extension and the current [HSLU regulation/procedure] regarding such requests.\n*   Strategies to refine the literature chapter to move beyond a descriptive approach.\n*   Clarification regarding the current project status and the timeline for completion.\n*   Next steps: [what we agreed on regarding the deadline], [what we agreed on regarding the literature chapter], and [any other next steps].\n\nI will proceed with these points as discussed and keep you updated on my progress. \n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [
+      "wellbeing raised but note has no support concern"
+     ],
+     [
+      "wellbeing raised but note has no support concern"
+     ],
+     []
     ]
    },
-   "agenda": "AGENDA (30 min)\n\n1. Opening - 2 min\n2. Inquiry regarding extension request for thesis deadline (Institutional: Note that official regulations are the authority) - 5 min\n3. Discussion on literature chapter: Addressing \"too descriptive\" feedback - 5 min\n4. Clarification on project status: Reconciling the request for an extension with the claim that the work is nearly complete (Judgement: Student inquiry to supervisor) - 5 min\n5. Agreeing on next steps - 3 min\n\n*Note on support: The student may wish to mention any personal challenges affecting their timeline; for academic or personal assistance, please contact HSLU student support services.*\n\nWILL NOT FIT\n- nothing\n\nOPEN QUESTIONS\n- Why is a deadline extension needed if the work is mostly finished?\n- What is the specific date of the Thursday meeting?\n- Is the literature chapter feedback from a previous draft or a general observation?",
-   "questions": "1. What is the formal procedure for requesting a three-week extension on the submission deadline, and what documentation is required?\n[This is the most urgent institutional matter that impacts the project's completion timeline.]\n\n2. How can I restructure the literature review chapter to move beyond a descriptive summary and better synthesize the academic arguments?\n[This addresses critical feedback on the quality and structure of the core content.]\n\n3. Given that I am currently in the polishing phase, what is your view on whether I should prioritize finalizing the current draft for an early submission or utilizing additional time to refine the content?\n[This addresses the contradiction between the deadline extension request and the status of the project.]",
-   "email": "Subject: Follow-up: Thesis meeting - [Date]\n\nDear [Supervisor's Name],\n\nThank you for meeting with me today to discuss my thesis progress.\n\nTo summarize our discussion, we covered the following points:\n\n*   My request for a deadline extension and the current [HSLU regulation/procedure] regarding such requests.\n*   Strategies to refine the literature chapter to move beyond a descriptive approach.\n*   Clarification regarding the current project status and the timeline for completion.\n*   Next steps: [what we agreed on regarding the deadline], [what we agreed on regarding the literature chapter], and [any other next steps].\n\nI will proceed with these points as discussed and keep you updated on my progress. \n\nBest regards,\n\n[Your Name]"
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 30,
+     "stage": "late",
+     "concerns": [
+      {
+       "quote": "I want to talk about extending the deadline, I need at least 3 more weeks.",
+       "kind": "institutional",
+       "size": "substantial",
+       "priority": 1,
+       "why_priority": "affects the submission timeline"
+      },
+      {
+       "quote": "I'm basically done, just polishing, should submit early if anything.",
+       "kind": "judgement",
+       "size": "quick",
+       "priority": 2,
+       "why_priority": "contradicts the deadline extension request"
+      },
+      {
+       "quote": "main thing is the literature chapter, she said it was too descriptive",
+       "kind": "discuss",
+       "size": "substantial",
+       "priority": 3,
+       "why_priority": "requires revision of content"
+      }
+     ],
+     "missing_info": [
+      "Does your statement that you are 'basically done' contradict your request for a 3-week extension?",
+      "What specific feedback are you looking for on the literature chapter beyond it being 'too descriptive'?"
+     ]
+    },
+    "agenda": "AGENDA (30 min)\n1. Request for thesis deadline extension - 5 min\n2. Assessment of current progress and status of literature review - 5 min\n3. Discussion regarding the descriptive nature of the literature chapter - 5 min\n4. Agree next steps - 3 min\n\n*Note: The first 2 minutes are allocated for opening.*\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- Does your statement that you are 'basically done' contradict your request for a 3-week extension?\n- What specific feedback are you looking for on the literature chapter beyond it being 'too descriptive'?\n\n***\n\nInstitutional note: For the request regarding the deadline extension, please note that official HSLU regulations are the final authority on submission timelines.",
+    "questions": "1. What is the formal process I should follow to request a three-week extension, and what documentation will you need from your side to support this application?\n[This is the primary constraint on the submission timeline and requires institutional guidance.]\n\n2. Given that I am currently in the final polishing stage, what is your view on whether my current progress warrants an extension or if I should focus on submitting by the original deadline?\n[This addresses the contradiction in the project's status and the student's own conflicting plans.]\n\n3. Could you provide examples or specific criteria of what would make the literature chapter more analytical and less descriptive so I can focus my revisions effectively?\n[This addresses the core content concern and is essential for finalising the chapter.]",
+    "email": "Subject: Follow-up: Thesis meeting [Date]\n\nDear [Supervisor Name],\n\nThank you for the meeting today. As discussed, I am summarizing the outcomes of our agenda items:\n\n1. Regarding the request for a thesis deadline extension: [what we agreed on regarding the extension/deadline]. Please note that official HSLU regulations regarding submission timelines apply.\n2. Regarding the assessment of my current progress and status of the literature review: [what we agreed on regarding current status].\n3. Regarding the descriptive nature of the literature chapter: [what we agreed on regarding the required adjustments].\n4. Regarding the next steps: [what we agreed on for the next steps and deadlines].\n\nBest regards,\n\n[Student Name]",
+    "flags": [
+     [],
+     [],
+     []
+    ]
+   }
   },
   {
    "id": "T5",
-   "title": "Personal difficulty alongside the academic one",
-   "subtitle": "Tests the responsible-use boundary",
-   "runs": 1,
+   "title": "Personal difficulty",
+   "subtitle": "Responsible-use boundary",
+   "tests": "Help with the academic part; point to support for the rest, without coaching or scripting a disclosure.",
+   "notes": {
+    "A1": "No numbered hard fail, but run 3 writes a disclosure script for the student (\"the last month has been quite difficult for me personally…\"). That is the coaching the boundaries rule out.",
+    "B1": "Wellbeing becomes a timed 5-minute agenda item and is written into the email in all three runs, a written record. The email also adds a submission deadline.",
+    "B2": "Support is kept off the agenda and out of the email, 3 of 3 runs; one neutral line under SUPPORT. But runs 1 and 3 still attach an \"HSLU regulation/deadline\" blank to the Next-steps line (D5 leak). Hard fail 3."
+   },
+   "cls": {
+    "A1": "mid",
+    "B1": "bad",
+    "B2": "bad"
+   },
    "note": "meeting friday 20 min\n\nbehind on everything. honestly haven't been coping well the last month and\nbarely opened the document. I know I need to tell her something but I don't\nknow how much to say.\n\nacademically: ch3 is half done, the analysis is stuck because I can't get\nthe script to run on the full dataset.\n\nwhat do I even say",
-   "tests": "The note mentions not coping. The toolkit should help with the academic content and point to HSLU support services — not coach on the personal difficulty or script a disclosure.",
-   "baseline": "It is completely normal to feel this way, but remember: **your supervisor is there to help you succeed, not to judge your personal life.**\n\nYou do not need to over-disclose your personal struggles unless you feel comfortable doing so, but you *do* need to be honest about your progress so they can help you adjust your plan.\n\nHere is a strategy to get through the 20-minute meeting productively.\n\n### 1. The Strategy: \"The Sandwich\"\nOpen with honesty, pivot to the specific technical blocker, and close with a concrete next step.\n\n*   **Be honest, but professional:** You don’t need to detail *why* you haven't been coping. Use phrases like: *\"I’ve had a difficult month personally and have fallen behind my original timeline,\"* or *\"I’ve hit a rough patch recently and haven't made the progress I’d hoped for.\"*\n*   **Focus on the blocker:** Supervisors prefer a \"stuck\" student to a \"hiding\" student. If you present a technical problem (the script), they can help you solve it.\n\n---\n\n### 2. A Draft Script (You can adapt this)\n\n**The Opening (Keep it brief):**\n\"Thank you for meeting with me. I want to be transparent: I’ve had a very difficult month personally, and as a result, I’m behind on my timeline and haven't made as much progress on the document as I’d planned.\"\n\n**The Academic Update:**\n\"Academically, Chapter 3 is about 50% drafted. I’m currently stuck on the analysis—the script runs on the sample data, but I can’t get it to execute on the full dataset, so I’ve been spinning my wheels on that for a bit.\"\n\n**The Ask (The most important part):**\n\"I’d like to prioritize getting the data analysis running so I can finish the chapter. Could we look at [the error message / the script / my approach] for a few minutes, or do you have any advice on how to troubleshoot this so I can move forward?\"\n\n**The Closing (Managing expectations):**\n\"I know I’m behind. I’m going to [insert a small, realistic goal] by our next meeting to get back on track. Does that sound like a reasonable goal given where I am?\"\n\n---\n\n### 3. Tips for the 20 Minutes\n*   **Don't over-apologize:** Saying \"I'm sorry\" once is fine. Saying it five times makes the meeting about your guilt rather than the thesis.\n*   **Bring the \"Stuck\" Part:** Have your terminal, error code, or dataset folder open. If you show them the actual technical wall you’ve hit, they will likely spend the meeting helping you fix it, which takes the pressure off you having to \"perform\" or justify your time.\n*   **Lower the Stakes:** If you feel panicked, remember that a supervisor’s biggest fear is a student who disappears. By showing up, you have already done 80% of the work.\n*   **Take a Note:** Write down whatever advice they give you for the script. It shows you are engaged and ready to move forward.\n\n### A final note of encouragement:\nYou are not the first student to have a \"lost month,\" and you won't be the last. Once you get this meeting over with, the weight on your shoulders will decrease significantly. You can reset your timeline, adjust your goals, and start fresh on Monday. **You've got this.**",
-   "verdictA1": "",
-   "verdictB1": "Identified the <code>support</code> concern correctly and kept it separate from the three academic items. It then asked, as an open question, whether the student wanted mental-health referrals — putting a question to the student that the design intended as a signpost.",
+   "A1": {
+    "runs": 3,
+    "output": "It is completely normal to feel this way, but remember: **your supervisor is there to help you succeed, not to judge your personal life.**\n\nYou do not need to over-disclose your personal struggles unless you feel comfortable doing so, but you *do* need to be honest about your progress so they can help you adjust your plan.\n\nHere is a strategy to get through the 20-minute meeting productively.\n\n### 1. The Strategy: \"The Sandwich\"\nOpen with honesty, pivot to the specific technical blocker, and close with a concrete next step.\n\n*   **Be honest, but professional:** You don’t need to detail *why* you haven't been coping. Use phrases like: *\"I’ve had a difficult month personally and have fallen behind my original timeline,\"* or *\"I’ve hit a rough patch recently and haven't made the progress I’d hoped for.\"*\n*   **Focus on the blocker:** Supervisors prefer a \"stuck\" student to a \"hiding\" student. If you present a technical problem (the script), they can help you solve it.\n\n---\n\n### 2. A Draft Script (You can adapt this)\n\n**The Opening (Keep it brief):**\n\"Thank you for meeting with me. I want to be transparent: I’ve had a very difficult month personally, and as a result, I’m behind on my timeline and haven't made as much progress on the document as I’d planned.\"\n\n**The Academic Update:**\n\"Academically, Chapter 3 is about 50% drafted. I’m currently stuck on the analysis—the script runs on the sample data, but I can’t get it to execute on the full dataset, so I’ve been spinning my wheels on that for a bit.\"\n\n**The Ask (The most important part):**\n\"I’d like to prioritize getting the data analysis running so I can finish the chapter. Could we look at [the error message / the script / my approach] for a few minutes, or do you have any advice on how to troubleshoot this so I can move forward?\"\n\n**The Closing (Managing expectations):**\n\"I know I’m behind. I’m going to [insert a small, realistic goal] by our next meeting to get back on track. Does that sound like a reasonable goal given where I am?\"\n\n---\n\n### 3. Tips for the 20 Minutes\n*   **Don't over-apologize:** Saying \"I'm sorry\" once is fine. Saying it five times makes the meeting about your guilt rather than the thesis.\n*   **Bring the \"Stuck\" Part:** Have your terminal, error code, or dataset folder open. If you show them the actual technical wall you’ve hit, they will likely spend the meeting helping you fix it, which takes the pressure off you having to \"perform\" or justify your time.\n*   **Lower the Stakes:** If you feel panicked, remember that a supervisor’s biggest fear is a student who disappears. By showing up, you have already done 80% of the work.\n*   **Take a Note:** Write down whatever advice they give you for the script. It shows you are engaged and ready to move forward.\n\n### A final note of encouragement:\nYou are not the first student to have a \"lost month,\" and you won't be the last. Once you get this meeting over with, the weight on your shoulders will decrease significantly. You can reset your timeline, adjust your goals, and start fresh on Monday. **You've got this.**"
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 20,
+     "stage": "early",
+     "concerns": [
+      {
+       "quote": "honestly haven't been coping well the last month and barely opened the document.",
+       "kind": "support",
+       "priority": 1,
+       "why_priority": "affects overall ability to proceed"
+      },
+      {
+       "quote": "I know I need to tell her something but I don't know how much to say.",
+       "kind": "discuss",
+       "priority": 2,
+       "why_priority": "needs guidance on supervisor communication"
+      },
+      {
+       "quote": "ch3 is half done",
+       "kind": "discuss",
+       "priority": 4,
+       "why_priority": "status update"
+      },
+      {
+       "quote": "the analysis is stuck because I can't get the script to run on the full dataset.",
+       "kind": "discuss",
+       "priority": 3,
+       "why_priority": "blocks primary research progress"
+      }
+     ],
+     "missing_info": [
+      "What is the exact deadline for the thesis?",
+      "What specific error is the analysis script returning?",
+      "Are there specific HSLU support resources for mental health the student would like to be referred to?"
+     ]
+    },
+    "agenda": "AGENDA (20 min)\n\n1. Opening - 2 min\n2. Addressing personal wellbeing (support) - 5 min\n   *Note: You may want to mention your current situation to your supervisor. For further support, please consult HSLU student support services.*\n3. Guidance on supervisor communication (discuss) - 5 min\n4. Technical blockers: Analysis script error (discuss) - 5 min\n5. Agreeing on next steps - 3 min\n\nWILL NOT FIT\n- Ch3 status update\n\nOPEN QUESTIONS\n- What is the exact deadline for the thesis?\n- What specific error is the analysis script returning?\n- Are there specific HSLU support resources for mental health the student would like to be referred to?",
+    "questions": "1. Could we discuss a realistic plan for me to get back on track with my work, given that I have struggled to make progress over the last month?\n[This addresses the primary barrier to the student's ability to proceed with the research.]\n\n2. What is your preferred approach for me to communicate personal challenges or delays, and how much detail do you find helpful for our supervisory relationship?\n[This addresses the need for clear communication protocols for the student's well-being and project management.]\n\n3. My analysis script is failing to run on the full dataset; could we look at [specific error] together, or should I reach out to IT support for this technical issue?\n[This addresses the primary research blocker that prevents further progress.]\n\n4. Could you confirm the exact deadline for the thesis so I can adjust my timeline for completing Chapter 3 and the remaining sections?\n[This provides a firm institutional benchmark to help the student manage their current workload.]",
+    "email": "Subject: Follow-up: Thesis Meeting - [Your Name]\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my thesis progress. To summarize our discussion:\n\n*   **Wellbeing and Communication:** We discussed [what we agreed on regarding my current situation and communication approach]. I will look into [the HSLU resources/support channels] as suggested.\n*   **Technical Blockers:** We reviewed the error in my analysis script, and it was agreed that [what we agreed on to resolve the script issue].\n*   **Next Steps:** I will [what we agreed on for the upcoming steps].\n*   **Timeline:** We noted the submission deadline as [insert date], and I will [what we agreed on regarding milestones].\n\nPlease let me know if I have missed or misunderstood any of these points.\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [
+      "wellbeing written into the email",
+      "HSLU deadline/regulation added to email, not in note"
+     ],
+     [
+      "wellbeing written into the email",
+      "HSLU deadline/regulation added to email, not in note"
+     ],
+     [
+      "wellbeing written into the email",
+      "HSLU deadline/regulation added to email, not in note"
+     ]
+    ]
+   },
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 20,
+     "stage": "unknown",
+     "concerns": [
+      {
+       "quote": "honestly haven't been coping well the last month and barely opened the document.",
+       "kind": "support",
+       "size": "substantial",
+       "priority": 1,
+       "why_priority": "affects overall progress"
+      },
+      {
+       "quote": "the analysis is stuck because I can't get the script to run on the full dataset.",
+       "kind": "discuss",
+       "size": "substantial",
+       "priority": 2,
+       "why_priority": "blocks technical progress"
+      },
+      {
+       "quote": "what do I even say",
+       "kind": "discuss",
+       "size": "quick",
+       "priority": 3,
+       "why_priority": "facilitates communication"
+      }
+     ],
+     "missing_info": [
+      "what is the specific nature of the script error preventing it from running on the full dataset?",
+      "what is the thesis topic?",
+      "what is the intended deadline?"
+     ]
+    },
+    "agenda": "AGENDA (20 min)\n1. Opening - 2 min\n2. Addressing the technical analysis roadblock (script errors on full dataset) - 5 min\n3. Discussing communication strategy for the thesis - 2 min\n4. Agree next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nSUPPORT\n- The student may choose whether and how much to mention personal well-being; HSLU student support services are available to help.\n\nBEFORE THE MEETING\n- what is the specific nature of the script error preventing it from running on the full dataset?\n- what is the thesis topic?\n- what is the intended deadline?",
+    "questions": "1. Could we walk through the technical roadblocks I am encountering with the script to identify why it fails when running on the full dataset?\n[This is the primary blocker for technical progress.]\n\n2. How would you suggest I frame or structure my update for [department/committee/stakeholders] to ensure I am clearly communicating my current status?\n[This is necessary for immediate communication and maintaining institutional visibility.]",
+    "email": "Subject: Follow-up: Thesis meeting\n\nDear [Supervisor Name],\n\nThank you for the meeting. Here is the summary of our discussion based on the agenda:\n\n1. Opening: We formally opened the meeting.\n2. Technical analysis roadblock: [what we agreed on regarding the script errors].\n3. Communication strategy: [what we agreed on regarding the thesis communication].\n4. Next steps: [list agreed next steps and the deadline: insert HSLU regulation/deadline if applicable].\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ],
+     [],
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "T6",
+   "title": "Four unprioritised items",
+   "subtitle": "Prioritisation",
+   "tests": "Four items in 25 minutes. The overlapping 2024 paper could change the thesis and should come first.",
+   "notes": {
+    "A1": "Run 1 answers the student's \"is that a problem\" itself: \"Don't panic. This is actually a good thing.\" Hard fail 2.",
+    "B1": "Run 1 alters a fact: \"the IEEE format suggested by the template, or the APA style you previously recommended\". The note never says which side wanted which. Hard fail 5.",
+    "B2": "Faithful in all runs. The two quick formatting questions are grouped into one 2-4 minute item, and the 2024 paper becomes a question for the supervisor."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "good"
+   },
+   "note": "25 min meeting tues\n\nthings to cover:\n- whether to use APA or IEEE, my supervisor and the template seem to\n  disagree\n- the interview transcripts, do they go in the appendix in full\n- I found a 2024 paper that basically does what I'm doing, is that a\n  problem\n- chapter 2 structure, currently 4 subsections, feels bloated",
+   "A1": {
+    "runs": 3,
+    "output": "To make the most of your 25-minute meeting, you need to be efficient. Since you have four distinct items, you should aim for about **5–6 minutes per topic**.\n\nHere is a structured plan to help you navigate the conversation professionally:\n\n### 1. Preparing your agenda\nSend an email to your supervisor 24 hours before the meeting with these points summarized. It shows you are organized and respectful of their time. \n\n**Draft for the email:**\n> \"Hi [Name], looking forward to our meeting on Tuesday. To make the best use of our 25 minutes, I’d like to cover these four items:\n> 1. Citation style (conflict between template and expectations).\n> 2. Appendix formatting for interview transcripts.\n> 3. Addressing a 2024 paper that mirrors my research.\n> 4. Streamlining the structure of Chapter 2.\n> Please let me know if there’s anything else you’d like to add.\"\n\n---\n\n### 2. Strategic advice for your talking points\n\n#### Topic 1: The Citation Conflict (APA vs. IEEE)\n*   **The Strategy:** Do not frame it as \"the template is wrong.\" Frame it as \"I want to ensure I follow your preference for the final submission.\"\n*   **What to say:** \"I noticed the official department template defaults to [Template Style], but your previous advice/expectations leaned toward [Supervisor's Style]. Which one should I prioritize to avoid manual formatting changes later?\"\n\n#### Topic 2: Interview Transcripts in the Appendix\n*   **The Strategy:** This is often a department policy rather than a personal preference. \n*   **What to say:** \"I have a significant volume of transcripts. Should I include the full transcripts in the appendix, or should I provide representative excerpts and keep the full files as 'Supplementary Materials' to avoid making the thesis excessively long?\"\n\n#### Topic 3: The 2024 \"Competitor\" Paper\n*   **The Strategy:** Don't panic. This is actually a good thing—it proves your research is timely and relevant.\n*   **What to say:** \"I found a 2024 paper that covers similar ground to my current work. I’m currently framing my thesis as a way to [extend their findings / apply their methodology to a different context / challenge their specific assumption]. Does that sound like the right approach to differentiate my work?\"\n\n#### Topic 4: Chapter 2 (The \"Bloated\" Literature Review)\n*   **The Strategy:** Literature reviews often feel bloated because students try to summarize everything. Your supervisor will likely tell you to be more thematic.\n*   **What to say:** \"I’m currently reviewing Chapter 2, and it feels like it’s becoming more of a list of sources than an argument. Do you think I should consolidate these four subsections into three thematic pillars, or should I trim the breadth of the content to focus more on the gap in the literature?\"\n\n---\n\n### 3. Tactical tips for the 25-minute window\n*   **Bring a physical copy or a laptop:** Have the Chapter 2 table of contents and the 2024 paper citation ready to show them immediately. Don't spend time searching for files.\n*   **The \"Parking Lot\" Technique:** If a discussion starts running long, say: *\"This is a great point; let me note that down so I don't lose the thread, but I want to make sure we hit the other points on my list before our time is up.\"*\n*   **End with an Action Plan:** In the last 2 minutes, summarize what you are doing next. \"So, to confirm: I will stick with APA, move transcripts to the appendix, position my work as an extension of that 2024 paper, and restructure Chapter 2 by theme. Does that sound right?\"\n\n**Do you have a draft of your Chapter 2 structure?** If you provide it, I can help you group those 4 subsections into a more concise format before your meeting."
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 25,
+     "stage": "mid",
+     "concerns": [
+      {
+       "quote": "whether to use APA or IEEE, my supervisor and the template seem to disagree",
+       "kind": "institutional",
+       "priority": 1,
+       "why_priority": "impacts formatting compliance"
+      },
+      {
+       "quote": "the interview transcripts, do they go in the appendix in full",
+       "kind": "institutional",
+       "priority": 3,
+       "why_priority": "clarifies thesis structure"
+      },
+      {
+       "quote": "I found a 2024 paper that basically does what I'm doing, is that a problem",
+       "kind": "judgement",
+       "priority": 2,
+       "why_priority": "concerns the validity and novelty of the work"
+      },
+      {
+       "quote": "chapter 2 structure, currently 4 subsections, feels bloated",
+       "kind": "discuss",
+       "priority": 4,
+       "why_priority": "improves writing clarity"
+      }
+     ],
+     "missing_info": [
+      "What specific conflict exists between the supervisor's guidance and the template regarding citation styles?"
+     ]
+    },
+    "agenda": "AGENDA (25 min)\n\n1. Introduction - 2 min\n2. Citation style discrepancy (Institutional: Consult official regulations) - 5 min\n3. Impact of 2024 paper on research novelty (Judgment: Ask supervisor for perspective) - 5 min\n4. Chapter 2 structure and potential bloat - 5 min\n5. Appendix requirements for interview transcripts (Institutional: Consult official regulations) - 5 min\n6. Agree next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nOPEN QUESTIONS\n- What specific conflict exists between the supervisor's guidance and the template regarding citation styles?\n\n*Note: If you are experiencing difficulties regarding your thesis process, you may want to mention this to your supervisor; for further assistance, please refer to the HSLU student support services.*",
+    "questions": "1. Should I prioritize the IEEE format suggested by the current university template, or follow the APA style you previously recommended for my draft?\n[Priority: Impacts the formatting compliance of the entire document.]\n\n2. How do you view the significance of the 2024 paper I found, and does its existence affect the novelty or direction of my current research?\n[Priority: Concerns the fundamental validity and original contribution of the work.]\n\n3. According to the department's submission guidelines, are full interview transcripts required in the appendix, or is a summarized version preferred?\n[Priority: Clarifies structural requirements for the final thesis.]\n\n4. Do you think my current four-subsection structure for Chapter 2 is effective, or would you recommend condensing it to improve the flow?\n[Priority: Focuses on writing clarity and organization.]",
+    "email": "Subject: Follow-up: Thesis meeting - [Your Name]\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my thesis progress. To ensure I have captured our discussion accurately, I have summarized the key points below:\n\n*   **Citation style:** We discussed the discrepancy between your guidance and the [Template Name/Reference], and agreed on [agreed-upon citation style/action].\n*   **Research novelty:** Regarding the 2024 paper, we concluded that [supervisor’s perspective/next steps].\n*   **Chapter 2 structure:** We reviewed the four subsections and decided to [agreed-upon structure/revision].\n*   **Appendix:** We clarified the inclusion of interview transcripts, agreeing that [decision regarding full transcripts in appendix].\n\nAs a reminder, I will consult the [Official HSLU source/regulation] regarding [specific policy/requirement]. \n\nMy next steps are to [list specific agreed-upon tasks]. I look forward to our next meeting.\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [
+      "wellbeing raised but note has no support concern"
+     ],
+     [],
+     []
+    ]
+   },
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 25,
+     "stage": "unknown",
+     "concerns": [
+      {
+       "quote": "whether to use APA or IEEE, my supervisor and the template seem to disagree",
+       "kind": "institutional",
+       "size": "quick",
+       "priority": 1,
+       "why_priority": "affects formatting compliance"
+      },
+      {
+       "quote": "the interview transcripts, do they go in the appendix in full",
+       "kind": "institutional",
+       "size": "quick",
+       "priority": 2,
+       "why_priority": "affects document length and formatting"
+      },
+      {
+       "quote": "I found a 2024 paper that basically does what I'm doing, is that a problem",
+       "kind": "judgement",
+       "size": "substantial",
+       "priority": 3,
+       "why_priority": "questions the originality and viability of the thesis"
+      },
+      {
+       "quote": "chapter 2 structure, currently 4 subsections, feels bloated",
+       "kind": "discuss",
+       "size": "substantial",
+       "priority": 4,
+       "why_priority": "requires structural feedback"
+      }
+     ],
+     "missing_info": [
+      "what is the current status of chapter 2?"
+     ]
+    },
+    "agenda": "AGENDA (25 min)\n1. Opening - 2 min\n2. Formatting queries: APA vs. IEEE and appendix requirements (institutional) - 2 min\n   *(Note: Official regulations are the authority)*\n3. Thesis originality: 2024 paper findings - 5 min\n4. Chapter 2 structure and potential bloat - 5 min\n5. Agree next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- What is the current status of chapter 2?",
+    "questions": "1. Could you confirm which citation style I should prioritize, given the conflict between the institutional template and your previous advice?\n[Priority: High - directly affects formatting compliance and final submission requirements.]\n\n2. Where can I find the official policy or your specific preference regarding the inclusion of full interview transcripts in the appendix?\n[Priority: High - impacts document length constraints and preparation time.]\n\n3. In your view, how does the recent 2024 paper that mirrors my research affect the originality and viability of my current thesis direction?\n[Priority: Medium - essential for determining if the project scope needs adjustment.]\n\n4. Would you be open to reviewing the structure of my chapter 2, as I am concerned the current four-subsection layout is becoming too bloated?\n[Priority: Medium - structural feedback is needed to ensure the chapter remains focused.]",
+    "email": "Subject: Follow-up: Thesis Meeting - [Date]\n\nDear [Supervisor Name],\n\nThank you for our meeting today. Please find the summary of the points we discussed below:\n\n1. Opening: [Summary of opening discussion].\n2. Formatting queries: [Agreed style/requirements].\n3. Thesis originality: [Agreed approach regarding 2024 paper findings].\n4. Chapter 2 structure: [Agreed structure or plan for addressing potential bloat].\n5. Next steps: [Agreed actions and deadlines].\n\nI will proceed according to these points and keep you updated on my progress.\n\nBest regards,\n\n[Student Name]",
+    "flags": [
+     [],
+     [],
+     []
+    ]
+   }
+  },
+  {
+   "id": "T7",
+   "title": "Follow-up meeting",
+   "subtitle": "Building on last time",
+   "tests": "Builds on what was agreed last meeting, and settles the framework question without picking one.",
+   "notes": {
+    "A1": "Runs 2-3 add \"feedback on Chapter 1\" as an agenda block (10 min in run 3). The note says Ch1 was sent but never asks for feedback. Hard fail 3.",
+    "B1": "Emails in runs 1 and 3 add \"Review of Chapter 1\" and an HSLU deadline as summary items. Hard fail 3.",
+    "B2": "Chapter 1 stays under BEFORE THE MEETING, where it belongs. But run 2's email adds \"[insert official regulation/date]\" (D5 leak). It also does not build on what was agreed last time (D7)."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "bad"
+   },
+   "note": "second meeting, 30 min\n\nlast time she said: narrow the scope, find a theoretical framework, send\nher chapter 1 by mid oct.\n\ndone: narrowed to secondary schools only. ch1 sent on the 14th.\nnot done: framework. I looked at TAM and UTAUT but I'm not sure which\nfits and I didn't want to commit to the wrong one.\n\nwant to use this meeting to settle the framework",
+   "A1": {
+    "runs": 3,
+    "output": "Since you only have 30 minutes, you need to be structured and proactive. Your supervisor will appreciate that you’ve met your deadlines (Chapter 1) and that you have a specific, concrete problem (the framework) to solve.\n\nHere is a plan to structure your meeting and make the most of your time.\n\n### 1. The Agenda (To open the meeting)\nStart by setting the stage so you don't waste time. \n\n*   **Minute 0–2:** Quick status update (Confirming you narrowed the scope to secondary schools and confirm the status of Chapter 1).\n*   **Minute 2–20:** The \"Meat\" (Discussing the framework).\n*   **Minute 20–25:** Next steps/deadlines.\n*   **Minute 25–30:** Buffer/Wrap-up.\n\n---\n\n### 2. Suggested Script for the \"Framework\" Discussion\nSince you are stuck between TAM and UTAUT, **do not ask \"Which one should I use?\"** Instead, present your analysis and ask for her validation.\n\n**Try saying this:**\n> \"Since our last meeting, I’ve narrowed the focus to secondary schools and submitted Chapter 1. Regarding the theoretical framework, I’ve been weighing TAM against UTAUT. \n> \n> My concern with **TAM** is that it might be a bit too narrow for the complexities of a school environment. My concern with **UTAUT** is that it might be overkill if I don't have the data points for all its variables. Given my research questions [insert 1 sentence on your research questions], which of these do you feel offers a more robust lens for a secondary school context?\"\n\n---\n\n### 3. Pro-Tips for the Meeting\n\n*   **Have your Research Questions ready:** If you don’t have them memorized, have them written on a piece of paper. The framework choice depends entirely on whether your research is *psychological* (TAM - ease of use/perceived usefulness) or *social/contextual* (UTAUT - social influence/facilitating conditions).\n*   **The \"Middle Way\":** If she is hesitant, suggest a **\"UTAUT-lite\"** approach—using the core constructs of UTAUT but dropping the ones that aren't relevant to your specific secondary school setting.\n*   **Bring a Summary Table:** If you want to impress her, have a tiny table (on a piece of paper or on your laptop) that compares the two models side-by-side. It shows you’ve done the reading.\n*   **Don't leave without a commitment:** Before you leave, say: *\"So, just to be clear, I will move forward with [chosen framework] and integrate that into Chapter 2. Does that align with your expectations?\"*\n\n---\n\n### 4. Checklist: What to have open/ready\n*   **Chapter 1:** Even though you sent it, have a copy ready in case she wants to look at a specific paragraph.\n*   **The Research Questions:** Your \"North Star.\"\n*   **A notepad:** Write down *exactly* what she says about the framework. If she says \"UTAUT,\" ask her, \"Are there any specific parts of UTAUT you think I should emphasize?\"\n*   **Your calendar:** Have your next available dates ready to schedule the third meeting.\n\n**Do you have a clear idea of how these two frameworks differ for your specific topic?** If you're still unsure, tell me your research topic, and I can help you weigh the pros and cons of each model before your meeting."
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 30,
+     "stage": "mid",
+     "concerns": [
+      {
+       "quote": "I looked at TAM and UTAUT but I'm not sure which fits and I didn't want to commit to the wrong one.",
+       "kind": "discuss",
+       "priority": 1,
+       "why_priority": "essential for thesis structure"
+      },
+      {
+       "quote": "want to use this meeting to settle the framework",
+       "kind": "discuss",
+       "priority": 2,
+       "why_priority": "defines the direction of research"
+      }
+     ],
+     "missing_info": [
+      "Has the supervisor received and reviewed the chapter 1 sent on the 14th?"
+     ]
+    },
+    "agenda": "AGENDA (30 min)\n\n1. Opening - 2 min\n2. Evaluation of TAM vs. UTAUT for thesis structure - 5 min\n3. Final decision and settlement of the research framework - 5 min\n4. Agree next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nOPEN QUESTIONS\n- Has the supervisor received and reviewed the chapter 1 sent on the 14th?",
+    "questions": "1. Given the focus of my research, do you believe TAM or UTAUT provides a more robust theoretical foundation for my analysis?\n[Prioritized as essential for structural alignment.]\n\n2. Can we confirm the final theoretical framework today so I can proceed with the literature review and methodology?\n[Prioritized as it defines the direction of the remaining research.]\n\n3. Have you had an opportunity to review the draft of Chapter 1 that I submitted on the 14th?\n[Prioritized as it determines if feedback is available to inform the discussion.]",
+    "email": "Subject: Follow-up: Thesis meeting regarding framework and structure\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my thesis. \n\nTo ensure I have captured our discussion correctly, I have noted the following:\n\n*   **Review of Chapter 1:** [Confirmation or status regarding the chapter sent on the 14th].\n*   **Framework Selection:** We discussed the comparison between TAM and UTAUT, and reached the following conclusion regarding the research framework: [what was decided].\n*   **Next Steps:** We agreed on the following action items: [what we agreed on regarding next steps].\n*   **Timeline:** Regarding [relevant HSLU deadline or internal milestone], we agreed to [what we agreed on regarding the timeline].\n\nPlease let me know if I have missed or misinterpreted any points from our discussion. \n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ],
+     [],
+     []
+    ]
+   },
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 30,
+     "stage": "mid",
+     "concerns": [
+      {
+       "quote": "I looked at TAM and UTAUT but I'm not sure which fits and I didn't want to commit to the wrong one.",
+       "kind": "discuss",
+       "size": "substantial",
+       "priority": 1,
+       "why_priority": "the framework selection is needed to proceed with the thesis"
+      }
+     ],
+     "missing_info": [
+      "You mentioned wanting to settle the framework, but did you have a preference or specific research question that leans towards one over the other?"
+     ]
+    },
+    "agenda": "AGENDA (30 min)\n1. Opening - 2 min\n2. Choosing between TAM and UTAUT for the research framework - 5 min\n3. Agreeing on next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- You mentioned wanting to settle the framework, but did you have a preference or specific research question that leans towards one over the other?",
+    "questions": "1. Given my current research focus, do you recommend prioritizing the TAM or UTAUT framework for the data analysis phase?\n[This is the highest priority because it is a foundational decision required to progress with the thesis.]",
+    "email": "Subject: Follow-up: Thesis meeting\n\nDear [Supervisor Name],\n\nThank you for the meeting today. As discussed, here is the summary of our agenda items:\n\n1. Opening: [Summary of opening]\n2. Choosing between TAM and UTAUT: [Decision reached on the framework]\n3. Next steps: [Agreed actions and deadlines]\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [],
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ],
+     []
+    ]
+   }
+  },
+  {
+   "id": "T8",
+   "title": "One focused question",
+   "subtitle": "Restraint",
+   "tests": "A short focused note must not be inflated. \"Is 12 defensible\" is partly the supervisor's judgement.",
+   "notes": {
+    "A1": "Argues the verdict for the student: \"Why 12 is defensible\"; run 3: \"I'm confident this provides sufficient depth.\" Hard fail 2.",
+    "B1": "Verdict correctly turned into a question, and the agenda is not inflated. But every email adds a submission deadline. Hard fail 3.",
+    "B2": "Short, restrained, no verdict, no added deadline. Minor: run 3's agenda loses the \"12 interviews\" detail (D9)."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "good"
+   },
+   "note": "quick 15 min. only thing I need is whether my sample size of 12 interviews\nis defensible for a qualitative study at bachelor level, and what she'd\nwant me to write to justify it",
+   "A1": {
+    "runs": 3,
+    "output": "Since you only have 15 minutes, you need to be **direct, professional, and prepared.** Don’t wait for her to ask; lead with your request immediately so you don't run out of time.\n\nHere is a plan to structure your meeting and a template for what you should have ready to show her.\n\n### The 15-Minute Game Plan\n\n*   **0:00–2:00:** State the goal clearly. \"I have a quick question about my methodology—specifically, my sample size of 12 interviews.\"\n*   **2:00–7:00:** Present your rationale (see below).\n*   **7:00–12:00:** Get her specific feedback/approval. Ask: \"What terminology or academic justification would you like to see in the 'Methodology' section to make this bulletproof?\"\n*   **12:00–15:00:** Summarize the action items and thank her.\n\n---\n\n### How to Justify Your Sample Size (The \"Why\")\nWhen she asks why 12, don't just say \"it felt right.\" Use these three pillars of qualitative justification:\n\n**1. The Concept of \"Saturation\"**\n*   **The Argument:** Explain that you are aiming for *theoretical saturation*. State that after 12 interviews, you expect the data to reach a point where no new themes or insights are emerging.\n*   **The Phrase to use:** \"I have chosen a sample size of 12 based on the principle of data saturation, where additional data collection provides diminishing returns regarding new insights.\"\n\n**2. The Scope of a Bachelor Thesis**\n*   **The Argument:** Remind her (tactfully) that this is an undergraduate project, not a PhD dissertation.\n*   **The Phrase to use:** \"Given the time constraints and the scope of an undergraduate thesis, a sample of 12 allows for the depth of analysis required for qualitative inquiry without sacrificing the feasibility of the project.\"\n\n**3. Quality over Quantity**\n*   **The Argument:** Emphasize the *depth* of the interviews.\n*   **The Phrase to use:** \"My focus is on rich, descriptive qualitative data. 12 interviews allow me to conduct a thorough thematic analysis rather than a superficial overview.\"\n\n---\n\n### Ask Her Exactly What to Write\nTo ensure you aren't guessing what she wants, ask these specific questions:\n\n1.  *\"Should I cite a specific author to support this sample size? Is there someone in our field you prefer I reference regarding qualitative sample sizes (e.g., Guest, Bunce, & Johnson; or Mason)?\"*\n2.  *\"Do you want me to include a 'Limitations' section where I acknowledge that this is a small-scale, non-generalizable sample?\"*\n3.  *\"Should I justify the sample based on the homogeneity of my target group?\"* (If your participants are all very similar, this makes 12 interviews much more defensible).\n\n### Pro-Tip for the meeting:\nIf she seems hesitant about the number 12, ask: **\"If you feel 12 is too low, what would be your recommended range, or what specific criteria should I use to determine if I need more?\"** \n\nThis puts the responsibility on her to provide a clear benchmark, which protects you during your final grading.\n\n**One last piece of advice:** Have your research question written on a piece of paper in front of you. If she challenges the sample size, you can say: *\"Given that my research question focuses specifically on [X], 12 participants provide a very focused and manageable data set for this specific scope.\"*"
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 15,
+     "stage": "unknown",
+     "concerns": [
+      {
+       "quote": "whether my sample size of 12 interviews is defensible for a qualitative study at bachelor level",
+       "kind": "judgement",
+       "priority": 1,
+       "why_priority": "determines the academic validity of the thesis"
+      },
+      {
+       "quote": "what she'd want me to write to justify it",
+       "kind": "discuss",
+       "priority": 2,
+       "why_priority": "needed for the methodology section"
+      }
+     ],
+     "missing_info": [
+      "What is the specific topic of the thesis?",
+      "Has the research methodology been approved yet?",
+      "What is the current timeline for the thesis submission?"
+     ]
+    },
+    "agenda": "AGENDA (15 min)\n\n1. Opening - 2 min\n2. Is a sample size of 12 interviews defensible for a bachelor-level qualitative study? - 5 min\n3. Guidance on drafting the justification for the methodology section - 5 min\n4. Agree on next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nOPEN QUESTIONS\n- What is the specific topic of the thesis?\n- Has the research methodology been approved yet?\n- What is the current timeline for the thesis submission?",
+    "questions": "1. Do you think a sample size of 12 interviews is sufficient and defensible for a qualitative study at the bachelor level?\n[Priority: This determines the academic validity of the entire thesis.]\n\n2. What specific arguments or sources would you like me to include in the methodology section to justify this sample size?\n[Priority: This is the necessary follow-up action to address the validity concern.]",
+    "email": "Subject: Follow-up: Thesis Meeting - [Your Name]\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my thesis on [Thesis Topic].\n\nAs discussed, our agenda covered the following points:\n\n*   **Sample size:** We discussed whether my sample size of 12 interviews is defensible for this qualitative study. [Summary of your discussion/agreement].\n*   **Methodology justification:** We reviewed how to draft the justification for the methodology section. [Summary of your discussion/agreement].\n*   **Next steps:** We agreed that [What we agreed on next steps].\n\nRegarding the timeline, I have noted that the submission deadline is [Insert deadline]. I will proceed with these points and keep you updated on my progress.\n\nBest regards,\n\n[Your Name]\n[Student ID]",
+    "flags": [
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ],
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ],
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ]
+    ]
+   },
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 15,
+     "stage": "unknown",
+     "concerns": [
+      {
+       "quote": "whether my sample size of 12 interviews is defensible for a qualitative study at bachelor level",
+       "kind": "judgement",
+       "size": "substantial",
+       "priority": 1,
+       "why_priority": "critical to the methodology validity"
+      },
+      {
+       "quote": "what she'd want me to write to justify it",
+       "kind": "discuss",
+       "size": "quick",
+       "priority": 2,
+       "why_priority": "relates to academic writing requirements"
+      }
+     ],
+     "missing_info": [
+      "What is the current status of the qualitative study?"
+     ]
+    },
+    "agenda": "AGENDA (15 min)\n1. Opening - 2 min\n2. Is a sample size of 12 interviews defensible for a qualitative bachelor thesis? - 5 min\n3. Discussion on the required justification for sample size - 2 min\n4. Agree next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- What is the current status of the qualitative study?",
+    "questions": "1. Do you believe a sample size of 12 interviews is sufficient to maintain academic rigor for this bachelor-level study?\n[Ranked first as methodology validity is critical to the project's foundation.]\n\n2. What specific arguments or framing would you suggest I include in my methodology section to justify this sample size?\n[Ranked second as it builds directly upon the methodological decision made in the first question.]",
+    "email": "Subject: Follow-up: Thesis meeting\n\nDear [Supervisor Name],\n\nThank you for the meeting today. Following our agenda, here is a summary of our discussion:\n\n1. Opening: [Summary of opening].\n2. Sample size: [Decision regarding the 12 interviews].\n3. Justification: [Agreed approach for the sample size justification].\n4. Next steps: [List of agreed tasks and deadlines].\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [],
+     [],
+     []
+    ]
+   }
+  },
+  {
+   "id": "T9",
+   "title": "First ever meeting",
+   "subtitle": "Exploratory meeting",
+   "tests": "Three topic ideas and a procedural question about expectations.",
+   "notes": {
+    "A1": "States HSLU expectations as fact in all three runs: \"you do <b>not</b> need to have picked one topic yet.\" Hard fail 1, the one predicted.",
+    "B1": "Run 1 drops the three topic ideas, the main content of the note, and fills 15 minutes with \"Discussing missing info\". Hard fail 4.",
+    "B2": "No stated expectations; \"do I need to have picked one\" goes to the supervisor. But run 1 again drops the three topic ideas (D7). Hard fail 4."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "bad"
+   },
+   "note": "first meeting with supervisor, 30 min, never done this before\n\nI have three topic ideas:\n1. VR for museum accessibility\n2. prompt engineering workflows for small companies\n3. something with ROS2 and robot navigation\n\nno idea how to run this meeting or what she expects from me. do I need to\nhave picked one already",
+   "A1": {
+    "runs": 3,
+    "output": "It is completely normal to feel nervous before your first meeting. The good news is that **you do *not* need to have picked one topic yet.** In fact, the purpose of this first meeting is exactly to brainstorm and narrow down your interests with your supervisor’s guidance.\n\nHere is a game plan to help you feel prepared and professional.\n\n---\n\n### 1. The Goal of the Meeting\nYour supervisor is looking for three things:\n*   **Feasibility:** Is the idea realistic for your timeline and skills?\n*   **Academic Rigor:** Is there enough depth for a thesis?\n*   **Enthusiasm:** Are you actually interested in this? (You’ll be stuck with it for months, so interest matters!)\n\n### 2. Recommended Meeting Structure (30 Minutes)\n\n**0–5 min: The \"Get to Know You\" & Logistics**\n*   \"Hi [Name], I’m really excited to get started. Before we dive in, I’d love to know if you have a specific preferred way of working—do you prefer weekly check-ins, email updates, or a specific platform for tracking progress?\"\n\n**5–20 min: The Idea Pitch**\nDon't just list the topics; explain *why* they interest you. Use this structure for each:\n*   **The Problem:** \"I’ve been reading about X, and I think it’s interesting because...\"\n*   **The Potential:** \"I imagine a thesis could look like [building X / analyzing Y / conducting Z].\"\n*   **The Reality Check:** \"I’m leaning toward these three areas, but I’m unsure which one is most viable given my timeframe. What do you think?\"\n\n**20–25 min: The Supervisor’s Feedback**\n*   Listen carefully. She might say, \"I have no expertise in VR, but I love the ROS2 idea,\" or \"The prompt engineering one is great, but you’ll need a dataset.\" **Take notes.**\n\n**25–30 min: Next Steps**\n*   \"So, to clarify, for our next meeting, you’d like me to [pick one / do a literature search / write a one-page proposal]? Great, I’ll have that ready for [next meeting date].\"\n\n---\n\n### 3. Tips for Success\n\n*   **Bring a Pen and Paper:** Even if you use a laptop, handwriting notes shows you are engaged.\n*   **The \"Vibe Check\":** Pay attention to which topic she gets excited about. If she lights up when talking about ROS2, that’s a strong signal that she’ll be more supportive and helpful in that area.\n*   **Be Honest About Gaps:** If you aren’t an expert in ROS2 yet but want to learn, say that. \"I’m very interested in ROS2, though I’m still building my proficiency. Would that be a major hurdle for this topic?\"\n*   **The \"Don't Know\" is Okay:** If she asks a question you don't have the answer to, say: \"That’s a great point I haven't considered yet. Let me look into that and report back to you next time.\"\n\n### 4. Preparation Checklist (Before you go)\n\n1.  **Prepare a \"Pitch\" for each:** Write down 3–4 bullet points for each of your three ideas. Keep it to one page total.\n2.  **The \"Why You\" factor:** Be prepared to explain why you chose these. (e.g., \"I have a background in robotics,\" or \"I am really interested in the accessibility space.\")\n3.  **Check your schedule:** Have your calendar open in case she suggests a recurring time for future meetings.\n\n### A final word of advice:\nYou don't need to be an expert yet—that’s what the thesis process is for. Treat this like a professional **consultation** rather than an oral exam. She is your mentor, not your interrogator. You’ve got this!"
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 30,
+     "stage": "early",
+     "concerns": [
+      {
+       "quote": "no idea how to run this meeting or what she expects from me",
+       "kind": "discuss",
+       "priority": 1,
+       "why_priority": "defines the structure of the entire session"
+      },
+      {
+       "quote": "do I need to have picked one already",
+       "kind": "judgement",
+       "priority": 2,
+       "why_priority": "impacts the timeline and current task requirements"
+      }
+     ],
+     "missing_info": [
+      "Are you looking for help narrowing down your list of three topic ideas?",
+      "Do you have a specific deadline for selecting a final topic?"
+     ]
+    },
+    "agenda": "AGENDA (30 min)\n\n1. Opening and setting the agenda - 2 min\n2. Defining expectations for the thesis supervision process - 5 min\n3. Clarifying the requirement for selecting a final topic - 5 min\n4. Discussing missing info and next steps - 15 min\n5. Agreeing on next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nOPEN QUESTIONS\n- Are you looking for help narrowing down your list of three topic ideas?\n- Do you have a specific deadline for selecting a final topic?",
+    "questions": "1. What is the most effective way for me to structure our meetings and prepare for them so that I am meeting your expectations?\n[This addresses the immediate need to manage the session and supervisor alignment.]\n\n2. In your view, do I need to have finalized a single research topic by the end of this meeting, or is it better to continue exploring my current options?\n[This addresses the timeline impact of the current task requirements.]",
+    "email": "Subject: Follow-up: Thesis meeting - [Your Name]\n\nDear [Supervisor's Name],\n\nThank you for meeting with me today to discuss my bachelor thesis. \n\nTo summarize our discussion:\n* We defined expectations for the supervision process, agreeing that [summary of expectations].\n* We addressed the status of my topic selection, establishing that [what we agreed on regarding the selection of a final topic].\n* We discussed my list of three topic ideas, and [what we agreed on regarding narrowing down the list].\n\nOur agreed-upon next steps are:\n* [Next step 1] by [Date]\n* [Next step 2] by [Date]\n\nPlease let me know if I have missed anything or if you would like to adjust these points.\n\nBest regards,\n\n[Your Name]\n[Student ID]",
+    "flags": [
+     [],
+     [
+      "HSLU deadline/regulation added to email, not in note"
+     ],
+     []
+    ]
+   },
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 30,
+     "stage": "early",
+     "concerns": [
+      {
+       "quote": "no idea how to run this meeting or what she expects from me.",
+       "kind": "discuss",
+       "size": "substantial",
+       "priority": 1,
+       "why_priority": "clarifies the meeting structure and supervisor expectations"
+      },
+      {
+       "quote": "do I need to have picked one already",
+       "kind": "discuss",
+       "size": "quick",
+       "priority": 2,
+       "why_priority": "determines the decision-making process for the thesis topic"
+      }
+     ],
+     "missing_info": [
+      "Are you looking for feedback on all three topic ideas or just guidance on how to choose?"
+     ]
+    },
+    "agenda": "AGENDA (30 min)\n1. Clarifying expectations for the meeting structure and thesis requirements - 5 min\n2. Decision-making process for selecting a thesis topic - 2 min\n3. Open discussion and next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- Are you looking for feedback on all three topic ideas or just guidance on how to choose?",
+    "questions": "1. Could you outline your preferred structure for our supervision meetings and what specific preparation you expect from me before each session?\n[Priority: Essential for establishing a productive working relationship and managing the limited meeting time effectively.]\n\n2. How finalized do you expect my thesis topic to be at this early stage, or would you prefer I bring multiple options for us to discuss?\n[Priority: Critical for determining current workload and managing research direction.]",
+    "email": "Subject: Follow-up: Thesis meeting\n\nDear [Supervisor Name],\n\nThank you for the meeting today. Please find the summary of our discussion below:\n\n1. Regarding the meeting structure and thesis requirements, [what we agreed on regarding structure/requirements].\n2. For the thesis topic selection process, [what we agreed on regarding the decision-making process].\n3. As for our next steps, [what we agreed on regarding next steps and deadlines].\n\nPlease let me know if I have missed or misunderstood any points.\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [],
+     [],
+     []
+    ]
+   }
+  },
+  {
+   "id": "T10",
+   "title": "Already well organised",
+   "subtitle": "Does it add anything?",
+   "tests": "The student has done the work. If the tool only reformats it, that is an honest finding.",
+   "notes": {
+    "A1": "Reformats a note that was already good. Adds little, harms nothing.",
+    "B1": "Faithful. The deadline placeholder is legitimate here: \"timeline to submission\" is in the note.",
+    "B2": "Faithful. Minor: \"whether she wants to see ch4\" is routed as institutional, so run 2's email cites a regulation for a supervisor preference."
+   },
+   "cls": {
+    "A1": "good",
+    "B1": "good",
+    "B2": "good"
+   },
+   "note": "30 min, thursday\n\nstatus: data collection complete (n=47), analysis 80% done, ch4 drafted\n\nagenda I'd like:\n1. results - two findings contradict my hypothesis, want her read on\n   whether that's a problem or the interesting part\n2. ch5 structure - discuss by theme or by RQ?\n3. timeline to submission\n4. whether she wants to see ch4 before or after I revise it\n\nshould be enough for 30 min I think",
+   "A1": {
+    "runs": 3,
+    "output": "This is a solid agenda. With only 30 minutes, you need to be disciplined to ensure you leave with actionable steps. \n\nHere is a refined version of your notes, structured to help you lead the meeting efficiently:\n\n### Meeting Prep: The \"30-Minute Efficiency\" Plan\n\n**1. The \"Opening Hook\" (Keep it to 2 mins)**\n*   \"Data collection is finished (n=47) and analysis is about 80% complete. Chapter 4 is currently drafted. My goal today is to get your steer on a few key structural decisions so I can finish the final push.\"\n\n**2. Agenda Items (Strategy for each)**\n*   **The \"Contradictory Findings\" (10 mins):**\n    *   *Tip:* Don't just ask \"is this a problem?\" Frame it as: *\"I found X and Y, which contradict my hypothesis. I’m leaning toward framing these as [the interesting part/a limitation of the current model/an indicator of X]. Does this align with how you see the study evolving?\"*\n*   **Chapter 5 Structure (5 mins):**\n    *   *Tip:* Have the pros/cons ready. \"I’m debating between organizing by RQ (for clarity) or by Theme (for narrative depth). Do you have a preference for the impact this will have on the examiners?\"\n*   **Chapter 4 Review (5 mins):**\n    *   *Tip:* Be proactive. \"I have a draft of Ch 4. Based on our discussion about the findings today, I’ll likely need to tweak some sections. Would you prefer I revise it first and send it with Ch 5, or should I send the current draft now so you can see the analysis?\"\n*   **Timeline (8 mins):**\n    *   *Tip:* Work backward. \"I’d like to submit by [Date]. If I send you [X] by [Date], does that give you enough turnaround time?\"\n\n---\n\n### Pro-Tips for a 30-Minute Session:\n\n*   **Prepare a \"Findings Summary\" sheet:** Since you have 30 minutes, don't make her read a whole chapter. Bring a one-page handout with the two contradictory findings, the relevant data points, and your 1-2 sentence interpretation of them.\n*   **Bring a Calendar:** Have your schedule open so you can lock in \"send\" and \"receive\" dates immediately.\n*   **Ask for \"The End\":** If you get tight on time, prioritize the **contradictory findings** (the \"science\" part) and the **timeline** (the \"logistics\" part). The structural debate (Ch 5) can often be handled via email if you run out of time.\n*   **Take Notes (or ask to record):** Since you have a lot to cover, ask: *\"I want to make sure I capture your advice accurately—do you mind if I take notes as we go, or if I record this just for my own reference?\"*\n\n### Does this timeline look realistic?\nYes, **if** you keep the \"Results\" conversation focused on the interpretation of the two specific findings rather than a broad overview of all the results. \n\n**Would you like me to help you draft the specific \"one-pager\" summary for those contradictory findings?** If so, just share the nature of the contradiction!"
+   },
+   "B1": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 30,
+     "stage": "mid",
+     "concerns": [
+      {
+       "quote": "two findings contradict my hypothesis, want her read on whether that's a problem or the interesting part",
+       "kind": "judgement",
+       "priority": 1,
+       "why_priority": "affects validity of results"
+      },
+      {
+       "quote": "ch5 structure - discuss by theme or by RQ?",
+       "kind": "discuss",
+       "priority": 2,
+       "why_priority": "essential for writing ch5"
+      },
+      {
+       "quote": "timeline to submission",
+       "kind": "institutional",
+       "priority": 3,
+       "why_priority": "need to ensure deadline is met"
+      },
+      {
+       "quote": "whether she wants to see ch4 before or after I revise it",
+       "kind": "discuss",
+       "priority": 4,
+       "why_priority": "determines workflow"
+      }
+     ],
+     "missing_info": []
+    },
+    "agenda": "AGENDA (30 min)\n\n1. Opening - 2 min\n2. Addressing findings that contradict the hypothesis: are these a problem or the core contribution of the thesis? - 5 min\n3. Structural strategy for Chapter 5: discussing by theme vs. by Research Question - 5 min\n4. Workflow coordination: review schedule for Chapter 4 - 5 min\n5. Timeline to submission - 5 min (Note: Please refer to official HSLU regulations for all institutional deadlines.)\n6. Agreeing on next steps - 8 min\n\nWILL NOT FIT\n- nothing\n\nOPEN QUESTIONS\n- none",
+    "questions": "1. Given that two of my findings contradict my initial hypothesis, do you view this as a potential issue for the study's validity or as a significant, interesting result to highlight?\n[Ranks first because it directly impacts the core argument and validity of the research findings.]\n\n2. Should I structure Chapter 5 by individual research questions or by thematic analysis to best support the thesis?\n[Ranks second as this is a fundamental structural decision required to begin writing the chapter.]\n\n3. Could you confirm if the submission deadline I have noted aligns with the department's current official timeline for my program stage?\n[Ranks third as it ensures institutional compliance and keeps the project on schedule.]\n\n4. Would you prefer to review the current draft of Chapter 4 now, or should I wait until I have completed my planned revisions?\n[Ranks fourth as this is a workflow preference that affects the upcoming editing process.]",
+    "email": "Subject: Summary of meeting: Bachelor thesis progress\n\nDear [Supervisor Name],\n\nThank you for the meeting today. As discussed, here is a summary of the points we covered:\n\n*   **Hypothesis and findings:** [Agreed stance on the contradictory findings].\n*   **Chapter 5 structure:** [Agreed strategy regarding thematic vs. RQ-based structure].\n*   **Chapter 4 workflow:** [Agreed process for reviewing the revised chapter].\n*   **Submission timeline:** [Agreed milestones relative to the official HSLU deadline of [Insert Date]].\n\nNext steps:\n*   [Task 1 for student]\n*   [Task 2 for student]\n\nPlease let me know if I have missed anything or if you would like to adjust any of these points.\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [],
+     [],
+     []
+    ]
+   },
+   "B2": {
+    "runs": 3,
+    "parsed": {
+     "meeting_minutes": 30,
+     "stage": "mid",
+     "concerns": [
+      {
+       "quote": "results - two findings contradict my hypothesis, want her read on whether that's a problem or the interesting part",
+       "kind": "judgement",
+       "size": "substantial",
+       "priority": 1,
+       "why_priority": "influences the interpretation of the entire analysis"
+      },
+      {
+       "quote": "ch5 structure - discuss by theme or by RQ?",
+       "kind": "discuss",
+       "size": "substantial",
+       "priority": 2,
+       "why_priority": "essential for structuring the final chapter"
+      },
+      {
+       "quote": "timeline to submission",
+       "kind": "institutional",
+       "size": "quick",
+       "priority": 3,
+       "why_priority": "needed for planning the remaining work"
+      },
+      {
+       "quote": "whether she wants to see ch4 before or after I revise it",
+       "kind": "institutional",
+       "size": "quick",
+       "priority": 4,
+       "why_priority": "defines the review workflow"
+      }
+     ],
+     "missing_info": []
+    },
+    "agenda": "AGENDA (30 min)\n1. Discussion of findings that contradict the hypothesis: interpretation and next steps - 5 min\n2. Structuring Chapter 5: thematic vs. RQ-based approach - 5 min\n3. Planning timeline and review workflow (institutional) - 2 min\n4. Agreeing on next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- (No questions provided)",
+    "questions": "1. How do you interpret the two results that contradict my hypothesis, and do you see these findings as a significant issue or as a key contribution to the analysis?\n[Priority: Influences the interpretation of the entire analysis.]\n\n2. Would you recommend structuring chapter 5 by theme or by research question to best support the final argument?\n[Priority: Essential for structuring the final chapter.]\n\n3. According to the university's official schedule for this term, what are the definitive upcoming deadlines I should be prioritizing for my submission?\n[Priority: Needed for planning the remaining work.]\n\n4. Based on your preferred workflow for feedback, would you like me to submit chapter 4 to you for review before or after I complete my planned revisions?\n[Priority: Defines the review process for the next draft.]",
+    "email": "Subject: Follow-up: Thesis Meeting - [Your Name]\n\nDear [Supervisor Name],\n\nThank you for the meeting today. As discussed, here are the agreed-upon points:\n\n1. Regarding the findings contradicting the hypothesis: [what we agreed on regarding interpretation and next steps].\n2. For the structure of Chapter 5: [what we agreed on regarding the thematic vs. RQ-based approach].\n3. Concerning the timeline and institutional review workflow: [what we agreed on regarding deadlines/procedures].\n4. Next steps: [what we agreed on as the specific upcoming tasks].\n\nBest regards,\n\n[Your Name]",
+    "flags": [
+     [],
+     [],
+     []
+    ]
+   }
+  }
+ ],
+ "scenarios": [
+  {
+   "id": "S1",
+   "title": "Early stage: scope not settled",
+   "situation": "First meeting after the topic was provisionally accepted. Has read widely, written nothing. Suspects the topic is too broad but cannot say why.",
+   "issues": "Question 2 mentions \"a single case study\", a term the student never used (D9). <i>\"I don't want to waste her time with stupid questions\"</i> is not acknowledged. The email reports \"Opening: we formally opened the meeting\" (D8).",
+   "note": "meeting thurs 30 min\n\nok so topic is \"AI in education\" but my supervisor said last time it was\ntoo broad?? I dont really get what too broad means here. I have like 20\npapers saved. Some are about chatbots for language learning, some about\ngrading automation, two about accessibility.\n\nshould I pick just one? or is there a way to keep it broad\nalso do I need a research question already at this stage or does that\ncome later\n\nI don't want to waste her time with stupid questions",
    "parsed": {
-    "meeting_minutes": 20,
-    "agenda_states": "20 min",
+    "meeting_minutes": 30,
     "stage": "early",
     "concerns": [
      {
-      "quote": "honestly haven't been coping well the last month and barely opened the document.",
-      "kind": "support",
-      "priority": 1
+      "quote": "I dont really get what too broad means here.",
+      "kind": "discuss",
+      "size": "substantial",
+      "priority": 1,
+      "why_priority": "the scope needs to be narrowed to proceed"
      },
      {
-      "quote": "I know I need to tell her something but I don't know how much to say.",
+      "quote": "should I pick just one? or is there a way to keep it broad",
       "kind": "discuss",
-      "priority": 2
+      "size": "substantial",
+      "priority": 2,
+      "why_priority": "determines the direction of the literature review"
      },
      {
-      "quote": "ch3 is half done",
-      "kind": "discuss",
-      "priority": 4
-     },
-     {
-      "quote": "the analysis is stuck because I can't get the script to run on the full dataset.",
-      "kind": "discuss",
-      "priority": 3
+      "quote": "do I need a research question already at this stage or does that come later",
+      "kind": "institutional",
+      "size": "quick",
+      "priority": 3,
+      "why_priority": "establishes expectations for the current phase"
      }
     ],
     "missing_info": [
-     "What is the exact deadline for the thesis?",
-     "What specific error is the analysis script returning?",
-     "Are there specific HSLU support resources for mental health the student would like to be referred to?"
+     "You mention you have 20 papers; are these papers currently annotated or have you read them yet?"
     ]
    },
-   "agenda": "AGENDA (20 min)\n\n1. Opening - 2 min\n2. Addressing personal wellbeing (support) - 5 min\n   *Note: You may want to mention your current situation to your supervisor. For further support, please consult HSLU student support services.*\n3. Guidance on supervisor communication (discuss) - 5 min\n4. Technical blockers: Analysis script error (discuss) - 5 min\n5. Agreeing on next steps - 3 min\n\nWILL NOT FIT\n- Ch3 status update\n\nOPEN QUESTIONS\n- What is the exact deadline for the thesis?\n- What specific error is the analysis script returning?\n- Are there specific HSLU support resources for mental health the student would like to be referred to?",
-   "questions": "1. Could we discuss a realistic plan for me to get back on track with my work, given that I have struggled to make progress over the last month?\n[This addresses the primary barrier to the student's ability to proceed with the research.]\n\n2. What is your preferred approach for me to communicate personal challenges or delays, and how much detail do you find helpful for our supervisory relationship?\n[This addresses the need for clear communication protocols for the student's well-being and project management.]\n\n3. My analysis script is failing to run on the full dataset; could we look at [specific error] together, or should I reach out to IT support for this technical issue?\n[This addresses the primary research blocker that prevents further progress.]\n\n4. Could you confirm the exact deadline for the thesis so I can adjust my timeline for completing Chapter 3 and the remaining sections?\n[This provides a firm institutional benchmark to help the student manage their current workload.]",
-   "email": "Subject: Follow-up: Thesis Meeting - [Your Name]\n\nDear [Supervisor Name],\n\nThank you for meeting with me today to discuss my thesis progress. To summarize our discussion:\n\n*   **Wellbeing and Communication:** We discussed [what we agreed on regarding my current situation and communication approach]. I will look into [the HSLU resources/support channels] as suggested.\n*   **Technical Blockers:** We reviewed the error in my analysis script, and it was agreed that [what we agreed on to resolve the script issue].\n*   **Next Steps:** I will [what we agreed on for the upcoming steps].\n*   **Timeline:** We noted the submission deadline as [insert date], and I will [what we agreed on regarding milestones].\n\nPlease let me know if I have missed or misunderstood any of these points.\n\nBest regards,\n\n[Your Name]"
+   "agenda": "AGENDA (30 min)\n1. Opening - 2 min\n2. Clarifying the meaning of \"too broad\" in the current project scope - 5 min\n3. Deciding between a focused research scope versus maintaining breadth for the literature review - 5 min\n4. Institutional requirement: clarifying expectations regarding the research question at this stage (Official regulations remain the authority) - 2 min\n5. Agree next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- You mention you have 20 papers; are these papers currently annotated or have you read them yet?",
+   "questions": "1. Could you provide some specific examples of what you consider \"too broad\" in the context of my project's current objectives?\n[Priority 1: Defining the scope is essential for any progress.]\n\n2. In your view, would it be more feasible for me to focus on a single case study, or is there an alternative strategy to keep the scope manageable while maintaining its current breadth?\n[Priority 2: The outcome dictates the next steps for the literature review.]\n\n3. According to our department’s guidelines for this stage, am I expected to have a finalized research question, or is it acceptable to develop one iteratively as I progress?\n[Priority 3: Clarifies the immediate institutional expectation.]",
+   "email": "Subject: Follow-up: Thesis meeting – [Date]\n\nDear [Supervisor Name],\n\nThank you for the meeting today. As discussed, here is the summary of our session:\n\n1. Opening: We formally opened the meeting regarding my thesis progress.\n2. Scope clarification: [what we agreed on regarding the definition of \"too broad\"].\n3. Research scope vs. literature review: [what we decided regarding the focus versus breadth].\n4. Institutional requirements: [what we clarified regarding the research question expectations based on official regulations].\n5. Next steps: [list of agreed next steps and deadlines].\n\nBest regards,\n\n[Your Name]",
+   "flags": []
+  },
+  {
+   "id": "S2",
+   "title": "Mid thesis: the method is not working",
+   "situation": "Six weeks in. The survey got 14 of 80+ responses. Wants to switch to interviews but the methods chapter is already approved.",
+   "issues": "<i>\"Will it look like I didn't plan properly\"</i> became \"academic integrity\", which wrongly implies misconduct (D9). The student's three options are not extracted (D7). \"Opening\" lands fourth in the agenda (D8).",
+   "note": "20 min slot monday\n\nthe survey isn't working. sent it to 3 student whatsapp groups + posted on\nthe discord, got 14 responses in two weeks. I planned for 80+. at 14 I\ncan't really say anything statistically.\n\noptions I see:\n- keep waiting (but I lose 3-4 weeks)\n- switch to interviews, maybe 6-8 people\n- change the whole RQ to something that doesn't need a survey\n\nI think interviews but that changes my whole methods chapter which is\nalready written and she approved it. is that a problem? will it look like\nI didn't plan properly\n\nalso need to know if the methods chapter change needs re-approval or if I\njust do it",
+   "parsed": {
+    "meeting_minutes": 20,
+    "stage": "mid",
+    "concerns": [
+     {
+      "quote": "the survey isn't working. sent it to 3 student whatsapp groups + posted on the discord, got 14 responses in two weeks. I planned for 80+. at 14 I can't really say anything statistically.",
+      "kind": "discuss",
+      "size": "substantial",
+      "priority": 1,
+      "why_priority": "the core data collection strategy is currently failing"
+     },
+     {
+      "quote": "I think interviews but that changes my whole methods chapter which is already written and she approved it. is that a problem? will it look like I didn't plan properly",
+      "kind": "judgement",
+      "size": "substantial",
+      "priority": 2,
+      "why_priority": "questions academic integrity and past progress approval"
+     },
+     {
+      "quote": "also need to know if the methods chapter change needs re-approval or if I just do it",
+      "kind": "institutional",
+      "size": "quick",
+      "priority": 3,
+      "why_priority": "procedural requirement for documentation"
+     }
+    ],
+    "missing_info": [
+     "What is your current research question?",
+     "Have you already drafted interview questions or a recruitment plan for the interviews?"
+    ]
+   },
+   "agenda": "AGENDA (20 min)\n1. Addressing low survey response rates and statistical validity - 5 min\n2. Evaluation of shifting methodology from surveys to interviews - 5 min\n3. Procedural requirements for changing the methods chapter (Official regulations are the authority) - 2 min\n4. Opening - 2 min\n5. Agree next steps - 3 min\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- What is your current research question?\n- Have you already drafted interview questions or a recruitment plan for the interviews?",
+   "questions": "1. Given the low response rate of 14, what is your advice on whether I should persist with the survey or pivot my data collection strategy entirely?\n[Highest priority because the current methodology is failing to produce sufficient data for the project.]\n\n2. If I were to shift to interviews, how would that reflect on the academic integrity of my planning process, and is this considered an acceptable evolution of the project at this stage?\n[High priority as it addresses concerns regarding academic reputation and previously approved work.]\n\n3. Should I formally request re-approval for the changes to my methods chapter, or is it sufficient to document these updates internally?\n[Procedural priority to ensure institutional compliance.]",
+   "email": "Subject: Follow-up: Thesis Meeting - [Student Name]\n\nDear [Supervisor Name],\n\nThank you for the meeting today. As discussed, here is a summary of our points:\n\n1. Regarding survey response rates and statistical validity: [what we agreed on].\n2. Regarding the shift from surveys to interviews: [what we agreed on].\n3. Regarding procedural requirements for changing the methods chapter: [what we agreed on per official regulations].\n4. Regarding the opening: [what we agreed on].\n5. Next steps: [what we agreed on and deadlines].\n\nBest regards,\n\n[Student Name]",
+   "flags": []
+  },
+  {
+   "id": "S3",
+   "title": "Late stage: behind schedule",
+   "situation": "Eight weeks from submission, about three weeks behind. Has been avoiding the timeline conversation.",
+   "issues": "Good: no meeting length in the note, and none invented. But the reason for the meeting, <i>\"need to talk to her about the timeline\"</i>, is not a concern, and the chapter status is unused (D7).",
+   "note": "need to talk to her about the timeline, been putting this off\n\nwhere I am: ch 1,2,3 done (draft). ch 4 results - half. ch 5 discussion -\nnothing. conclusion nothing.\nwas supposed to have ch4 finished 2 weeks ago.\n\nreasons: the data cleaning took way longer than I thought, and I was sick\nfor a week in october.\n\nwhat I want to ask:\n- can I drop the second case study? it was always \"if time permits\" but\n  it's in my proposal\n- is an extension possible and what do I need for it\n- if I submit ch4 next week can she read it before the end\n\nhonestly I also just want to know if she thinks I'm going to make it",
+   "parsed": {
+    "meeting_minutes": null,
+    "stage": "mid",
+    "concerns": [
+     {
+      "quote": "can I drop the second case study? it was always \"if time permits\" but it's in my proposal",
+      "kind": "discuss",
+      "size": "substantial",
+      "priority": 1,
+      "why_priority": "affects the scope and workload of the remaining thesis"
+     },
+     {
+      "quote": "is an extension possible and what do I need for it",
+      "kind": "institutional",
+      "size": "quick",
+      "priority": 2,
+      "why_priority": "critical for adjusting the project timeline"
+     },
+     {
+      "quote": "if I submit ch4 next week can she read it before the end",
+      "kind": "discuss",
+      "size": "quick",
+      "priority": 3,
+      "why_priority": "affects feedback loop for remaining chapters"
+     },
+     {
+      "quote": "honestly I also just want to know if she thinks I'm going to make it",
+      "kind": "judgement",
+      "size": "substantial",
+      "priority": 4,
+      "why_priority": "needs supervisor assessment on project viability"
+     }
+    ],
+    "missing_info": [
+     "The meeting length is not stated.",
+     "The 'end' date mentioned regarding the chapter review is not defined."
+    ]
+   },
+   "agenda": "AGENDA (length not stated)\n\n1. Proposed removal of the second case study from the thesis scope - (substantial)\n2. Inquiry regarding the possibility and requirements for an extension (Note: Official HSLU regulations are the authority here) - (quick)\n3. Feasibility of reviewing Chapter 4 before the end of the project - (quick)\n4. Supervisor’s assessment of current project viability and timeline - (substantial)\n\nWILL NOT FIT\n- nothing\n\nBEFORE THE MEETING\n- The meeting length is not stated.\n- The 'end' date mentioned regarding the chapter review is not defined.",
+   "questions": "1. Given that the second case study was included in my proposal but designated as \"if time permits,\" do you agree that removing it is a viable strategy to manage my workload?\n[This is the highest priority as it directly dictates the scope and direction of the remaining work.]\n\n2. If I find that I am unable to complete the thesis by the deadline, could you direct me to the official institutional policy or the contact person responsible for managing formal extension requests?\n[This is critical as it provides a necessary contingency plan for the project timeline.]\n\n3. If I submit Chapter 4 by next week, would you be able to provide feedback before the semester concludes?\n[This impacts the feedback loop and planning for the remainder of the writing process.]\n\n4. Based on my current progress, what is your assessment of whether the project is on track to be completed successfully by the submission deadline?\n[This provides essential professional insight into project viability.]",
+   "email": "Subject: Follow-up: Thesis meeting\n\nDear [Supervisor Name],\n\nThank you for the meeting today. Please find the summary of our discussion below:\n\n1. Regarding the removal of the second case study: [what we agreed on regarding the scope].\n2. Concerning the possibility and requirements for an extension: [what we discussed, referencing the official HSLU regulation deadline of [date/link]].\n3. Regarding the feasibility of reviewing Chapter 4: [what we agreed on regarding the submission/review date].\n4. Regarding your assessment of the project viability and timeline: [what we agreed on regarding the next steps].\n\nBest regards,\n\n[Your Name]",
+   "flags": []
   }
  ],
- "scenarios_pending": [
-  "S1",
-  "S2",
-  "S3"
+ "rag": [
+  {
+   "q": "How many credits do I need before I can register for the bachelor thesis?",
+   "verdict": "pass",
+   "expected": "Answered from the documents, citing Art. 44.",
+   "obs": "Correct: 150 credits, Art. 44 cited, programme specifics included.",
+   "answer": "To register for the Bachelor thesis, you require at least 150 credits (Art. 44). Additionally, specific credit requirements apply depending on your programme: 30 credits from Information & Cyber Security, Informatik, or Wirtschaftsinformatik, or 24 ECTS from project modules for AI & Machine Learning (Art. 44). You should also check for any further programme-specific requirements (Art. 44).\n\nSource note: Studienreglement Bachelor, HSLU Departement Informatik, in force 1 Sept 2022. Extracts for a course prototype - verify against the source PDF before acting on them.",
+   "retrieved": [
+    2,
+    1,
+    6
+   ]
+  },
+  {
+   "q": "What happens if I fail the thesis - can I repeat it?",
+   "verdict": "pass",
+   "expected": "Answered from the documents, with article numbers.",
+   "obs": "Cites Art. 24, 27, 34, 43. One caution: it applies the general FX compensation rule to the thesis. The extract does not say whether that rule covers the thesis, so a student should check.",
+   "answer": "The regulations state that the thesis is a condition for the diploma (Art. 43). If you fail the thesis, please note that an unexcused non-completion counts as failed (Art. 34 Abs. 6). Regarding a repetition, the regulations specify that a failed module may be repeated once more in justified exceptional cases, provided that your other achievements are overall good (Art. 24 Abs. 2). Additionally, if you receive an FX grade, an FX grade allows for one compensation assessment to be completed by the end of the following semester (Art. 27 Abs. 3-4).\n\nSource note: Studienreglement Bachelor, HSLU Departement Informatik, in force 1 Sept 2022. Extracts for a course prototype - verify against the source PDF before acting on them.",
+   "retrieved": [
+    6,
+    8,
+    3
+   ]
+  },
+  {
+   "q": "I might not be able to finish the thesis. What am I supposed to do?",
+   "verdict": "pass",
+   "expected": "Answered from the documents, with article numbers.",
+   "obs": "Correct: notify the Studiengangleitung, written request, medical certificate (Art. 34).",
+   "answer": "If you are unable to complete your thesis, you must notify the Studiengangleitung immediately and submit a written request (Art. 34 Abs. 1). If the reason is medical, you are required to provide a medical certificate (Art. 34 Abs. 2). Please be aware that if you do not complete the thesis and do not provide an excuse, it will count as a failed attempt (Art. 34 Abs. 6).\n\nSource note: Studienreglement Bachelor, HSLU Departement Informatik, in force 1 Sept 2022. Extracts for a course prototype - verify against the source PDF before acting on them.",
+   "retrieved": [
+    8,
+    6,
+    3
+   ]
+  },
+  {
+   "q": "When exactly is the submission deadline this semester and do I hand in paper copies or just a pdf?",
+   "verdict": "pass",
+   "expected": "Refused: the documents do not say. Redirected to the official source.",
+   "obs": "\"This is not covered by the documents provided.\" No date or format guessed.",
+   "answer": "This is not covered by the documents provided. Please check the official regulations, the mycampus WIPRO/BAA page, or ask your supervisor for the exact submission deadline and the required format (paper copies vs. PDF).\n\nSource note: Studienreglement Bachelor, HSLU Departement Informatik, in force 1 Sept 2022. Extracts for a course prototype - verify against the source PDF before acting on them.",
+   "retrieved": [
+    8,
+    9,
+    6
+   ]
+  },
+  {
+   "q": "Is my research question specific enough to pass?",
+   "verdict": "pass",
+   "expected": "Refused differently: no document can answer it; it is the supervisor's judgement.",
+   "obs": "\"A judgement that belongs to your supervisor.\" The two refusals stay distinct, which was the sharpest test in the project.",
+   "answer": "Whether your research question is specific enough to pass is a judgement that belongs to your supervisor, as it involves assessing the quality and scope of your proposed work. You should discuss your research question directly with your supervisor to ensure it meets the expectations for demonstrating the ability to independently handle and solve a complex problem as required by Art. 45.\n\nSource note: Studienreglement Bachelor, HSLU Departement Informatik, in force 1 Sept 2022. Extracts for a course prototype - verify against the source PDF before acting on them.",
+   "retrieved": [
+    3,
+    6,
+    1
+   ]
+  }
+ ],
+ "revision": [
+  {
+   "id": "D1",
+   "defect": "Invents a meeting length when the note gives none",
+   "evidence": "B1: 5 of 6 runs (T1, T3)",
+   "change": "Null stated explicitly to step 2; rule for unknown length",
+   "status": "pass",
+   "result": "Fixed in B2: 0 runs"
+  },
+  {
+   "id": "D2",
+   "defect": "Empty note still gets an agenda and email",
+   "evidence": "B1: T3, 2 of 3",
+   "change": "Code skips steps 2-4, returns a fixed request (fail closed)",
+   "status": "pass",
+   "result": "Fixed in B2: T3 3/3"
+  },
+  {
+   "id": "D3",
+   "defect": "10-second question \"will not fit\"",
+   "evidence": "B1: T1 run 1",
+   "change": "quick / substantial size in the schema",
+   "status": "pass",
+   "result": "Fixed in B2"
+  },
+  {
+   "id": "D4",
+   "defect": "Gap questions fish for wellbeing and become agenda items",
+   "evidence": "B1: T1, T4, T6",
+   "change": "Gaps shown as BEFORE THE MEETING, never as agenda items",
+   "status": "pass",
+   "result": "Fixed in B2: 0 runs"
+  },
+  {
+   "id": "D5",
+   "defect": "Email adds HSLU deadlines the note never raised",
+   "evidence": "B1: 19 of 30 runs",
+   "change": "Email sees only the agenda (B2); code guard strips them (B3)",
+   "status": "issue",
+   "result": "B2: 3 runs left, all on the Next-steps line → B3"
+  },
+  {
+   "id": "D6",
+   "defect": "Personal difficulty given an agenda slot and written into the email",
+   "evidence": "B1: T5, 3 of 3",
+   "change": "Support never on the agenda, never in the email",
+   "status": "pass",
+   "result": "Fixed in B2: T5 3/3"
+  },
+  {
+   "id": "D7",
+   "defect": "Statements that are the reason for the meeting get dropped",
+   "evidence": "B2: S2, S3, T7; T9 run 1",
+   "change": "Rule + example in step 1: framing statements are concerns",
+   "status": "fail",
+   "result": "Planned for B3"
+  },
+  {
+   "id": "D8",
+   "defect": "\"Opening: we formally opened the meeting\" in the email",
+   "evidence": "B2: most emails",
+   "change": "Opening/close added by code, not listed as agenda items",
+   "status": "fail",
+   "result": "Planned for B3"
+  },
+  {
+   "id": "D9",
+   "defect": "Rewording changes the student's meaning",
+   "evidence": "B2: S2 \"academic integrity\", T5 run 2",
+   "change": "Questions keep the quote's own key words; overlap check",
+   "status": "fail",
+   "result": "Planned for B3"
+  },
+  {
+   "id": "+",
+   "defect": "Regulation answers not yet inside the workflow",
+   "evidence": "RAG-v1 5/5 standalone",
+   "change": "Institutional concerns routed to the grounded answerer",
+   "status": "fail",
+   "result": "Planned for B3"
+  },
+  {
+   "id": "+",
+   "defect": "Only one model tested",
+   "evidence": "All 90 runs on gemini-flash-lite",
+   "change": "Cross-model run on claude-haiku-4.5; blind student review",
+   "status": "fail",
+   "result": "Planned before M5"
+  }
  ]
 }

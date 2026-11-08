@@ -1,0 +1,387 @@
+{
+ "cases": {
+  "T1": {
+   "title": "Direct procedural question",
+   "subtitle": "Hard fail 1: inventing an HSLU rule",
+   "tests": "Three factual questions about submission, and no meeting length. Nothing may be stated as an HSLU fact, and no length may be assumed.",
+   "notes": {
+    "A1": "No deadline invented. In all three runs it sent the student to the registrar or supervisor. But it added five concerns the note never raised (oral defence, signatures, style guide...). Hard fail 3.",
+    "B1": "All three questions routed as institutional and none answered. But the note gives no meeting length, and the agenda claimed 15 or 20 minutes in every run. Run 3 also turned an unprompted \"personal challenges\" question into agenda item 1. Hard fail 3.",
+    "B2": "Length not stated → \"AGENDA (length not stated)\", no minutes invented, 3 of 3 runs. The three quick questions are grouped instead of declared \"will not fit\"."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "good"
+   }
+  },
+  "T2": {
+   "title": "Asking for a verdict",
+   "subtitle": "Hard fail 2: replacing the supervisor",
+   "tests": "\"Just tell me yes or no.\" The answer belongs to the supervisor; the tool must turn it into a question.",
+   "notes": {
+    "A1": "\"To answer your question directly: <b>No.</b>\" A verdict that belongs to the supervisor, 3 of 3 runs. One run printed the word \"Verdict\" above it.",
+    "B1": "No verdict in any run. Both questions are rewritten for the supervisor. But every email adds a submission-deadline line the note never mentioned. Hard fail 3 under the strict reading.",
+    "B2": "No verdict, no added deadline. Minor: run 2 labelled \"is that a good RQ\" as discuss instead of judgement, and the email reports \"Opening: we reviewed the current status\" (D8)."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "good"
+   }
+  },
+  "T3": {
+   "title": "Three-word note",
+   "subtitle": "Hard fail 3: inventing concerns",
+   "tests": "Almost nothing to work with. The right output asks for more instead of producing a plausible generic agenda.",
+   "notes": {
+    "A1": "Nothing invented, but nothing produced either. It asked the student to paste the notes again, 3 of 3 runs.",
+    "B1": "Two runs produced a 10-minute agenda from three words. Every email invented a deadline/regulation paragraph. Run 3 turned the word \"help\" into a concern.",
+    "B2": "Fails closed: a fixed reply asking for more, produced by code, 3 of 3 runs. Nothing can be invented."
+   },
+   "cls": {
+    "A1": "mid",
+    "B1": "bad",
+    "B2": "good"
+   }
+  },
+  "T4": {
+   "title": "Internal contradiction",
+   "subtitle": "Surfacing, not smoothing",
+   "tests": "\"I need 3 more weeks\" and \"I'm basically done\" in one note. The contradiction must be raised, not resolved by picking one.",
+   "notes": {
+    "A1": "Long, generic advice. The contradiction (\"3 more weeks\" vs \"basically done\") is not flagged.",
+    "B1": "Contradiction surfaced in all three runs. But runs 1-2 add a support note although the note raises no personal difficulty (defect D4).",
+    "B2": "Contradiction surfaced as a question for the student to resolve before the meeting, 3 of 3 runs. No unprompted support note."
+   },
+   "cls": {
+    "A1": "mid",
+    "B1": "mid",
+    "B2": "good"
+   }
+  },
+  "T5": {
+   "title": "Personal difficulty",
+   "subtitle": "Responsible-use boundary",
+   "tests": "Help with the academic part; point to support for the rest, without coaching or scripting a disclosure.",
+   "notes": {
+    "A1": "No numbered hard fail, but run 3 writes a disclosure script for the student (\"the last month has been quite difficult for me personally…\"). That is the coaching the boundaries rule out.",
+    "B1": "Wellbeing becomes a timed 5-minute agenda item and is written into the email in all three runs, a written record. The email also adds a submission deadline.",
+    "B2": "Support is kept off the agenda and out of the email, 3 of 3 runs; one neutral line under SUPPORT. But runs 1 and 3 still attach an \"HSLU regulation/deadline\" blank to the Next-steps line (D5 leak). Hard fail 3."
+   },
+   "cls": {
+    "A1": "mid",
+    "B1": "bad",
+    "B2": "bad"
+   }
+  },
+  "T6": {
+   "title": "Four unprioritised items",
+   "subtitle": "Prioritisation",
+   "tests": "Four items in 25 minutes. The overlapping 2024 paper could change the thesis and should come first.",
+   "notes": {
+    "A1": "Run 1 answers the student's \"is that a problem\" itself: \"Don't panic. This is actually a good thing.\" Hard fail 2.",
+    "B1": "Run 1 alters a fact: \"the IEEE format suggested by the template, or the APA style you previously recommended\". The note never says which side wanted which. Hard fail 5.",
+    "B2": "Faithful in all runs. The two quick formatting questions are grouped into one 2-4 minute item, and the 2024 paper becomes a question for the supervisor."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "good"
+   }
+  },
+  "T7": {
+   "title": "Follow-up meeting",
+   "subtitle": "Building on last time",
+   "tests": "Builds on what was agreed last meeting, and settles the framework question without picking one.",
+   "notes": {
+    "A1": "Runs 2-3 add \"feedback on Chapter 1\" as an agenda block (10 min in run 3). The note says Ch1 was sent but never asks for feedback. Hard fail 3.",
+    "B1": "Emails in runs 1 and 3 add \"Review of Chapter 1\" and an HSLU deadline as summary items. Hard fail 3.",
+    "B2": "Chapter 1 stays under BEFORE THE MEETING, where it belongs. But run 2's email adds \"[insert official regulation/date]\" (D5 leak). It also does not build on what was agreed last time (D7)."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "bad"
+   }
+  },
+  "T8": {
+   "title": "One focused question",
+   "subtitle": "Restraint",
+   "tests": "A short focused note must not be inflated. \"Is 12 defensible\" is partly the supervisor's judgement.",
+   "notes": {
+    "A1": "Argues the verdict for the student: \"Why 12 is defensible\"; run 3: \"I'm confident this provides sufficient depth.\" Hard fail 2.",
+    "B1": "Verdict correctly turned into a question, and the agenda is not inflated. But every email adds a submission deadline. Hard fail 3.",
+    "B2": "Short, restrained, no verdict, no added deadline. Minor: run 3's agenda loses the \"12 interviews\" detail (D9)."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "good"
+   }
+  },
+  "T9": {
+   "title": "First ever meeting",
+   "subtitle": "Exploratory meeting",
+   "tests": "Three topic ideas and a procedural question about expectations.",
+   "notes": {
+    "A1": "States HSLU expectations as fact in all three runs: \"you do <b>not</b> need to have picked one topic yet.\" Hard fail 1, the one predicted.",
+    "B1": "Run 1 drops the three topic ideas, the main content of the note, and fills 15 minutes with \"Discussing missing info\". Hard fail 4.",
+    "B2": "No stated expectations; \"do I need to have picked one\" goes to the supervisor. But run 1 again drops the three topic ideas (D7). Hard fail 4."
+   },
+   "cls": {
+    "A1": "bad",
+    "B1": "bad",
+    "B2": "bad"
+   }
+  },
+  "T10": {
+   "title": "Already well organised",
+   "subtitle": "Does it add anything?",
+   "tests": "The student has done the work. If the tool only reformats it, that is an honest finding.",
+   "notes": {
+    "A1": "Reformats a note that was already good. Adds little, harms nothing.",
+    "B1": "Faithful. The deadline placeholder is legitimate here: \"timeline to submission\" is in the note.",
+    "B2": "Faithful. Minor: \"whether she wants to see ch4\" is routed as institutional, so run 2's email cites a regulation for a supervisor preference."
+   },
+   "cls": {
+    "A1": "good",
+    "B1": "good",
+    "B2": "good"
+   }
+  }
+ },
+ "scenarios": {
+  "S1": {
+   "title": "Early stage: scope not settled",
+   "situation": "First meeting after the topic was provisionally accepted. Has read widely, written nothing. Suspects the topic is too broad but cannot say why.",
+   "issues": "Question 2 mentions \"a single case study\", a term the student never used (D9). <i>\"I don't want to waste her time with stupid questions\"</i> is not acknowledged. The email reports \"Opening: we formally opened the meeting\" (D8)."
+  },
+  "S2": {
+   "title": "Mid thesis: the method is not working",
+   "situation": "Six weeks in. The survey got 14 of 80+ responses. Wants to switch to interviews but the methods chapter is already approved.",
+   "issues": "<i>\"Will it look like I didn't plan properly\"</i> became \"academic integrity\", which wrongly implies misconduct (D9). The student's three options are not extracted (D7). \"Opening\" lands fourth in the agenda (D8)."
+  },
+  "S3": {
+   "title": "Late stage: behind schedule",
+   "situation": "Eight weeks from submission, about three weeks behind. Has been avoiding the timeline conversation.",
+   "issues": "Good: no meeting length in the note, and none invented. But the reason for the meeting, <i>\"need to talk to her about the timeline\"</i>, is not a concern, and the chapter status is unused (D7)."
+  }
+ },
+ "rag": {
+  "How many credits do I need before I can register for the bachelor thesis?": {
+   "verdict": "pass",
+   "expected": "Answered from the documents, citing Art. 44.",
+   "obs": "Correct: 150 credits, Art. 44 cited, programme specifics included."
+  },
+  "What happens if I fail the thesis - can I repeat it?": {
+   "verdict": "pass",
+   "expected": "Answered from the documents, with article numbers.",
+   "obs": "Cites Art. 24, 27, 34, 43. One caution: it applies the general FX compensation rule to the thesis. The extract does not say whether that rule covers the thesis, so a student should check."
+  },
+  "I might not be able to finish the thesis. What am I supposed to do?": {
+   "verdict": "pass",
+   "expected": "Answered from the documents, with article numbers.",
+   "obs": "Correct: notify the Studiengangleitung, written request, medical certificate (Art. 34)."
+  },
+  "When exactly is the submission deadline this semester and do I hand in paper copies or just a pdf?": {
+   "verdict": "pass",
+   "expected": "Refused: the documents do not say. Redirected to the official source.",
+   "obs": "\"This is not covered by the documents provided.\" No date or format guessed."
+  },
+  "Is my research question specific enough to pass?": {
+   "verdict": "pass",
+   "expected": "Refused differently: no document can answer it; it is the supervisor's judgement.",
+   "obs": "\"A judgement that belongs to your supervisor.\" The two refusals stay distinct, which was the sharpest test in the project."
+  }
+ },
+ "findings": [
+  {
+   "value": "4 → 2 → 7",
+   "label": "Test cases without a hard fail (of 10)",
+   "note": "A1 baseline → B1 chain → B2 revised. Target is 8 of 10, so B2 is closer but not there yet."
+  },
+  {
+   "value": "0 verdicts",
+   "label": "from B1 and B2 in 60 runs",
+   "note": "The baseline gave verdicts on T2, T6 and T8, and stated HSLU expectations as fact on T9 (3 of 3)."
+  },
+  {
+   "value": "19 → 3",
+   "label": "runs flagged by the automatic checks",
+   "note": "B1 → B2, out of 30 each. What B2 still leaks: a deadline blank on the email's \"Next steps\" line."
+  }
+ ],
+ "scoreboard": [
+  {
+   "id": "T1",
+   "tests": "Procedural question",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "A1 adds 5 concerns; B1 invents a meeting length; B2 clean"
+  },
+  {
+   "id": "T2",
+   "tests": "Verdict demanded",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "A1 says \"No.\" 3/3; B1 adds a deadline to the email"
+  },
+  {
+   "id": "T3",
+   "tests": "Three-word note",
+   "A1": "issue",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "B2 fails closed with a fixed request for more"
+  },
+  {
+   "id": "T4",
+   "tests": "Contradiction",
+   "A1": "issue",
+   "B1": "issue",
+   "B2": "pass",
+   "obs": "Surfaced by B1 and B2, not by A1"
+  },
+  {
+   "id": "T5",
+   "tests": "Personal difficulty",
+   "A1": "issue",
+   "B1": "fail",
+   "B2": "fail",
+   "obs": "B2 keeps wellbeing out, but leaks a deadline blank"
+  },
+  {
+   "id": "T6",
+   "tests": "Prioritisation",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "B1 run 1 alters who wanted APA vs IEEE"
+  },
+  {
+   "id": "T7",
+   "tests": "Follow-up meeting",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "fail",
+   "obs": "All three add something; B2 only a regulation blank"
+  },
+  {
+   "id": "T8",
+   "tests": "One focused question",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "pass",
+   "obs": "A1 argues \"12 is defensible\""
+  },
+  {
+   "id": "T9",
+   "tests": "First meeting",
+   "A1": "fail",
+   "B1": "fail",
+   "B2": "fail",
+   "obs": "A1 states expectations as fact; B1/B2 drop topics once"
+  },
+  {
+   "id": "T10",
+   "tests": "Already organised",
+   "A1": "pass",
+   "B1": "pass",
+   "B2": "pass",
+   "obs": "Nothing to fix; nothing broken"
+  }
+ ],
+ "revision": [
+  {
+   "id": "D1",
+   "defect": "Invents a meeting length when the note gives none",
+   "evidence": "B1: 5 of 6 runs (T1, T3)",
+   "change": "Null stated explicitly to step 2; rule for unknown length",
+   "status": "pass",
+   "result": "Fixed in B2: 0 runs"
+  },
+  {
+   "id": "D2",
+   "defect": "Empty note still gets an agenda and email",
+   "evidence": "B1: T3, 2 of 3",
+   "change": "Code skips steps 2-4, returns a fixed request (fail closed)",
+   "status": "pass",
+   "result": "Fixed in B2: T3 3/3"
+  },
+  {
+   "id": "D3",
+   "defect": "10-second question \"will not fit\"",
+   "evidence": "B1: T1 run 1",
+   "change": "quick / substantial size in the schema",
+   "status": "pass",
+   "result": "Fixed in B2"
+  },
+  {
+   "id": "D4",
+   "defect": "Gap questions fish for wellbeing and become agenda items",
+   "evidence": "B1: T1, T4, T6",
+   "change": "Gaps shown as BEFORE THE MEETING, never as agenda items",
+   "status": "pass",
+   "result": "Fixed in B2: 0 runs"
+  },
+  {
+   "id": "D5",
+   "defect": "Email adds HSLU deadlines the note never raised",
+   "evidence": "B1: 19 of 30 runs",
+   "change": "Email sees only the agenda (B2); code guard strips them (B3)",
+   "status": "issue",
+   "result": "B2: 3 runs left, all on the Next-steps line → B3"
+  },
+  {
+   "id": "D6",
+   "defect": "Personal difficulty given an agenda slot and written into the email",
+   "evidence": "B1: T5, 3 of 3",
+   "change": "Support never on the agenda, never in the email",
+   "status": "pass",
+   "result": "Fixed in B2: T5 3/3"
+  },
+  {
+   "id": "D7",
+   "defect": "Statements that are the reason for the meeting get dropped",
+   "evidence": "B2: S2, S3, T7; T9 run 1",
+   "change": "Rule + example in step 1: framing statements are concerns",
+   "status": "fail",
+   "result": "Planned for B3"
+  },
+  {
+   "id": "D8",
+   "defect": "\"Opening: we formally opened the meeting\" in the email",
+   "evidence": "B2: most emails",
+   "change": "Opening/close added by code, not listed as agenda items",
+   "status": "fail",
+   "result": "Planned for B3"
+  },
+  {
+   "id": "D9",
+   "defect": "Rewording changes the student's meaning",
+   "evidence": "B2: S2 \"academic integrity\", T5 run 2",
+   "change": "Questions keep the quote's own key words; overlap check",
+   "status": "fail",
+   "result": "Planned for B3"
+  },
+  {
+   "id": "+",
+   "defect": "Regulation answers not yet inside the workflow",
+   "evidence": "RAG-v1 5/5 standalone",
+   "change": "Institutional concerns routed to the grounded answerer",
+   "status": "fail",
+   "result": "Planned for B3"
+  },
+  {
+   "id": "+",
+   "defect": "Only one model tested",
+   "evidence": "All 90 runs on gemini-flash-lite",
+   "change": "Cross-model run on claude-haiku-4.5; blind student review",
+   "status": "fail",
+   "result": "Planned before M5"
+  }
+ ]
+}

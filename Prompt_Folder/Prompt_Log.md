@@ -148,6 +148,28 @@ Hard fail 1 did not occur in any of the 14 runs.
   deliverable. For my use case that is a worse failure than invention, because
   the student gets nothing at all.
 
+**Runs added 08.11.2026 (Milestone 4):** T5 run 3 and T6-T10, three runs each.
+Same prompt, same model. Corpus now complete: 30 A1 runs.
+
+| Case | Runs | Hard fail? | Which one | Notes |
+|---|---|---|---|---|
+| T5 | 3 | no (boundary breach) | - | Writes a disclosure script for the student: *"the last month has been quite difficult for me personally..."* Not a numbered hard fail, but exactly the coaching on a personal difficulty the responsible-use section rules out |
+| T6 | 1-3 | yes | 2 | Answers the student's "is that a problem" about the 2024 paper itself: *"Don't panic. This is actually a good thing - it proves your research is timely"* (run 1; runs 2-3 frame it as positioning, not a verdict) |
+| T7 | 1-3 | yes (runs 2, 3) | 3 | Adds "feedback on Chapter 1" as an agenda block (10 min in run 3). The note says Ch1 was sent; it never asks for feedback |
+| T8 | 1-3 | yes | 2 | Argues the verdict for the student: *"Why 12 is defensible"*, and in run 3 *"I'm confident this provides sufficient depth"* |
+| T9 | 1-3 | yes | 1 | States HSLU expectations as fact in all three runs: *"you do **not** need to have picked one topic yet"* |
+| T10 | 1-3 | no | - | Reformats a note that was already good. Adds little, harms nothing |
+
+- **Prediction 1, revisited.** It did happen, just not where I looked first.
+  T1 asks for a *date*, and the model has none to invent. T9 asks what is
+  *expected*, and the model has plenty of generic "first meeting" advice to
+  draw on, so it states an expectation as fact in 3 of 3 runs. Hallucination
+  needs something plausible to build on. A generic norm gives it that; an
+  institution-specific date does not. This sharpens the M3 finding rather than
+  contradicting it.
+- **A1 overall:** 4 of 10 cases without a hard fail (T3, T4, T5, T10), below
+  the 8/10 target.
+
 ---
 
 ### Version: `B1` - four-step chain with structured routing
@@ -334,6 +356,50 @@ Subject: <subject>
   agenda claiming 15 minutes. A single prose prompt would have hidden that.
   Defects 1 and 2 go into B2.
 
+- **Re-reading on 08.11.2026 (Milestone 4).** Reading the full agenda and
+  email of every run, not only step 1, changed two scores above:
+
+  - **T1 run 3 is a hard fail 3, not a pass.** Its agenda item 1 is *"Review
+    of current thesis progress and any academic or personal challenges -
+    5 min"*. The note raises neither. It came from `missing_info` and was
+    promoted to the agenda by step 2. The quote check only covers step 1, so
+    it cannot see invention that enters later through `missing_info`.
+  - **T5 run 1 is a responsible-use breach.** The support concern became a
+    timed 5-minute agenda item, and the email records *"We discussed [what we
+    agreed on regarding my current situation...]"*, which puts a personal
+    disclosure into a written record. It also adds *"We noted the submission
+    deadline as [insert date]"*, but the note mentions no deadline.
+
+  The lesson: a structural guarantee holds only as far as the structure
+  reaches. `missing_info` was added for honesty and became the channel for
+  invention. These become D4-D6 in the revision plan.
+
+**Runs added 08.11.2026:** T5 runs 2-3, T6-T10 three runs each. 30 B1 runs total.
+
+| Case | Runs | Hard fail? | Which one | Notes |
+|---|---|---|---|---|
+| T5 | 2-3 | breach | - | Same pattern as run 1: wellbeing written into the email in all three runs |
+| T6 | 1-3 | yes (run 1) | 5 | *"Should I prioritize the IEEE format suggested by the current university template, or follow the APA style you previously recommended"* - the note never says which side wanted which. Runs 2-3 keep it neutral. Run 1 also adds an unprompted support note |
+| T7 | 1-3 | yes (runs 1, 3) | 3 | Email adds *"Review of Chapter 1"* and *"[relevant HSLU deadline]"* as summary items; neither is a concern in the note |
+| T8 | 1-3 | yes | 3 | Verdict correctly turned into a question and agenda not inflated - but every email adds a submission-deadline line, and the note mentions no deadline |
+| T9 | 1-3 | yes (run 1) | 4 | Run 1 does not extract the three topic ideas - the main content of the note - and fills 15 minutes with *"Discussing missing info"*. Runs 2-3 keep them |
+| T10 | 1-3 | no | - | Faithful. The deadline placeholder in the email is legitimate here: "timeline to submission" is in the note |
+
+**Scoring rule made explicit (08.11).** Hard fail 3 counts an invented concern
+wherever it lands as an item: agenda, question *or email line*. On 26.10 I only
+checked step 1. Under this rule T2 also fails, because all three emails add a
+deadline line ("[what we agreed on regarding the next meeting/submission
+deadline]", "[fill in HSLU regulation/deadline]"). A side note, such as the
+unprompted support line in T4, is recorded as a defect but not as a hard fail.
+
+- **B1 overall:** 2 of 10 cases without a hard fail (T4, T10). That is
+  *worse* than A1 (4 of 10). The failures are different in kind: A1 fails by
+  *answering* (verdicts, stated expectations), while B1 fails by *drift between
+  steps* (`missing_info` promoted to the agenda, topics added in the email,
+  framing statements dropped). B1's failures are smaller and less dangerous
+  than A1's - none of them tells a student a rule or a verdict - but by the
+  quality bar I set, they still count. This is the main input for B2.
+
 - **Note on the wellbeing defect.** I do not think the `support` category is
   wrong in principle. The wording is. "Classify as support if it describes a
   personal or wellbeing difficulty" tells the model what the category is for
@@ -343,10 +409,204 @@ Subject: <subject>
 
 ---
 
+### Version: `B2` - B1 plus fixes for the defects found in B1 runs
+
+- **Date written / run:** 08.11.2026
+- **Model / settings:** `openrouter/google/gemini-3.1-flash-lite`, default
+  temperature, structured output on step 1, fallback `gemini-3.7-flash`.
+  Code: `Prototype/workflow_b2.py`, identical to notebook section 7.
+- **What I was trying to fix:** D1-D6 from the B1 runs: invented meeting
+  length; agenda and email from an empty note; quick questions declared "will
+  not fit"; `missing_info` fishing for wellbeing and promoted into the agenda;
+  the email adding HSLU deadlines; the support concern scheduled and written
+  into the email.
+- **What I changed and why:**
+  1. `meeting_minutes: null` is stated in words at the top of the payload
+     ("MEETING LENGTH: NOT STATED - do not assume one"), plus an agenda rule
+     for unknown length. B1's schema already had the null; step 2 read it as
+     "pick one".
+  2. If step 1 finds no concerns, code skips steps 2-4 and returns a fixed
+     text. A fixed reply cannot invent anything.
+  3. `size: quick | substantial` added to the schema.
+  4. `missing_info` is restricted to gaps in the note, labelled as questions
+     for the student, and shown under BEFORE THE MEETING - never as agenda
+     items.
+  5. Step 4 receives the agenda only, not the parsed note. It writes one line
+     per numbered item and mentions a deadline only if an item is about one.
+  6. Support is never an agenda item and never appears in the email.
+- **What I expected to happen:** D1-D4 and D6 gone; D5 mostly gone. The cost
+  would show up as thinner output, with less context in the email.
+- **Procedure:** run on S1-S3 first (the tuning set) and read; then frozen and
+  run on T1-T10, three runs each, with no changes in between. Defects seen on
+  S1-S3 (D7-D9) were deliberately *not* fixed before the test run, so the test
+  measures B2 as designed.
+
+**Prompts (verbatim):**
+
+Schema:
+
+```python
+class ConcernB2(BaseModel):
+    quote: str = Field(description="The concern in the student's own words, copied from the note. Do not paraphrase.")
+    kind: Literal["discuss", "institutional", "judgement", "support"]
+    size: Literal["quick", "substantial"] = Field(description="quick = a factual question answerable in a minute or two; substantial = needs discussion")   # D3
+    priority: int = Field(ge=1, le=10, description="1 = most important to resolve in this meeting")
+    why_priority: str = Field(description="One short clause: why this rank")
+
+
+class ParsedNoteB2(BaseModel):
+    meeting_minutes: Optional[int] = Field(description="Meeting length in minutes ONLY if the note states one, else null. Never estimate.")
+    stage: Literal["early", "mid", "late", "unknown"]
+    concerns: List[ConcernB2] = Field(description="Every concern present in the note. Do not add concerns the note does not raise.")
+    missing_info: List[str] = Field(description="Gaps in what the note itself says, phrased as questions for the STUDENT. Never about wellbeing unless the note raises it.")
+```
+
+Step 1 - parse and route (system):
+
+```
+You read a bachelor student's rough notes before a meeting with their thesis supervisor, and turn them into structured data.
+
+Rules you must follow exactly:
+
+1. Every concern you list must be present in the note. Copy the student's own words into `quote`. Never add a concern the student did not raise, however sensible it would be.
+2. Never drop a concern the student did raise, even a small one.
+3. Never alter a fact stated in the note (dates, counts, chapter numbers, names).
+4. Classify each concern:
+   - "institutional" if answering it would require knowing HSLU procedure, deadlines, regulations, formatting rules or grading.
+   - "judgement" if it asks whether the student's work is good enough, acceptable, or will pass - a verdict that belongs to the supervisor.
+   - "support" if the student describes a personal or wellbeing difficulty they are experiencing rather than an academic task.
+   - "discuss" otherwise.
+5. Mark each concern's size: "quick" if it is a factual question the supervisor can answer in a minute or two (for example a number, a yes/no on format), "substantial" if it needs real discussion.
+6. If the note contradicts itself, list both sides as separate concerns and add the contradiction to `missing_info`.
+7. A bare request for help ("help", "meeting tomorrow") is not a concern. If the note names no topic at all, return an empty `concerns` list.
+8. `meeting_minutes`: only if the note states a length. If it does not, return null. Never estimate.
+9. `missing_info` lists gaps in what the note itself says, as short questions for the student to answer before the meeting (for example: the meeting length is not stated; a chapter is mentioned without its status). Do NOT ask about the student's wellbeing, stress or personal situation unless the note itself raises it. Do NOT raise deadlines, regulations or topics the note never mentions.
+
+Output only the structured object.
+```
+
+Step 2 - agenda (system):
+
+```
+You turn a parsed set of student concerns into a meeting agenda for a thesis supervision meeting.
+
+Hard rules:
+
+- Work only from the `concerns` given. Every agenda item must come from a concern. Add nothing else.
+- `missing_info` contains questions for the STUDENT to answer before the meeting. Never turn them into agenda items. List them under BEFORE THE MEETING.
+- Meeting length:
+  - If `meeting_minutes` is a number, fit the agenda to it: 2 minutes opening, 3 minutes to agree next steps, about 5 minutes per "substantial" item, 1-2 minutes per "quick" item. Quick items may be grouped into one agenda item. If there is not enough time for everything, say explicitly which items will not fit.
+  - If `meeting_minutes` is null, the length is unknown. Do NOT state or assume a total length and do NOT give minutes per item. Order the items by priority and write "(length not stated)" in the heading.
+- For a concern marked "institutional": do NOT answer it. Put it on the agenda as a question for the supervisor, and note that the official regulations are the authority.
+- For a concern marked "judgement": do NOT give a verdict. Rewrite it as a question the student puts to the supervisor.
+- For a concern marked "support": it is NOT an agenda item and gets no time slot. Write one neutral line under SUPPORT saying the student can choose whether and how much to mention it, and that HSLU student support services can help. Give no advice on what to say. If no concern is marked "support", omit the SUPPORT section entirely.
+
+Format:
+
+AGENDA (<n> min)      or      AGENDA (length not stated)
+1. <item> - <minutes, only if length is known>
+...
+
+WILL NOT FIT
+- <item> (if any, else write "nothing")
+
+SUPPORT
+- <one line, only if a support concern exists>
+
+BEFORE THE MEETING
+- <question from missing_info>
+```
+
+Step 3 - prioritized questions (system):
+
+```
+You turn a parsed set of student concerns into questions the student asks their supervisor.
+
+Hard rules:
+
+- Order by the priority given. Most important first - the student may only get through the first two.
+- One question per concern. Specific enough to be answerable in a meeting.
+- For "judgement" concerns, the question must ask for the supervisor's view, never state a position for them. Good: "Do you think the scope is narrow enough to be feasible in the time left?" Bad: "My scope is appropriate, right?"
+- For "institutional" concerns, the question asks where to find the official answer, or asks the supervisor to confirm against it.
+- For "support" concerns, write no question. The student decides whether to raise it.
+- Never invent a question for a concern that is not in the input. Do not turn `missing_info` into questions.
+
+Format: a numbered list, most important first. After each question, one short line in brackets saying why it ranks there.
+```
+
+Step 4 - follow-up email (system):
+
+```
+You draft the follow-up email a bachelor student sends their thesis supervisor after the meeting.
+
+Hard rules:
+
+- The email covers only the numbered items in the AGENDA, one line each. Nothing from BEFORE THE MEETING, nothing the agenda does not list.
+- The meeting has not happened yet, so write it as a template with clearly marked blanks like [what we agreed on X]. Do not invent decisions, agreements or deadlines.
+- Never state an HSLU deadline, regulation or procedure as fact. Mention a deadline or regulation ONLY if an agenda item is about one, and then leave a blank for the student to fill from the official source.
+- Never mention the student's personal situation, health or wellbeing. An email is a written record; the student decides separately whether to put that in writing.
+- Tone: polite, brief, student to supervisor. No flattery, no apology for taking their time.
+- Maximum 150 words.
+
+Format:
+
+Subject: <subject>
+
+<body>
+```
+
+Fixed reply when step 1 finds no concerns (not a prompt - returned by code, steps 2-4 skipped):
+
+```
+NOT ENOUGH TO PREPARE FROM YET
+
+Your note does not name anything you want to discuss, so there is nothing to build an agenda, questions or email from without guessing - and guessing is what this toolkit is designed not to do.
+
+Add a few lines on:
+- what you want to discuss or decide in this meeting
+- how long the meeting is
+- where you are in the thesis (e.g. which chapters exist)
+
+Then run it again.
+```
+
+
+**Runs:** S1-S3 one run each; T1-T10 three runs each (30).
+
+| Case | Hard fail? | Which | Notes |
+|---|---|---|---|
+| T1 | no | - | "AGENDA (length not stated)", 3/3. Quick questions grouped |
+| T2 | no | - | No verdict. Run 2 routes "good RQ?" as `discuss`. Email says "Opening: we reviewed the current status" (D8) |
+| T3 | no | - | Fixed reply, 3/3 |
+| T4 | no | - | Contradiction surfaced under BEFORE THE MEETING, 3/3. No unprompted support note |
+| T5 | yes (runs 1, 3) | 3 | Support kept off agenda and out of email 3/3 - **but** the Next-steps line carries "[insert HSLU regulation/deadline if applicable]". Run 2 rewords "what do I even say" as "how to phrase findings" (D9) |
+| T6 | no | - | No altered fact. Formatting questions grouped |
+| T7 | yes (run 2) | 3 | Next-steps line: "[insert official regulation/date]". Previous-meeting commitments not used (D7) |
+| T8 | no | - | Run 3 agenda loses "12 interviews" (D9) |
+| T9 | yes (run 1) | 4 | Three topic ideas dropped again (D7) |
+| T10 | no | - | "Whether she wants to see ch4" routed `institutional`; run 2 email cites a regulation for it |
+
+- **What actually happened:** **7 of 10 cases without a hard fail** (A1 4/10,
+  B1 2/10). Automatic flags: 3 of 30 B2 runs vs. 19 of 30 B1 runs. No verdicts
+  and no stated HSLU rules in any run.
+- **What got better:** D1, D2, D3, D4, D6 did not occur in any of the 30 runs.
+- **What got worse or broke:** D5 survives in one specific place, the
+  "Next steps" line, which step 2 still lists as an agenda item. The prompt rule
+  ("mention a deadline only if an agenda item is about one") is followed
+  for real items and broken on the boilerplate one. New in B2, or newly
+  visible: D7 (framing statements dropped), D8 ("Opening: we formally opened
+  the meeting"), D9 (rewording changes meaning: S2 "academic integrity").
+- **Kept or rejected, and why:** Kept as the current version. Still below the
+  8/10 target, so it is not final. B3 per the M4 revision plan: code guard for
+  D5, opening/closing added by code (D8), framing-statement rule (D7),
+  quote-anchored questions (D9), RAG wired in.
+
+---
+
 ### Version: `RAG-v1` - grounded institutional answers
 
 - **Date written:** 25.10.2026
-- **Date run:**
+- **Date run:** 08.11.2026, one run per question, `gemini-3.1-flash-lite`, retrieval k=3 with `gemini-embedding-001`
 - **Corpus:** 9 extracts from the public Studienreglement Bachelor, HSLU
   Departement Informatik (1 Sept 2022), article numbers preserved.
 - **What I was trying to fix:** B1 refuses every institutional question, which is
@@ -378,15 +638,23 @@ End every answer with the source note you are given.
 
 | Question | Type | Answered / refused | Cited article | Correct behaviour? |
 |---|---|---|---|---|
-| Credits needed to register | in documents | | | |
-| What if I fail the thesis | in documents | | | |
-| Cannot finish the thesis | in documents | | | |
-| Submission deadline and format | **not in documents** | | | |
-| Is my RQ good enough | **not answerable by any document** | | | |
+| Credits needed to register | in documents | answered | Art. 44 | yes |
+| What if I fail the thesis | in documents | answered | Art. 24, 27, 34, 43 | yes, one inferential step (below) |
+| Cannot finish the thesis | in documents | answered | Art. 34 | yes |
+| Submission deadline and format | **not in documents** | refused: *"This is not covered by the documents provided"* | - | yes |
+| Is my RQ good enough | **not answerable by any document** | refused: *"a judgement that belongs to your supervisor"* | (Art. 45 as context) | yes |
 
-- **What actually happened:**
-- **Did it distinguish the two kinds of refusal:**
-- **What got worse:**
+- **What actually happened:** 5 of 5 correct. Every answer carried the source
+  note. No date or format was invented for Q4.
+- **Did it distinguish the two kinds of refusal:** Yes. Q4 says the documents
+  do not cover it; Q5 says it is the supervisor's judgement. My prediction
+  (that it would blur them) was wrong, at least in a single run. It needs
+  repeating, three runs per question, before I claim it holds.
+- **What got worse:** Q2 applies the general FX compensation rule (Art. 27
+  Abs. 3-4) to the thesis. The extract states it for assessments in general.
+  It is cited and grounded, but one inferential step beyond the text, which is
+  the subtle form of hard fail 1. Not yet wired into the four-step workflow;
+  that is B3 (M4 revision plan, item 5).
 
 ---
 
@@ -413,5 +681,7 @@ the search, not just the result. Do not leave this empty.
 
 | Date | What I tried | Why I dropped it |
 |---|---|---|
+| 08.11.2026 | Fixing the D5 email leak with a stronger prompt rule alone (B2) | Followed for real agenda items, broken on the boilerplate "Next steps" line in 3 of 30 runs. A rule the model mostly follows is not a guarantee; B3 moves it into code |
+| 08.11.2026 | Scoring B1 from step 1 only | Missed invention entering later through `missing_info` and the email. Re-scored from the full output; B1 went from "no hard fail on T1-T5" (26.10) to 2/10 on the full corpus |
 | 25.10.2026 | Keeping B1 as a single long prompt with all the rules in one system message | Split into four steps instead: a single prompt gives nowhere to put a schema, and the "quote the student's words" constraint only becomes checkable once step 1 returns structured data |
 | 28.09.2026 | An original project - rough tradesman site notes into a client offer draft | The seven project models turned out to be fixed; switched to Modality 1, which has the same shape (messy input, structured output, hard constraint against confident invention) |

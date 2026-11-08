@@ -67,10 +67,19 @@ refuses rather than guessing.
 ```
 Project/
 ├── Readme.md
-├── Milestone_1/            Project choice
-├── Milestone_3/            Baseline, workflow design, first prototype
+├── Milestone_1/ … Milestone_4/   Milestone submissions
+├── Product/
+│   └── User_Guide_and_Boundaries.md   for the student
 ├── Prototype/
-│   └── thesis_meeting_prep_prototype.ipynb
+│   ├── thesis_meeting_prep_prototype.ipynb   A1, B1, B2, RAG
+│   ├── workflow_b2.py      current version (same code as notebook §7)
+│   ├── checks.py           automatic flags for candidate hard fails
+│   └── run_m4.py           batch runner (runs the notebook's own code)
+├── docs/                   project page (GitHub Pages)
+│   ├── index.html
+│   ├── outputs.json        generated - do not edit by hand
+│   ├── annotations.json    my reading notes, the only hand-written page text
+│   └── build_outputs.py    run_log.jsonl + annotations -> outputs.json
 ├── Prompt_Folder/
 │   ├── Prompt_Log.md               every prompt version, verbatim
 │   └── PROMPT_project_log.md       decisions, quality bar, milestones
@@ -83,12 +92,35 @@ Project/
 1. Open `Prototype/thesis_meeting_prep_prototype.ipynb` in Google Colab.
 2. Add the course OpenRouter key to Colab Secrets as `OPENROUTER_API_KEY`.
    Never paste a key into a cell.
-3. Run top to bottom.
+3. Run top to bottom. Section 7 is the current version, B2.
+
+Locally (Windows/macOS/Linux), from the `Project` folder with
+`OPENROUTER_API_KEY` set in the environment:
+
+```
+python Prototype/run_m4.py scenarios   # B2 on S1-S3
+python Prototype/run_m4.py b2tests     # B2 on T1-T10, three runs each
+python Prototype/checks.py             # automatic flags, B1 vs B2
+python docs/build_outputs.py           # refresh the project page data
+```
 
 Every run appends one line to `run_log.jsonl`: timestamp, case, run number,
 prompt version, model, latency, tokens, cost, input and output.
 
 ---
+
+## Results so far (Milestone 4)
+
+| | A1 baseline | B1 chain | B2 revised |
+|---|---|---|---|
+| Test cases without a hard fail (target 8/10) | 4/10 | 2/10 | **7/10** |
+| Runs flagged by `checks.py` | - | 19/30 | 3/30 |
+
+A1 fails by *answering*: verdicts on T2/T6/T8, and HSLU expectations stated
+as fact on T9. B1 never does that, but it fails by *drift* between steps:
+`missing_info` promoted to the agenda, and deadlines added to the email. B2
+fixes most of the drift. What is left, and the plan for B3, is in
+`Milestone_4/Thaqi_Adhurim_Milestone4.md`.
 
 ## Evaluation
 
@@ -139,8 +171,8 @@ writing to a supervisor, usable without heavy editing.
 |---|---|---|
 | 1 · Project choice | 28.09.26 | Done |
 | 2 · Project brief | 12.10.26 | Submitted |
-| 3 · Baseline, workflow, prototype | 26.10.26 | Built; runs not yet collected |
-| 4 · Draft product & revision plan | 09.11.26 | |
+| 3 · Baseline, workflow, prototype | 26.10.26 | Done |
+| 4 · Draft product & revision plan | 09.11.26 | Done - 90 test runs; A1 4/10, B1 2/10, B2 7/10 cases without a hard fail |
 | 5 · Near-final product, evidence check | 30.11.26 | |
 | 6 · Final presentation | 07.12.26 | |
 | 7 · Final report | 17.12.26 | |

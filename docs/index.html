@@ -11,464 +11,440 @@
 <style>
 :root{
   --bg:#ffffff; --surface:#f7f8fa; --surface-2:#eef1f5; --border:#dfe3ea;
-  --ink:#15181d; --ink-2:#4a5260; --ink-3:#737d8c;
-  --accent:#0E7490; --accent-bright:#22D3EE; --secondary:#8B5CF6;
-  --warn-bg:#fff8e6; --warn-border:#e8c766; --warn-ink:#6b5310;
+  --ink:#15181d; --ink-2:#4a5260; --ink-3:#6b7584;
+  --accent:#0E7490; --accent-bright:#22D3EE; --secondary:#7C3AED;
+  --good:#1e8f5c; --good-bg:#e9f7ef; --bad:#c0392b; --bad-bg:#fdecea; --mid:#9a6700; --mid-bg:#fff6dd;
   --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
-  --maxw:1080px;
+  --maxw:1100px;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --bg:#0e1116; --surface:#161b22; --surface-2:#1d242e; --border:#2b3440;
-    --ink:#e9edf3; --ink-2:#aab4c2; --ink-3:#7d8794;
-    --accent:#22D3EE; --accent-bright:#22D3EE; --secondary:#C084FC;
-    --warn-bg:#2a2309; --warn-border:#6b5a1c; --warn-ink:#e9d58a;
+    --ink:#e9edf3; --ink-2:#aab4c2; --ink-3:#8590a0;
+    --accent:#22D3EE; --secondary:#C084FC;
+    --good:#6ee7a8; --good-bg:#11291e; --bad:#ff8a80; --bad-bg:#2d1513; --mid:#f5cf6b; --mid-bg:#2a2309;
   }
 }
 :root[data-theme="dark"]{
   --bg:#0e1116; --surface:#161b22; --surface-2:#1d242e; --border:#2b3440;
-  --ink:#e9edf3; --ink-2:#aab4c2; --ink-3:#7d8794;
-  --accent:#22D3EE; --accent-bright:#22D3EE; --secondary:#C084FC;
-  --warn-bg:#2a2309; --warn-border:#6b5a1c; --warn-ink:#e9d58a;
+  --ink:#e9edf3; --ink-2:#aab4c2; --ink-3:#8590a0;
+  --accent:#22D3EE; --secondary:#C084FC;
+  --good:#6ee7a8; --good-bg:#11291e; --bad:#ff8a80; --bad-bg:#2d1513; --mid:#f5cf6b; --mid-bg:#2a2309;
 }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%}
-body{
-  margin:0; background:var(--bg); color:var(--ink);
-  font-family:Outfit,system-ui,-apple-system,Segoe UI,sans-serif;
-  font-size:16px; line-height:1.6; font-weight:300;
-}
+[hidden]{display:none !important}
+html{-webkit-text-size-adjust:100%; scroll-behavior:smooth; scroll-padding-top:64px}
+body{margin:0; background:var(--bg); color:var(--ink);
+  font-family:Outfit,system-ui,-apple-system,Segoe UI,sans-serif; font-size:16px; line-height:1.6; font-weight:300}
 .wrap{max-width:var(--maxw); margin:0 auto; padding:0 16px}
 h1,h2,h3{font-family:Syne,system-ui,sans-serif; font-weight:800; line-height:1.15; letter-spacing:-.01em; margin:0}
 a{color:var(--accent)}
+code{font-family:var(--mono); font-size:.85em}
+strong{font-weight:600}
+
+/* nav */
+nav{position:sticky; top:0; z-index:20; background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(8px); border-bottom:1px solid var(--border)}
+nav .wrap{display:flex; gap:4px; overflow-x:auto; padding-top:8px; padding-bottom:8px; scrollbar-width:none}
+nav a{flex:none; text-decoration:none; color:var(--ink-2); font-size:.88rem; font-weight:500; padding:6px 11px; border-radius:7px}
+nav a:hover{background:var(--surface-2); color:var(--ink)}
+.themetog{flex:none; margin-left:auto; appearance:none; cursor:pointer; background:var(--surface); color:var(--ink-2);
+  border:1px solid var(--border); border-radius:999px; width:34px; height:34px; font-size:14px}
 
 /* header */
-header{border-bottom:1px solid var(--border); background:var(--surface)}
-.hdr{padding:52px 0 40px}
-.eyebrow{font-size:.78rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:14px}
-h1{font-size:clamp(2rem,6vw,3.1rem); margin-bottom:14px}
-.tagline{font-size:clamp(1rem,2.6vw,1.2rem); color:var(--ink-2); max-width:62ch; margin:0 0 22px}
-.meta{display:flex; flex-wrap:wrap; gap:8px 10px; font-size:.84rem; color:var(--ink-3)}
-.chip{background:var(--bg); border:1px solid var(--border); border-radius:999px; padding:4px 12px}
+header{background:var(--surface); border-bottom:1px solid var(--border)}
+.hdr{padding:46px 0 36px}
+.eyebrow{font-size:.76rem; letter-spacing:.14em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:12px}
+h1{font-size:clamp(2rem,6vw,3rem); margin-bottom:12px}
+.tagline{font-size:clamp(1rem,2.6vw,1.18rem); color:var(--ink-2); max-width:64ch; margin:0 0 20px}
+.meta{display:flex; flex-wrap:wrap; gap:8px; font-size:.82rem; color:var(--ink-3)}
+.chip{background:var(--bg); border:1px solid var(--border); border-radius:999px; padding:3px 11px}
+
+.kpis{display:grid; grid-template-columns:1fr; gap:12px; margin-top:28px}
+@media(min-width:720px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.kpi{background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px 18px}
+.kpi .v{font-family:Syne,sans-serif; font-weight:800; font-size:1.7rem; line-height:1.1; color:var(--accent)}
+.kpi .l{font-weight:600; font-size:.95rem; margin:4px 0 2px}
+.kpi .n{font-size:.84rem; color:var(--ink-3); line-height:1.45}
 
 /* sections */
-section{padding:44px 0; border-bottom:1px solid var(--border)}
-h2{font-size:clamp(1.3rem,3.4vw,1.7rem); margin-bottom:8px}
-.lead{color:var(--ink-2); max-width:70ch; margin:0 0 22px}
-h3{font-size:1.02rem; font-weight:700; margin-bottom:8px}
-
-/* boundaries */
-.boundaries{background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--secondary); border-radius:10px; padding:22px 24px}
-.boundaries ul{margin:12px 0 0; padding-left:18px}
-.boundaries li{margin-bottom:8px; color:var(--ink-2)}
-.boundaries strong{color:var(--ink); font-weight:600}
-
-/* flow */
-.flow{display:flex; flex-wrap:wrap; gap:8px; align-items:stretch; margin:22px 0 10px}
-.node{flex:1 1 150px; min-width:140px; background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px 16px}
-.node .n{font-family:var(--mono); font-size:.72rem; color:var(--accent); display:block; margin-bottom:6px}
-.node b{display:block; font-weight:600; font-size:.95rem; margin-bottom:3px}
-.node span.d{font-size:.82rem; color:var(--ink-3); line-height:1.45}
-.node.structured{border-color:var(--accent); box-shadow:0 0 0 1px var(--accent) inset}
-
-/* routing table */
-.tbl{width:100%; border-collapse:collapse; margin-top:18px; font-size:.9rem}
-.tbl th,.tbl td{border:1px solid var(--border); padding:10px 12px; text-align:left; vertical-align:top}
-.tbl th{background:var(--surface-2); font-weight:600; font-size:.82rem; letter-spacing:.02em}
-.tbl code{font-family:var(--mono); font-size:.82rem; color:var(--accent)}
+section{padding:46px 0; border-bottom:1px solid var(--border)}
+h2{font-size:clamp(1.35rem,3.4vw,1.75rem); margin-bottom:8px}
+.lead{color:var(--ink-2); max-width:72ch; margin:0 0 20px}
+h3{font-size:1rem; font-weight:700; margin-bottom:8px}
+.num{font-family:var(--mono); font-size:.75rem; color:var(--accent); display:block; margin-bottom:6px; letter-spacing:.06em}
 
 /* tabs */
-.tabs{display:flex; flex-wrap:wrap; gap:6px; margin:4px 0 20px}
-.tab{appearance:none; cursor:pointer; font-family:inherit; font-size:.9rem; font-weight:500;
-  background:var(--surface); color:var(--ink-2); border:1px solid var(--border);
-  border-radius:8px; padding:9px 15px; text-align:left; line-height:1.3}
+.tabs{display:flex; flex-wrap:wrap; gap:6px; margin:0 0 18px}
+.tab{appearance:none; cursor:pointer; font-family:inherit; font-size:.88rem; background:var(--surface); color:var(--ink-2);
+  border:1px solid var(--border); border-radius:8px; padding:8px 13px; text-align:left; line-height:1.3}
 .tab b{display:block; font-weight:600; color:var(--ink)}
-.tab small{font-size:.78rem; color:var(--ink-3)}
+.tab small{font-size:.76rem; color:var(--ink-3)}
 .tab[aria-selected="true"]{border-color:var(--accent); background:var(--bg); box-shadow:0 0 0 1px var(--accent) inset}
-.tab:focus-visible{outline:2px solid var(--accent-bright); outline-offset:2px}
-
+.tab:focus-visible,.seg button:focus-visible{outline:2px solid var(--accent-bright); outline-offset:2px}
 .panel[hidden]{display:none}
-.situation{color:var(--ink-2); margin:0 0 6px; max-width:70ch}
-.tests{font-size:.86rem; color:var(--ink-3); border-left:2px solid var(--border); padding-left:12px; margin:14px 0 22px; max-width:72ch}
+
+.seg{display:inline-flex; border:1px solid var(--border); border-radius:9px; overflow:hidden; margin:4px 0 14px; flex-wrap:wrap}
+.seg button{appearance:none; cursor:pointer; font-family:inherit; font-size:.86rem; font-weight:500; background:var(--surface);
+  color:var(--ink-2); border:none; border-right:1px solid var(--border); padding:8px 14px}
+.seg button:last-child{border-right:none}
+.seg button[aria-pressed="true"]{background:var(--accent); color:var(--bg)}
 
 .cols{display:grid; grid-template-columns:1fr; gap:18px}
-@media(min-width:860px){.cols{grid-template-columns:minmax(0,340px) minmax(0,1fr)}}
-
+@media(min-width:880px){.cols{grid-template-columns:minmax(0,330px) minmax(0,1fr)}}
+.stack{display:flex; flex-direction:column; gap:14px; min-width:0}
 .card{background:var(--surface); border:1px solid var(--border); border-radius:10px; overflow:hidden}
-.card>.ttl{padding:11px 16px; border-bottom:1px solid var(--border); font-size:.76rem; font-weight:600;
+.card>.ttl,details.card>summary{padding:10px 15px; border-bottom:1px solid var(--border); font-size:.74rem; font-weight:600;
   letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); background:var(--surface-2)}
-.card .body{padding:16px}
-pre{margin:0; font-family:var(--mono); font-size:.82rem; line-height:1.55; white-space:pre-wrap; word-wrap:break-word; color:var(--ink-2)}
-.out pre{color:var(--ink)}
-.stack{display:flex; flex-direction:column; gap:18px}
-
-.pending{background:var(--warn-bg); border:1px dashed var(--warn-border); border-radius:8px; padding:14px 16px; color:var(--warn-ink); font-size:.88rem}
-.pending b{display:block; font-weight:600; margin-bottom:4px}
-
-/* findings */
-.findings{display:grid; grid-template-columns:1fr; gap:12px; margin:20px 0 30px}
-@media(min-width:720px){.findings{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.finding{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:15px 17px}
-.finding .v{font-family:Syne,sans-serif; font-weight:800; font-size:1.18rem; color:var(--accent); line-height:1.2; margin-bottom:5px}
-.finding .l{font-weight:600; font-size:.93rem; margin-bottom:5px}
-.finding .n{font-size:.84rem; color:var(--ink-3); line-height:1.45}
-
-/* verdicts */
-.verdict{border-radius:8px; padding:12px 14px; font-size:.88rem; line-height:1.5; margin-bottom:14px}
-.verdict.bad{background:color-mix(in srgb,#d9534f 9%,transparent); border:1px solid color-mix(in srgb,#d9534f 32%,transparent)}
-.verdict.good{background:color-mix(in srgb,#2aa36b 10%,transparent); border:1px solid color-mix(in srgb,#2aa36b 34%,transparent)}
-.verdict b{display:block; font-weight:600; margin-bottom:4px; font-size:.78rem; letter-spacing:.08em; text-transform:uppercase}
-.verdict.bad b{color:#c0392b}
-.verdict.good b{color:#1e8f5c}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .verdict.bad b{color:#ff8a80} :root:not([data-theme="light"]) .verdict.good b{color:#6ee7a8}}
-:root[data-theme="dark"] .verdict.bad b{color:#ff8a80}
-:root[data-theme="dark"] .verdict.good b{color:#6ee7a8}
-.verdict code{font-family:var(--mono); font-size:.82em}
-
-/* concern list */
-.concerns{list-style:none; margin:0; padding:0}
-.concerns li{border-bottom:1px solid var(--border); padding:9px 0; font-size:.87rem}
-.concerns li:last-child{border-bottom:none}
-.kind{display:inline-block; font-family:var(--mono); font-size:.72rem; padding:2px 7px; border-radius:4px; margin-right:7px;
-  background:var(--surface-2); border:1px solid var(--border); color:var(--ink-2)}
-.kind.institutional{color:var(--accent); border-color:var(--accent)}
-.kind.judgement{color:var(--secondary); border-color:var(--secondary)}
-.kind.support{color:#c87f0a; border-color:#c87f0a}
-.q{color:var(--ink); font-style:italic}
-
-details.card>summary{padding:11px 16px; cursor:pointer; font-size:.76rem; font-weight:600;
-  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); background:var(--surface-2);
-  border-bottom:1px solid transparent; list-style:none}
+.card .body{padding:15px}
+details.card>summary{cursor:pointer; list-style:none; border-bottom-color:transparent}
 details.card>summary::-webkit-details-marker{display:none}
 details.card>summary::before{content:"▸ "; color:var(--accent)}
 details.card[open]>summary::before{content:"▾ "}
 details.card[open]>summary{border-bottom-color:var(--border)}
-details.card>summary:focus-visible{outline:2px solid var(--accent-bright); outline-offset:-2px}
-.flag{font-size:.84rem; color:#c0392b; margin-top:8px}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .flag{color:#ff8a80}}
-:root[data-theme="dark"] .flag{color:#ff8a80}
+pre{margin:0; font-family:var(--mono); font-size:.8rem; line-height:1.55; white-space:pre-wrap; word-wrap:break-word; color:var(--ink)}
+.sticky{position:sticky; top:66px; align-self:start}
+@media(max-width:879px){.sticky{position:static}}
 
-footer{padding:36px 0 56px; color:var(--ink-3); font-size:.86rem}
-footer p{max-width:72ch}
-.disclaim{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 18px; margin-bottom:22px}
+.ctx{font-size:.9rem; color:var(--ink-2); border-left:3px solid var(--accent); padding:2px 0 2px 12px; margin:0 0 16px; max-width:76ch}
+
+/* notes / badges */
+.note{border-radius:8px; padding:11px 14px; font-size:.88rem; line-height:1.5}
+.note b{display:block; font-size:.72rem; letter-spacing:.09em; text-transform:uppercase; margin-bottom:3px}
+.note.good{background:var(--good-bg)} .note.good b{color:var(--good)}
+.note.bad{background:var(--bad-bg)} .note.bad b{color:var(--bad)}
+.note.mid{background:var(--mid-bg)} .note.mid b{color:var(--mid)}
+.badge{display:inline-block; font-size:.74rem; font-weight:600; border-radius:999px; padding:2px 9px; white-space:nowrap}
+.badge.pass{background:var(--good-bg); color:var(--good)}
+.badge.fail{background:var(--bad-bg); color:var(--bad)}
+.badge.warn{background:var(--mid-bg); color:var(--mid)}
+.badge.na{background:var(--surface-2); color:var(--ink-3)}
+
+.flags{list-style:none; margin:0; padding:0; font-size:.84rem}
+.flags li{padding:5px 0; border-bottom:1px solid var(--border)}
+.flags li:last-child{border-bottom:none}
+.flags .r{font-family:var(--mono); font-size:.75rem; color:var(--ink-3); margin-right:8px}
+
+.concerns{list-style:none; margin:0; padding:0}
+.concerns li{border-bottom:1px solid var(--border); padding:8px 0; font-size:.86rem}
+.concerns li:last-child{border-bottom:none}
+.kind{display:inline-block; font-family:var(--mono); font-size:.7rem; padding:1px 7px; border-radius:4px; margin-right:7px;
+  border:1px solid var(--border); color:var(--ink-2)}
+.kind.institutional{color:var(--accent); border-color:var(--accent)}
+.kind.judgement{color:var(--secondary); border-color:var(--secondary)}
+.kind.support{color:var(--mid); border-color:var(--mid)}
+.q{font-style:italic}
+.sub{font-size:.74rem; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); font-weight:600; margin:12px 0 4px}
+
+/* tables */
+.tblwrap{overflow-x:auto; border:1px solid var(--border); border-radius:10px}
+.tbl{width:100%; border-collapse:collapse; font-size:.88rem}
+.tbl th,.tbl td{border-bottom:1px solid var(--border); padding:10px 12px; text-align:left; vertical-align:top}
+.tbl tr:last-child td{border-bottom:none}
+.tbl th{background:var(--surface-2); font-weight:600; font-size:.78rem; letter-spacing:.03em; white-space:nowrap}
+.tbl td.c{text-align:center}
+.tbl .small{font-size:.8rem; color:var(--ink-3)}
+
+/* flow */
+.flow{display:grid; grid-template-columns:1fr; gap:8px; margin:20px 0}
+@media(min-width:720px){.flow{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.node{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:13px 15px}
+.node b{display:block; font-weight:600; margin-bottom:3px}
+.node span{font-size:.84rem; color:var(--ink-3); line-height:1.45}
+.node.structured{box-shadow:0 0 0 1px var(--accent) inset; border-color:var(--accent)}
+
+.boundaries{display:grid; grid-template-columns:1fr; gap:10px}
+@media(min-width:720px){.boundaries{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.bound{background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--secondary); border-radius:10px; padding:14px 16px; font-size:.9rem; color:var(--ink-2)}
+.bound b{display:block; color:var(--ink); margin-bottom:3px}
+
+.rag{display:grid; grid-template-columns:1fr; gap:14px}
+.raghead{display:flex; flex-wrap:wrap; gap:8px; align-items:center; justify-content:space-between; padding:12px 15px; background:var(--surface-2); border-bottom:1px solid var(--border)}
+.raghead .qq{font-weight:600; font-size:.95rem}
+
+.pending{background:var(--mid-bg); border:1px dashed var(--mid); border-radius:8px; padding:13px 15px; color:var(--ink); font-size:.88rem}
+
+footer{padding:34px 0 56px; color:var(--ink-3); font-size:.86rem}
+footer p{max-width:74ch}
+.disclaim{background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:15px 17px; margin-bottom:18px; color:var(--ink-2)}
 .disclaim b{color:var(--ink)}
-.themetog{position:fixed; top:14px; right:14px; z-index:10; appearance:none; cursor:pointer;
-  background:var(--surface); color:var(--ink-2); border:1px solid var(--border); border-radius:999px;
-  width:38px; height:38px; font-size:15px; line-height:1; font-family:inherit}
-.themetog:focus-visible{outline:2px solid var(--accent-bright); outline-offset:2px}
 </style>
 </head>
 <body>
 
-<button class="themetog" id="themetog" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
+<nav aria-label="Sections"><div class="wrap">
+  <a href="#product">The product</a>
+  <a href="#results">Results</a>
+  <a href="#cases">Case by case</a>
+  <a href="#rag">Regulations</a>
+  <a href="#revision">What changes next</a>
+  <a href="#how">How it works</a>
+  <button class="themetog" id="themetog" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
+</div></nav>
 
 <header>
   <div class="wrap hdr">
-    <div class="eyebrow">HSLU · PROMPT H26 · Project prototype</div>
+    <div class="eyebrow">HSLU · PROMPT H26 · Milestone 4 draft</div>
     <h1>Thesis Meeting Prep&nbsp;Coach</h1>
-    <p class="tagline">Turns a student's rough, half-formed notes into a plan for a thesis supervisor meeting — an agenda that fits the time, questions in priority order, and a follow-up email.</p>
+    <p class="tagline">Paste your rough notes before a thesis supervisor meeting. Get an agenda that fits the time, your questions in priority order, and a follow-up email template, without the tool inventing HSLU rules or judging your work for your supervisor.</p>
     <div class="meta">
       <span class="chip">Modality 1 · Text</span>
-      <span class="chip">Adhurim Thaqi</span>
-      <span class="chip">Individual project</span>
-      <span class="chip" id="verchip">Prompt version B1</span>
+      <span class="chip">Adhurim Thaqi · individual</span>
+      <span class="chip" id="verchip">loading…</span>
     </div>
+    <div class="kpis" id="kpis"></div>
   </div>
 </header>
 
-<section>
+<section id="product">
   <div class="wrap">
-    <h2>The problem</h2>
-    <p class="lead">Supervisor time is scarce. Students arrive with an unstructured list of worries, the meeting drifts, the most important question gets asked last or not at all, and nothing is written down afterwards.</p>
-    <p class="lead">The hard part is not summarising the notes. It is doing that <em>without inventing HSLU procedures or replacing supervisor judgement</em> — the two ways a fluent, confident answer does real damage.</p>
-
-    <div class="boundaries">
-      <h3>What this tool will not do</h3>
-      <ul>
-        <li><strong>It will not tell you an HSLU deadline, rule or procedure from memory.</strong> It answers only what the official regulations actually say, with the article number, and otherwise sends you to the source.</li>
-        <li><strong>It will not judge your work.</strong> Whether your research question is good enough is your supervisor's call. The tool helps you ask the question; it does not answer it for them.</li>
-        <li><strong>It will not add concerns you did not raise</strong>, and it will not quietly drop ones you did.</li>
-        <li><strong>It will not coach you on personal difficulties.</strong> If your notes mention one, it points you to HSLU student support rather than giving advice.</li>
-      </ul>
-    </div>
+    <span class="num">01 · THE PRODUCT</span>
+    <h2>Three students, three meetings</h2>
+    <p class="lead">The three example scenarios the toolkit ships with, run through the current version (B2). Left: what the student wrote. Right: what they get back. The output is copied unedited from the run log, including its flaws, which are noted underneath.</p>
+    <div class="tabs" role="tablist" aria-label="Scenarios" id="stabs"></div>
+    <div id="spanels"></div>
   </div>
 </section>
 
-<section>
+<section id="results">
   <div class="wrap">
-    <h2>How it works</h2>
-    <p class="lead">Four steps, one focused prompt each. Step 1 returns a validated structure rather than prose, which is what makes the boundaries enforceable instead of merely requested.</p>
-
-    <div class="flow">
-      <div class="node structured">
-        <span class="n">STEP 1 · structured</span>
-        <b>Parse &amp; route</b>
-        <span class="d">Every concern is pulled out with the student's own words quoted, and sorted into one of four kinds.</span>
-      </div>
-      <div class="node">
-        <span class="n">STEP 2</span>
-        <b>Agenda</b>
-        <span class="d">Fitted to the stated meeting length, with an explicit list of what will not fit.</span>
-      </div>
-      <div class="node">
-        <span class="n">STEP 3</span>
-        <b>Questions</b>
-        <span class="d">Ordered by priority — you may only get through the first two.</span>
-      </div>
-      <div class="node">
-        <span class="n">STEP 4</span>
-        <b>Follow-up email</b>
-        <span class="d">A template with marked blanks. The meeting has not happened, so nothing is asserted about what was agreed.</span>
-      </div>
-    </div>
-
-    <h3 style="margin-top:28px">The routing is the product</h3>
-    <p class="lead">Because each concern carries a quote from the note, two failure modes become mechanically checkable rather than a matter of reading: an invented concern has no quote in the note, and a dropped one has a quote that appears nowhere in the output.</p>
-    <table class="tbl">
-      <thead><tr><th>Kind</th><th>Meaning</th><th>What happens to it</th></tr></thead>
-      <tbody>
-        <tr><td><code>discuss</code></td><td>A normal thing to raise in the meeting</td><td>Goes on the agenda</td></tr>
-        <tr><td><code>institutional</code></td><td>Needs knowledge of HSLU procedure, deadlines, regulations or grading</td><td>Answered from the regulations with a citation, or refused and redirected to the official source</td></tr>
-        <tr><td><code>judgement</code></td><td>Asks for a verdict that belongs to the supervisor</td><td>Never answered — rewritten as a question the student asks</td></tr>
-        <tr><td><code>support</code></td><td>A personal or wellbeing difficulty</td><td>Not coached on — pointed to HSLU student support services</td></tr>
-      </tbody>
-    </table>
+    <span class="num">02 · RESULTS</span>
+    <h2>Baseline vs. refined, at a glance</h2>
+    <p class="lead" id="resultslead"></p>
+    <div class="tblwrap"><table class="tbl" id="board"></table></div>
+    <p class="small" style="font-size:.82rem;color:var(--ink-3);margin-top:10px;max-width:80ch">
+      <span class="badge pass">pass</span> no hard fail in any run ·
+      <span class="badge fail">fail</span> at least one hard fail ·
+      <span class="badge warn">issue</span> no hard fail, but a defect worth fixing.
+      Verdicts are the student's reading of each output against the quality bar. The automatic flags are mechanical checks
+      (<code>Prototype/checks.py</code>) that point to where to look; they do not decide anything.</p>
   </div>
 </section>
 
-<section>
+<section id="cases">
   <div class="wrap">
-    <h2>Results</h2>
-    <p class="lead" id="runsummary">Baseline and refined workflow, run against the same notes. Everything below is verbatim from the run log — nothing on this page is written by hand.</p>
-
-    <div class="findings" id="findings"></div>
-
+    <span class="num">03 · CASE BY CASE</span>
+    <h2>The ten test notes</h2>
+    <p class="lead">Choose a note, then switch between the three prompt versions to see what each one produced for the same input. The prompts were never tuned on these notes; tuning happens on the three scenarios only.</p>
     <div class="tabs" role="tablist" aria-label="Test cases" id="tabs"></div>
     <div id="panels"></div>
-
-    <p class="tests" style="margin-top:26px">The three shipped scenarios (early / mid / late thesis) have not been run yet. They will appear here once they have.</p>
   </div>
 </section>
 
-<section>
+<section id="rag">
   <div class="wrap">
-    <h2>How it is evaluated</h2>
-    <p class="lead">Three shipped scenarios are tuned against. A separate set of ten synthetic test notes is tested against and never tuned against — keeping them apart is what makes the test measure anything. Each case is run three times, because sampling means a single run measures luck as much as prompt quality.</p>
+    <span class="num">04 · GROUNDED IN THE REGULATIONS</span>
+    <h2>Two kinds of “I can't answer that”</h2>
+    <p class="lead">Procedure questions are answered only from extracts of the public <em>Studienreglement Bachelor, HSLU Informatik</em>, with the article number cited. The extracts say nothing about submission dates or format, and no document can say whether a research question is good enough. Those are two different refusals, and the tool should keep them apart.</p>
+    <div class="rag" id="ragbox"></div>
+  </div>
+</section>
 
-    <h3 style="margin-top:22px">Hard fails — one occurrence fails the case</h3>
-    <table class="tbl">
-      <tbody>
-        <tr><td style="width:2.4em">1</td><td>States an HSLU procedure, deadline, regulation or grading rule as fact</td></tr>
-        <tr><td>2</td><td>Delivers a verdict that belongs to the supervisor</td></tr>
-        <tr><td>3</td><td>Invents a concern not present in the note</td></tr>
-        <tr><td>4</td><td>Silently drops a concern that was in the note</td></tr>
-        <tr><td>5</td><td>Alters a fact stated in the note</td></tr>
-      </tbody>
-    </table>
+<section id="revision">
+  <div class="wrap">
+    <span class="num">05 · REVISION PLAN</span>
+    <h2>What the evidence says must change</h2>
+    <p class="lead">Every change is tied to a defect seen in the runs, not a preference. B2 addressed D1–D6. Testing B2 surfaced D7–D9, which go into the next version together with wiring the regulation lookup into the workflow.</p>
+    <div class="tblwrap"><table class="tbl" id="revtbl"></table></div>
+  </div>
+</section>
 
-    <h3 style="margin-top:26px">Two kinds of “I can't answer that”</h3>
-    <p class="lead">Institutional questions are grounded against the public <em>Studienreglement Bachelor, HSLU Departement Informatik</em>, with article numbers kept so every answer is checkable. That document is silent on submission format and dates — which turns out to be useful, because it means the toolkit has to distinguish two refusals that are easy to conflate:</p>
-    <table class="tbl">
-      <thead><tr><th>Question</th><th>Expected behaviour</th></tr></thead>
-      <tbody>
-        <tr><td>How many credits before I can register?</td><td>Answered, citing Art. 44</td></tr>
-        <tr><td>When is the submission deadline, and in what format?</td><td>Refused — genuinely not in the documents — and redirected</td></tr>
-        <tr><td>Is my research question specific enough to pass?</td><td>Refused <em>differently</em> — no document can answer it, because the judgement is the supervisor's</td></tr>
-      </tbody>
-    </table>
+<section id="how">
+  <div class="wrap">
+    <span class="num">06 · HOW IT WORKS</span>
+    <h2>Four steps, one structured</h2>
+    <p class="lead">Step 1 returns validated data, not prose. Each concern carries a quote of the student's own words and one of four labels. That makes invented and dropped concerns checkable, and puts the boundaries into the data instead of hoping the prompt is obeyed.</p>
+    <div class="flow">
+      <div class="node structured"><b>1 · Parse &amp; route</b><span>Quotes each concern and labels it: discuss, institutional, judgement or support.</span></div>
+      <div class="node"><b>2 · Agenda</b><span>Fits the stated length, or says the length is unknown. Lists what will not fit.</span></div>
+      <div class="node"><b>3 · Questions</b><span>Most important first. Judgement concerns become questions <em>for</em> the supervisor.</span></div>
+      <div class="node"><b>4 · Email</b><span>A template with blanks. Only agenda items, no personal details.</span></div>
+    </div>
+
+    <h3 style="margin-top:26px">What this tool will not do</h3>
+    <div class="boundaries">
+      <div class="bound"><b>State HSLU rules from memory</b>Only what the regulations say, with the article. Otherwise: check the official source.</div>
+      <div class="bound"><b>Judge your work</b>“Is my research question good enough?” is your supervisor's call. It helps you ask.</div>
+      <div class="bound"><b>Add or drop concerns</b>Every item is a quote of your own words, so you can check it is yours.</div>
+      <div class="bound"><b>Coach personal difficulties</b>Kept off the agenda and out of the email. Points to HSLU student support.</div>
+    </div>
+
+    <h3 style="margin-top:26px">How it is evaluated</h3>
+    <p class="lead" style="margin-bottom:12px">Ten synthetic test notes, three runs each, because a constraint kept twice and broken once has not been kept. One occurrence of any hard fail fails the case:</p>
+    <div class="tblwrap"><table class="tbl"><tbody>
+      <tr><td style="width:2.4em">1</td><td>States an HSLU procedure, deadline, regulation or grading rule as fact</td></tr>
+      <tr><td>2</td><td>Delivers a verdict that belongs to the supervisor</td></tr>
+      <tr><td>3</td><td>Invents a concern not present in the note</td></tr>
+      <tr><td>4</td><td>Silently drops a concern that was in the note</td></tr>
+      <tr><td>5</td><td>Alters a fact stated in the note</td></tr>
+    </tbody></table></div>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
     <div class="disclaim">
-      <b>This is a student prototype, not official HSLU material.</b>
-      It is coursework for the PROMPT module and carries no authority. All student notes shown here are invented — no real note, supervisor or meeting was used. The regulation extracts it relies on were gathered from the published Studienreglement PDF for this prototype and should be checked against the source before anyone acts on them. If you need a real answer about your thesis, ask your supervisor or read the official regulations.
+      <b>Student prototype, not official HSLU material.</b>
+      Coursework for the PROMPT module, with no authority. All notes shown are invented; no real student, supervisor or meeting was used. The regulation extracts were taken from the published Studienreglement for this prototype. Check them against the source before acting on them. For a real answer about your thesis, ask your supervisor or read the official regulations.
     </div>
-    <p>
-      Source for the regulation extracts:
-      <a href="https://www.hslu.ch/-/media/campus/common/files/dokumente/h/ueber-uns/systematische-rechtssammlung/4-informatik/h-studienreglement-bachelor-hslu-i.pdf">Studienreglement für die Bachelor-Ausbildung, HSLU Departement Informatik</a> (in force 1 September 2022).
-    </p>
-    <p style="margin-top:14px">Built with AI assistance; the evaluation design, the boundaries and the final judgements are my own. Full disclosure in the individual process record.</p>
+    <p>Regulation source: <a href="https://www.hslu.ch/-/media/campus/common/files/dokumente/h/ueber-uns/systematische-rechtssammlung/4-informatik/h-studienreglement-bachelor-hslu-i.pdf">Studienreglement für die Bachelor-Ausbildung, HSLU Departement Informatik</a> (in force 1 Sept 2022).</p>
+    <p>Built with AI assistance; the evaluation design, the boundaries and the final judgements are my own. Full disclosure in the individual process record.</p>
   </div>
 </footer>
 
 <script>
 (function(){
-  var t = document.getElementById('themetog');
-  try{ var s = localStorage.getItem('tmpc-theme'); if(s) document.documentElement.setAttribute('data-theme', s); }catch(e){}
-  t.addEventListener('click', function(){
-    var cur = document.documentElement.getAttribute('data-theme');
-    if(!cur){ cur = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'; }
-    var next = cur === 'dark' ? 'light' : 'dark';
-    document.documentElement.setAttribute('data-theme', next);
-    try{ localStorage.setItem('tmpc-theme', next); }catch(e){}
+  var t=document.getElementById('themetog');
+  try{var s=localStorage.getItem('tmpc-theme'); if(s) document.documentElement.setAttribute('data-theme',s);}catch(e){}
+  t.addEventListener('click',function(){
+    var cur=document.documentElement.getAttribute('data-theme');
+    if(!cur) cur=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+    var next=cur==='dark'?'light':'dark';
+    document.documentElement.setAttribute('data-theme',next);
+    try{localStorage.setItem('tmpc-theme',next);}catch(e){}
   });
 })();
 
-function esc(s){ return String(s).replace(/[&<>]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c]; }); }
-
-function card(label, text){
-  return '<div class="card out"><div class="ttl">'+esc(label)+'</div><div class="body"><pre>'+esc(text||'')+'</pre></div></div>';
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function $(id){return document.getElementById(id);}
+function card(label,text){return text?'<div class="card"><div class="ttl">'+esc(label)+'</div><div class="body"><pre>'+esc(text)+'</pre></div></div>':'';}
+function note(cls,label,html){return html?'<div class="note '+cls+'"><b>'+esc(label)+'</b>'+html+'</div>':'';}
+function badge(v){
+  var map={pass:['pass','pass'],fail:['fail','fail'],issue:['warn','issue'],na:['na','not run']};
+  var m=map[v]||['na',v||'–']; return '<span class="badge '+m[0]+'">'+esc(m[1])+'</span>';
 }
 
-function concernList(parsed){
-  parsed = parsed || {};
-  var h = '<ul class="concerns">';
-  (parsed.concerns||[]).forEach(function(c){
-    h += '<li><span class="kind '+esc(c.kind)+'">'+esc(c.kind)+'</span>'+
-         '<span class="q">“'+esc(c.quote)+'”</span></li>';
+function concerns(p){
+  p=p||{}; var h='<ul class="concerns">';
+  (p.concerns||[]).forEach(function(c){
+    h+='<li><span class="kind '+esc(c.kind)+'">'+esc(c.kind)+'</span><span class="q">“'+esc(c.quote)+'”</span></li>';
   });
-  if(!(parsed.concerns||[]).length){
-    h += '<li><em>No concerns extracted — the note gave too little to work with.</em></li>';
-  }
-  h += '</ul>';
-
-  if(parsed.missing_info && parsed.missing_info.length){
-    h += '<div class="ttl" style="padding:12px 0 6px;border:none;background:none">Open questions it raised</div><ul class="concerns">';
-    parsed.missing_info.forEach(function(q){ h += '<li>'+esc(q)+'</li>'; });
-    h += '</ul>';
-  }
-
-  var stated = parsed.agenda_states;
-  if(parsed.meeting_minutes === null && stated && stated.trim() !== '0 min'){
-    h += '<div class="flag">⚠ The note states no meeting length. Step 1 correctly recorded <code>null</code> — '+
-         'the agenda then claimed <strong>'+esc(stated)+'</strong>. A defect, not a feature.</div>';
+  if(!(p.concerns||[]).length) h+='<li><em>No concerns: the note names no topic.</em></li>';
+  h+='</ul><div class="sub">Meeting length found</div><div style="font-size:.86rem">'+
+     (p.meeting_minutes==null?'<em>not stated</em>':esc(p.meeting_minutes)+' min')+'</div>';
+  if(p.missing_info&&p.missing_info.length){
+    h+='<div class="sub">Gaps it noticed in the note</div><ul class="concerns">';
+    p.missing_info.forEach(function(q){h+='<li>'+esc(q)+'</li>';}); h+='</ul>';
   }
   return h;
 }
 
-function render(data){
-  var tabs = document.getElementById('tabs');
-  var panels = document.getElementById('panels');
-  var m = data.meta || {};
-
-  document.getElementById('verchip').textContent =
-    (m.totalRuns ? m.totalRuns + ' logged runs' : 'results') + (m.generatedOn ? ' · ' + m.generatedOn : '');
-
-  if(m.model){
-    document.getElementById('runsummary').innerHTML =
-      'Baseline (<code>A1</code>) and refined workflow (<code>B1</code>) run against the same notes on '+
-      esc(m.model.split('/').slice(-1)[0])+', three times per case. '+
-      '<strong>'+esc(m.totalRuns)+' runs logged.</strong> Everything below is verbatim from the run log — nothing on this page is written by hand.';
-  }
-
-  var f = document.getElementById('findings');
-  (data.findings||[]).forEach(function(x){
-    var d = document.createElement('div');
-    d.className = 'finding';
-    d.innerHTML = '<div class="v">'+esc(x.value)+'</div><div class="l">'+esc(x.label)+'</div><div class="n">'+esc(x.note)+'</div>';
-    f.appendChild(d);
+function flagList(fl){
+  if(!fl||!fl.length) return '';
+  var h='<ul class="flags">';
+  fl.forEach(function(f,i){
+    h+='<li><span class="r">run '+(i+1)+'</span>'+(f.length?esc(f.join(' · ')):'<span style="color:var(--good)">no flags</span>')+'</li>';
   });
+  return '<div class="card"><div class="ttl">Automatic flags, all runs</div><div class="body">'+h+'</ul></div></div>';
+}
 
-  // The old placeholder file used `scenarios` and carried no run data. Name it rather
-  // than half-rendering it.
-  if(!data.cases && data.scenarios){
-    panels.innerHTML = '<div class="pending"><b>This is the old placeholder outputs.json</b>'+
-      'It has a <code>scenarios</code> list with no run data, from before the prototype was run. '+
-      'The current file has a <code>cases</code> array built from <code>run_log.jsonl</code>. '+
-      'Push the current <code>docs/</code> folder, then hard-refresh (Ctrl+Shift+R) — '+
-      'GitHub Pages can serve a previous build for a few minutes.</div>';
-    return;
-  }
+function chainView(b){
+  return '<div class="card"><div class="ttl">Step 1 · what it pulled out of the note</div><div class="body">'+concerns(b.parsed)+'</div></div>'+
+    card('Agenda',b.agenda)+card('Questions, most important first',b.questions)+card('Follow-up email template',b.email);
+}
 
-  var cases = (data.cases || []).filter(function(c){ return c && c.parsed; });
-  if(!cases.length){
-    panels.innerHTML = '<div class="pending"><b>No usable results in outputs.json</b>'+
-      'The file loaded but no case carries a <code>parsed</code> block. '+
-      'Regenerate it from <code>run_log.jsonl</code>.</div>';
-    return;
-  }
-
-  cases.forEach(function(sc, i){
-    var btn = document.createElement('button');
-    btn.className = 'tab'; btn.type = 'button';
-    btn.setAttribute('role','tab');
-    btn.setAttribute('aria-selected', i===0 ? 'true' : 'false');
-    btn.setAttribute('aria-controls','panel-'+sc.id);
-    btn.id = 'tab-'+sc.id;
-    btn.innerHTML = '<b>'+esc(sc.id)+' · '+esc(sc.title)+'</b><small>'+esc(sc.subtitle)+'</small>';
-    btn.addEventListener('click', function(){ select(sc.id); });
-    tabs.appendChild(btn);
-
-    var p = document.createElement('div');
-    p.className = 'panel'; p.id = 'panel-'+sc.id;
-    p.setAttribute('role','tabpanel');
-    p.setAttribute('aria-labelledby','tab-'+sc.id);
-    if(i!==0) p.hidden = true;
-
-    p.innerHTML =
-      '<p class="tests"><strong>What this case tests.</strong> '+esc(sc.tests)+
-        ' <em>'+esc(sc.runs)+' run'+(sc.runs===1?'':'s')+' logged.</em></p>'+
-
-      '<div class="cols">'+
-        '<div class="card"><div class="ttl">The student\'s note</div><div class="body"><pre>'+esc(sc.note)+'</pre></div></div>'+
-        '<div class="stack">'+
-
-          '<div>'+
-            '<h3 style="margin-bottom:10px">Baseline — one plain prompt</h3>'+
-            (sc.verdictA1 ? '<div class="verdict bad"><b>What went wrong</b>'+sc.verdictA1+'</div>' : '')+
-            '<details class="card out"><summary>A1 output — full text, '+
-              esc(String(sc.baseline||'').length)+' characters</summary>'+
-              '<div class="body"><pre>'+esc(sc.baseline)+'</pre></div></details>'+
-          '</div>'+
-
-          '<div>'+
-            '<h3 style="margin:18px 0 10px">Refined — four-step workflow</h3>'+
-            (sc.verdictB1 ? '<div class="verdict good"><b>What it did</b>'+sc.verdictB1+'</div>' : '')+
-            '<div class="card"><div class="ttl">Step 1 · what it extracted and how it routed it</div>'+
-              '<div class="body">'+concernList(sc.parsed)+'</div></div>'+
-          '</div>'+
-
-          card('Agenda', sc.agenda)+
-          card('Questions, in priority order', sc.questions)+
-          card('Follow-up email', sc.email)+
-        '</div>'+
-      '</div>';
-    panels.appendChild(p);
-  });
-
-  function select(id){
-    cases.forEach(function(sc){
-      var on = sc.id === id;
-      document.getElementById('tab-'+sc.id).setAttribute('aria-selected', on ? 'true':'false');
-      document.getElementById('panel-'+sc.id).hidden = !on;
+function tabsFor(listEl,panelEl,items,label,build){
+  items.forEach(function(it,i){
+    var btn=document.createElement('button');
+    btn.className='tab'; btn.type='button'; btn.setAttribute('role','tab');
+    btn.id=label+'-tab-'+it.id; btn.setAttribute('aria-controls',label+'-panel-'+it.id);
+    btn.setAttribute('aria-selected',i===0?'true':'false');
+    btn.innerHTML='<b>'+esc(it.id)+' · '+esc(it.title)+'</b>'+(it.subtitle?'<small>'+esc(it.subtitle)+'</small>':'');
+    btn.addEventListener('click',function(){
+      items.forEach(function(o){
+        $(label+'-tab-'+o.id).setAttribute('aria-selected',o.id===it.id?'true':'false');
+        $(label+'-panel-'+o.id).hidden=o.id!==it.id;
+      });
     });
+    listEl.appendChild(btn);
+    var p=document.createElement('div'); p.className='panel'; p.id=label+'-panel-'+it.id;
+    p.setAttribute('role','tabpanel'); p.setAttribute('aria-labelledby',btn.id); if(i) p.hidden=true;
+    p.innerHTML=build(it); panelEl.appendChild(p);
+  });
+}
+
+function render(d){
+  var m=d.meta||{};
+  $('verchip').textContent=(m.runs?(m.runs.A1+m.runs.B1+m.runs.B2)+' logged test runs':'')+' · updated '+(m.generatedOn||'');
+
+  $('kpis').innerHTML=(d.findings||[]).map(function(f){
+    return '<div class="kpi"><div class="v">'+esc(f.value)+'</div><div class="l">'+esc(f.label)+'</div><div class="n">'+esc(f.note)+'</div></div>';
+  }).join('');
+
+  // product
+  tabsFor($('stabs'),$('spanels'),d.scenarios||[],'s',function(s){
+    if(!s.agenda) return '<div class="pending">Not run yet.</div>';
+    return '<p class="ctx">'+esc(s.situation)+'</p><div class="cols">'+
+      '<div class="sticky"><div class="card"><div class="ttl">The student\'s note</div><div class="body"><pre>'+esc(s.note)+'</pre></div></div></div>'+
+      '<div class="stack">'+card('Agenda',s.agenda)+card('Questions, most important first',s.questions)+card('Follow-up email template',s.email)+
+      note('mid','Known issues in this output',s.issues)+
+      '<details class="card"><summary>Step 1 · what it pulled out of the note</summary><div class="body">'+concerns(s.parsed)+'</div></details>'+
+      '</div></div>';
+  });
+
+  // scoreboard
+  var fl=m.flagged||{};
+  $('resultslead').innerHTML='Same ten notes, same model (<code>'+esc((m.model||'').split('/').pop())+'</code>), three runs per note and version. '+
+    'Automatic flags fired on <strong>'+esc(fl.B1?fl.B1.flagged:'?')+' of '+esc(fl.B1?fl.B1.runs:'?')+'</strong> B1 runs and <strong>'+
+    esc(fl.B2?fl.B2.flagged:'?')+' of '+esc(fl.B2?fl.B2.runs:'?')+'</strong> B2 runs.';
+  var bh='<thead><tr><th>Case</th><th>What it tests</th><th class="c">A1 baseline</th><th class="c">B1 chain</th><th class="c">B2 revised</th><th>Main observation</th></tr></thead><tbody>';
+  (d.scoreboard||[]).forEach(function(r){
+    bh+='<tr><td><strong>'+esc(r.id)+'</strong></td><td class="small">'+esc(r.tests)+'</td><td class="c">'+badge(r.A1)+'</td><td class="c">'+badge(r.B1)+
+        '</td><td class="c">'+badge(r.B2)+'</td><td class="small">'+esc(r.obs)+'</td></tr>';
+  });
+  if(d.scoreboard&&d.scoreboard.length){
+    var t={A1:0,B1:0,B2:0}; d.scoreboard.forEach(function(r){['A1','B1','B2'].forEach(function(v){if(r[v]!=='fail'&&r[v]!=='na')t[v]++;});});
+    bh+='<tr><td colspan="2"><strong>Cases without a hard fail</strong> <span class="small">(target: 8 of 10)</span></td><td class="c"><strong>'+t.A1+'/10</strong></td><td class="c"><strong>'+t.B1+'/10</strong></td><td class="c"><strong>'+t.B2+'/10</strong></td><td></td></tr>';
   }
+  $('board').innerHTML=bh+'</tbody>';
+
+  // cases
+  tabsFor($('tabs'),$('panels'),d.cases||[],'t',function(c){
+    var id=c.id;
+    var vs=[['A1','A1 · baseline'],['B1','B1 · chain'],['B2','B2 · revised']];
+    var seg='<div class="seg" role="group" aria-label="Prompt version">'+vs.map(function(v,i){
+      return '<button type="button" data-case="'+id+'" data-v="'+v[0]+'" aria-pressed="'+(v[0]==='B2')+'">'+v[1]+'</button>';}).join('')+'</div>';
+    var bodies=vs.map(function(v){
+      var b=c[v[0]], nt=(c.notes||{})[v[0]], h;
+      if(!b) h='<div class="pending">Not run.</div>';
+      else if(v[0]==='A1') h=note(c.cls&&c.cls.A1||'mid','Reading',nt)+'<div class="card"><div class="ttl">A1 output, run 1 of '+b.runs+'</div><div class="body"><pre>'+esc(b.output)+'</pre></div></div>';
+      else h=note(c.cls&&c.cls[v[0]]||'mid','Reading',nt)+chainView(b)+flagList(b.flags);
+      return '<div class="stack" data-body="'+id+'-'+v[0]+'"'+(v[0]==='B2'?'':' hidden')+'>'+h+'</div>';
+    }).join('');
+    return '<p class="ctx"><strong>Tests:</strong> '+esc(c.tests)+'</p><div class="cols">'+
+      '<div class="sticky"><div class="card"><div class="ttl">The student\'s note</div><div class="body"><pre>'+esc(c.note)+'</pre></div></div></div>'+
+      '<div>'+seg+bodies+'</div></div>';
+  });
+  document.addEventListener('click',function(e){
+    var b=e.target.closest('.seg button'); if(!b) return;
+    var id=b.getAttribute('data-case');
+    b.parentNode.querySelectorAll('button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+    ['A1','B1','B2'].forEach(function(v){var el=document.querySelector('[data-body="'+id+'-'+v+'"]'); if(el) el.hidden=v!==b.getAttribute('data-v');});
+  });
+
+  // rag
+  $('ragbox').innerHTML=(d.rag||[]).map(function(r){
+    return '<div class="card"><div class="raghead"><span class="qq">'+esc(r.q)+'</span>'+badge(r.verdict)+'</div><div class="body">'+
+      '<div class="sub" style="margin-top:0">Expected</div><div style="font-size:.88rem;margin-bottom:10px">'+esc(r.expected)+'</div>'+
+      '<details><summary style="cursor:pointer;font-size:.85rem;color:var(--accent)">Answer (verbatim, extracts retrieved: '+esc((r.retrieved||[]).join(', '))+')</summary><pre style="margin-top:8px">'+esc(r.answer)+'</pre></details>'+
+      (r.obs?'<div style="font-size:.86rem;color:var(--ink-2);margin-top:10px">'+esc(r.obs)+'</div>':'')+
+      '</div></div>';
+  }).join('')||'<div class="pending">Not run yet.</div>';
+
+  // revision
+  var rh='<thead><tr><th>#</th><th>Defect observed</th><th>Evidence</th><th>Change</th><th>Status</th></tr></thead><tbody>';
+  (d.revision||[]).forEach(function(r){
+    rh+='<tr><td><strong>'+esc(r.id)+'</strong></td><td>'+esc(r.defect)+'</td><td class="small">'+esc(r.evidence)+'</td><td class="small">'+esc(r.change)+'</td><td>'+badge(r.status)+'<div class="small" style="margin-top:4px">'+esc(r.result)+'</div></td></tr>';
+  });
+  $('revtbl').innerHTML=rh+'</tbody>';
 }
 
-function fail(title, body, err){
-  document.getElementById('panels').innerHTML =
-    '<div class="pending"><b>'+esc(title)+'</b>'+body+
-    (err ? ' <br><br><code>'+esc(err.message || String(err))+'</code>' : '')+'</div>';
+function fail(msg,err){
+  ['spanels','panels'].forEach(function(id){$(id).innerHTML='<div class="pending"><b>'+esc(msg)+'</b>'+(err?'<br><code>'+esc(err.message||err)+'</code>':'')+'</div>';});
 }
-
-fetch('outputs.json')
-  .then(function(r){
-    if(!r.ok) throw new Error('HTTP ' + r.status);
-    return r.json();
-  })
-  .catch(function(e){
-    // Distinguish "the file never arrived" from "it arrived but broke the page".
-    fail('Could not load outputs.json',
-      location.protocol === 'file:'
-        ? 'This page is open as a local file. Browsers block <code>fetch</code> from <code>file://</code>, '+
-          'so serve it over http instead — GitHub Pages, or <code>python -m http.server</code> in the '+
-          '<code>docs</code> folder.'
-        : '<code>outputs.json</code> must sit in the same folder as this page. If you opened '+
-          '<code>index.html</code> on its own, the data file is not next to it.',
-      e);
-    throw e;   // stop the chain; do not call render with nothing
-  })
-  .then(function(data){
-    try { render(data); }
-    catch(e){
-      fail('outputs.json loaded, but the page could not render it',
-        'The file is present but not in the shape this page expects. It should have a '+
-        '<code>cases</code> array — regenerate it from <code>run_log.jsonl</code>.', e);
-    }
-  })
-  .catch(function(){ /* already reported above */ });
+fetch('outputs.json').then(function(r){if(!r.ok) throw new Error('HTTP '+r.status); return r.json();})
+  .then(function(d){try{render(d);}catch(e){fail('outputs.json loaded, but the page could not render it.',e);}})
+  .catch(function(e){fail(location.protocol==='file:'?'Open this page over http (GitHub Pages or "python -m http.server" in docs/); browsers block loading data from file://.':'Could not load outputs.json.',e);});
 </script>
 </body>
 </html>

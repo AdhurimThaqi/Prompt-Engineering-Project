@@ -79,6 +79,21 @@ W2 established that sampling makes the same prompt produce different answers. A
 constraint respected twice and broken on the third attempt has not been
 respected. A single run per case would measure luck alongside prompt quality.
 
+**08.11.2026 - Strict reading of hard fail 3.** An invented concern counts
+wherever it lands as an item: agenda, question or email line. A generic
+"[next steps and deadlines]" blank does not count; an HSLU/official deadline
+or regulation blank in a note that raised none does. Applied to all versions.
+*Consequence:* B1 drops to 2/10, below the baseline. Kept anyway, because a bar
+that loosens when my own version fails is not a bar.
+
+**08.11.2026 - B2 frozen before the test run.** Defects seen on S1-S3
+(D7-D9) were not fixed before running T1-T10, so the test measures B2 as
+designed. They go to B3.
+
+**08.11.2026 - Automatic flags as pointers, not scores.** `checks.py`
+validated against my own reading of all 13 B1 runs first; one false
+positive ("Fundamental" matched "mental") was found and fixed.
+
 ---
 
 ## 3. Quality bar - what makes an output PASS
@@ -125,7 +140,14 @@ Log these as they happen rather than hunting for them in December.
 
 | # | Case | Prompt version | Run | Issue observed |
 |---|---|---|---|---|
-| | | | | |
+| 1 | T1 | B1 | 1-3 | Invents a meeting length the note does not state (step 1 correctly null) |
+| 2 | T1 | B1 | 3 | `missing_info` question promoted to agenda item 1 - re-scored as hard fail 3 |
+| 3 | T5 | B1 | 1-3 | Personal difficulty written into the follow-up email |
+| 4 | T9 | A1 | 1-3 | States HSLU expectations as fact ("you do not need to have picked one") |
+| 5 | T6 | B1 | 1 | Alters a fact: who recommended APA vs IEEE |
+| 6 | T5/T7 | B2 | 1,3 / 2 | Regulation blank survives on the email's "Next steps" line |
+| 7 | S2 | B2 | 1 | "Didn't plan properly" reworded as "academic integrity" |
+| 8 | - | checker | - | False positive: "Fundamental" matched the wellbeing pattern |
 
 Edge cases to build into the corpus:
 
@@ -161,9 +183,9 @@ Edge cases to build into the corpus:
 | # | Deliverable | Due | Status |
 |---|---|---|---|
 | 1 | Project choice & team | 28.09.26 | Done - Modality 1, solo |
-| 2 | Project brief | 12.10.26 | |
-| 3 | Baseline, workflow design, first prototype | 26.10.26 | |
-| 4 | Draft product & revision plan | 09.11.26 | |
+| 2 | Project brief | 12.10.26 | Done |
+| 3 | Baseline, workflow design, first prototype | 26.10.26 | Done |
+| 4 | Draft product & revision plan | 09.11.26 | Done - B2, 90 test runs, revision plan D1-D9 |
 | 5 | Near-final product, evidence check | 30.11.26 | |
 | 6 | Final presentation | 07.12.26 | |
 | 7 | Final report (1,500-2,000 words) | 17.12.26 | |
@@ -185,10 +207,12 @@ generation vs. testing, and where their behaviour differed.
 
 ## 9. Open items
 
-- [ ] Write the three shipped student scenarios
-- [ ] Write the 10 synthetic test notes, including the edge cases in §5
+- [x] Write the three shipped student scenarios
+- [x] Write the 10 synthetic test notes, including the edge cases in §5
 - [ ] Turn the scored criteria into a reviewer-usable rubric
-- [ ] Run the zero-shot baseline and log it
+- [x] Run the zero-shot baseline and log it
+- [ ] B3 per M4 revision plan (tune on S1-S3 only)
+- [ ] Re-run RAG-v1 three times per question; wire into the workflow
 - [ ] Recruit 2-3 students for the blind review (ask early)
 - [ ] Decide delivery surface for the toolkit (structured chat workflow vs.
       small prototype)
